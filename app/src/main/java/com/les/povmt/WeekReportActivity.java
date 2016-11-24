@@ -57,6 +57,7 @@ public class WeekReportActivity extends AppCompatActivity {
         l.setOrientation(Legend.LegendOrientation.VERTICAL);
         l.setDrawInside(false);
         l.setEnabled(false);
+        //tes
 
         mChart.setData(generatePieData());
     }
