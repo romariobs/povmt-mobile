@@ -16,6 +16,15 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter></activity>
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_login" />
+        <activity android:name=".RegisterActivity" />
+        <activity
+            android:name=".WeekReportActivity"
+            android:label="@string/title_activity_week_report" />
+        <activity android:name=".listUserActivity"></activity>
             </intent-filter>
         </activity>
         <activity android:name=".RegisterTi"></activity>
