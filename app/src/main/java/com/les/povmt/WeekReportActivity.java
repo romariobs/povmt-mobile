@@ -9,12 +9,16 @@ import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
@@ -24,7 +28,7 @@ public class WeekReportActivity extends AppCompatActivity {
     // private Typeface tf;
     private static final int[] GRAPH_COLORS = {
             Color.rgb(42, 109, 130),Color.rgb(217, 80, 138),
-            Color.rgb(254, 149, 7), Color.rgb(254, 247, 120),
+            Color.rgb(254, 149, 7), Color.rgb(254, 247, 50),
             Color.rgb(106, 167, 134), Color.rgb(53, 194, 209),
             Color.rgb(193, 37, 82), Color.rgb(255, 102, 0), Color.rgb(245, 199, 0),
             Color.rgb(106, 150, 31), Color.rgb(179, 100, 53)};
@@ -60,6 +64,19 @@ public class WeekReportActivity extends AppCompatActivity {
         //tes
 
         mChart.setData(generatePieData());
+
+        mChart.setOnChartValueSelectedListener( new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                Toast toast = Toast.makeText(getApplicationContext(), h.getX() + "",Toast.LENGTH_SHORT);
+                toast.show();
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });
     }
 
     @Override
@@ -76,9 +93,10 @@ public class WeekReportActivity extends AppCompatActivity {
 
     protected PieData generatePieData() {
 
-        int count = 10;
+        int count = 8;
         ArrayList<PieEntry> entries1 = new ArrayList<>();
 
+        // TODO PASSAR ORDENADO
         for(int i = 0; i < count; i++) {
             entries1.add(new PieEntry((float) ((Math.random() * 60) + 40), ""));
         }

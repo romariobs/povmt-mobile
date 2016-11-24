@@ -21,4 +21,5 @@
         completions."
     </string>
     <string name="txtDivisionTime">Time Division</string>
+    <string name="title_activity_list">listActivity</string>
 </resources>
