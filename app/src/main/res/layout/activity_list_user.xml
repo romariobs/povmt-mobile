@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context="com.les.povmt.listUserActivity">
 
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_trade_in_progress"
         android:layout_width="match_parent"

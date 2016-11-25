@@ -1,16 +1,20 @@
 package com.les.povmt;
 
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import com.les.povmt.adapter.ActivitiesAdapter;
+import com.les.povmt.fragment.ReportFragment;
 import com.les.povmt.models.Activity;
 
 import java.util.ArrayList;
@@ -59,4 +63,35 @@ public class listUserActivity extends AppCompatActivity {
 
         activitiesAdapter.update(activities);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        switch (itemId) {
+            case 16908332:
+                onBackPressed();
+                finish();
+                return true;
+            case R.id.action_report:
+                startReportFragment();
+                return true;
+            case R.id.action_options:
+                Toast.makeText(listUserActivity.this, "Options", Toast.LENGTH_SHORT).show();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void startReportFragment() {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        ReportFragment profileUserFragment = ReportFragment.newInstance();
+        profileUserFragment.show(fragmentTransaction, "ReportsType");
+    }
+
 }

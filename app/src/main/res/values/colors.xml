@@ -6,6 +6,5 @@
     <color name="cardsBackground">#ededed</color>
     <color name="colorTransparent">#00ffffff</color>
     <color name="colorBlack">#000000</color>
-
-
+    <color name="colorGray">#808080</color>
 </resources>
