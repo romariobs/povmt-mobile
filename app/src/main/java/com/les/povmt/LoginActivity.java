@@ -1,6 +1,7 @@
 package com.les.povmt;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -80,6 +81,12 @@ public class LoginActivity extends AppCompatActivity {
                 final String email = etEmail.getText().toString();
                 final String password = etPassword.getText().toString();
 
+                final ProgressDialog loading = new ProgressDialog(LoginActivity.this);
+
+                loading.setTitle("Authentication");
+                loading.setMessage("Loading, Please Wait...");
+                loading.show();
+
                 Response.Listener<String> responseListener = new Response.Listener<String>(){
                     @Override
                     public void onResponse(String response){
@@ -100,10 +107,12 @@ public class LoginActivity extends AppCompatActivity {
                             }
 
                             if (status == HTTP_OK){
+                                loading.cancel();
                                 Intent accountIntent = new Intent(LoginActivity.this, PovMTActivity.class);
                                 LoginActivity.this.startActivity(accountIntent);
                             }
                             else{
+                                loading.cancel();
                                 AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                                 builder.setMessage("Fail trying authentication with server!")
                                         .setNegativeButton("Retry", null)
@@ -113,8 +122,8 @@ public class LoginActivity extends AppCompatActivity {
 
                         }
                         catch (JSONException e){
+                            loading.cancel();
                             Log.d(TAG, e.getMessage());
-                            e.printStackTrace();
                         }
                     }
                 };
