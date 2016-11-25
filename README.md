@@ -22,7 +22,8 @@ Em uma frase: um assistente que permite à pessoa ocupada acompanhar e avaliar c
 ## Glossário
 
 - Atividade – Uma atividade rotineira do usuário na qual ele deseja acompanhar quanto tempo coloca. (ex: LES, Ciclismo, Aprender alemão, ...)
- - Ti – Tempo investido. Um registro de tempo colocado em uma atividade.
+- Ti – Tempo investido. Um registro de tempo colocado em uma atividade.
+- Povmt - Pra onde vai meu tempo
 
 ## Requisitos não-funcionais
 
