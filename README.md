@@ -1,5 +1,6 @@
-# povmt-mobile
-Em uma frase: um assistente que permite à pessoa ocupada acompanhar e avaliar como tem usado seu tempo e aprender com isso.
+﻿# povmt-mobile
+Em uma frase: 
+- um assistente que permite à pessoa ocupada acompanhar e avaliar como tem usado seu tempo e aprender com isso.
 
 ## Problema atacado
 
