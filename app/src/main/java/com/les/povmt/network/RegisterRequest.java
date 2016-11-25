@@ -28,10 +28,9 @@ public class RegisterRequest extends StringRequest {
      * @param name - the value to parameter name.
      * @param email - the value to parameter email.
      * @param password - the value to parameter password.
-     * @param role - the value to parameter role.
      * @param listener - the Listener to handler server response.
      */
-    public RegisterRequest(String name, String email, String password, String role, Response.Listener<String> listener){
+    public RegisterRequest(String name, String email, String password, Response.Listener<String> listener){
         super(Method.POST, REGISTER_URL, listener,null);
         parameters = new HashMap<>();
         parameters.put(KEY_NAME, name);
