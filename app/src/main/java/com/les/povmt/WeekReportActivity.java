@@ -1,15 +1,15 @@
 package com.les.povmt;
 
-import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Typeface;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.AttributeSet;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
+import android.widget.ScrollView;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
@@ -19,23 +19,38 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
+import com.les.povmt.adapter.RankingAdapter;
+import com.les.povmt.models.Activity;
+import com.les.povmt.models.RankingItem;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class WeekReportActivity extends AppCompatActivity {
     private PieChart mChart;
-    // private Typeface tf;
+
+    private List<RankingItem> activities = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private RankingAdapter rankingAdapter;
+
+    private ScrollView scroll;
+    private float totalTimeInvested;
+
     private static final int[] GRAPH_COLORS = {
-            Color.rgb(42, 109, 130),Color.rgb(217, 80, 138),
+            Color.rgb(42, 109, 130), Color.rgb(217, 80, 138),
             Color.rgb(254, 149, 7), Color.rgb(254, 247, 50),
             Color.rgb(106, 167, 134), Color.rgb(53, 194, 209),
             Color.rgb(193, 37, 82), Color.rgb(255, 102, 0), Color.rgb(245, 199, 0),
             Color.rgb(106, 150, 31), Color.rgb(179, 100, 53)};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_week_report);
+
+        scroll = (ScrollView) findViewById(R.id.scrollView);
 
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
@@ -45,11 +60,8 @@ public class WeekReportActivity extends AppCompatActivity {
         mChart = (PieChart) findViewById(R.id.pieChart);
         mChart.getDescription().setEnabled(false);
 
-       // tf = Typeface.createFromAsset(this.getAssets(), "OpenSans-Light.ttf");
-       // mChart.setCenterTextTypeface(tf);
         mChart.setCenterText("15 h\n30 min");
         mChart.setCenterTextSize(18f);
-       // mChart.setCenterTextTypeface(tf);
 
         mChart.setHoleRadius(50f);
         mChart.setTransparentCircleRadius(55f);
@@ -61,15 +73,14 @@ public class WeekReportActivity extends AppCompatActivity {
         l.setOrientation(Legend.LegendOrientation.VERTICAL);
         l.setDrawInside(false);
         l.setEnabled(false);
-        //tes
 
         mChart.setData(generatePieData());
 
-        mChart.setOnChartValueSelectedListener( new OnChartValueSelectedListener() {
+
+        mChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
-                Toast toast = Toast.makeText(getApplicationContext(), h.getX() + "",Toast.LENGTH_SHORT);
-                toast.show();
+                scroll.scrollTo(0,(int)(400 + 110 *  (h.getX() + 1)));
             }
 
             @Override
@@ -92,14 +103,37 @@ public class WeekReportActivity extends AppCompatActivity {
     }
 
     protected PieData generatePieData() {
-
-        int count = 8;
+        int count = 15;
         ArrayList<PieEntry> entries1 = new ArrayList<>();
 
-        // TODO PASSAR ORDENADO
-        for(int i = 0; i < count; i++) {
-            entries1.add(new PieEntry((float) ((Math.random() * 60) + 40), ""));
+        for (int i = 0; i < count; i++) {
+            float value = (float) (Math.random() * 20) + 10 ;
+            totalTimeInvested += value;
+            entries1.add(new PieEntry((float) value, ""));
         }
+
+        int min =  (int) ((totalTimeInvested % 1) * 100);
+        if (min >= 60)
+            min = min % 60;
+
+        mChart.setCenterText( (int)(totalTimeInvested/1) + " h\n" + min +" min");
+        Collections.sort(entries1, new Comparator<PieEntry>() {
+            @Override
+            public int compare(PieEntry pieEntry, PieEntry t1) {
+                if (pieEntry.getValue() > t1.getValue()) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            }
+        });
+
+        int i = 0;
+        for (PieEntry pie: entries1) {
+            activities.add(new RankingItem(new Activity("Title", "Description"), GRAPH_COLORS[i % GRAPH_COLORS.length], pie.getValue()));
+            i++;
+        }
+        setList();
 
         PieDataSet ds1 = new PieDataSet(entries1, "");
         ds1.setColors(GRAPH_COLORS);
@@ -107,9 +141,21 @@ public class WeekReportActivity extends AppCompatActivity {
         ds1.setValueTextColor(Color.WHITE);
         ds1.setValueTextSize(12f);
         PieData d = new PieData(ds1);
-      //  d.setValueTypeface(tf);
+
         return d;
     }
 
+    private void setList() {
+        this.rankingAdapter = new RankingAdapter(getApplicationContext(), activities, totalTimeInvested);
 
+        this.recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        registerForContextMenu(recyclerView);
+        this.recyclerView.setAdapter(rankingAdapter);
+        this.recyclerView.setItemAnimator(new DefaultItemAnimator());
+        LinearLayoutManager linearLayoutManager =  new LinearLayoutManager(getApplicationContext());
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        this.recyclerView.setLayoutManager(linearLayoutManager);
+
+        rankingAdapter.update(activities);
+    }
 }

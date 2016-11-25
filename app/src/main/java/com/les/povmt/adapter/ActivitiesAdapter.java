@@ -2,7 +2,6 @@ package com.les.povmt.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -10,13 +9,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.les.povmt.R;
 import com.les.povmt.RegisterTi;
-import com.les.povmt.WeekReportActivity;
-import com.les.povmt.listUserActivity;
 import com.les.povmt.models.Activity;
 
 import java.util.List;
@@ -27,8 +25,6 @@ import java.util.List;
 public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.viewHolder> implements PopupMenu.OnMenuItemClickListener{
     private Context context;
     private List<Activity> activities;
-    private int group;
-    private int child;
 
     public ActivitiesAdapter(Context context, List<Activity> activities) {
         this.context = context;
@@ -54,12 +50,12 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.vi
         holder.imageViewMenuOverflow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showPopup(v, 0);
+                showPopup(v);
             }
         });
     }
 
-    private void showPopup(View v, int groupPosition) {
+    private void showPopup(View v) {
         PopupMenu popup = new PopupMenu(context, v);
         MenuInflater inflater = popup.getMenuInflater();
         popup.setOnMenuItemClickListener(this);
@@ -85,9 +81,6 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.vi
                 Intent intent = new Intent(context, RegisterTi.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
-                return true;
-            case R.id.option2:
-                Toast.makeText(context, "option2", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.option3:
                 Toast.makeText(context, "option3", Toast.LENGTH_SHORT).show();

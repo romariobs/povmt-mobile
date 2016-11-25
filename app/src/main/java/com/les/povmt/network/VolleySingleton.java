@@ -53,7 +53,8 @@ public class VolleySingleton   {
         if (mRequestQueue == null) {
             // getApplicationContext() is key, it keeps you from leaking the
             // Activity or BroadcastReceiver if someone passes one in.
-           // mRequestQueue = Volley.newRequestQueue(mContext.getApplicationContext(), 10 * 1024 * 1024); // this for caching
+           // mRequestQueue = Volley.newRequestQueue(mContext.getApplicationContext(), 10 * 1024 * 1024);
+            // this for caching
         }
         return mRequestQueue;
     }

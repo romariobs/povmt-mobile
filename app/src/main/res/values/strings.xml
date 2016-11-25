@@ -23,4 +23,5 @@
     <string name="txtDivisionTime">Time Division</string>
     <string name="title_activity_list">listActivity</string>
     <string name="options">Settings</string>
+    <string name="txtRanking">Ranking</string>
 </resources>
