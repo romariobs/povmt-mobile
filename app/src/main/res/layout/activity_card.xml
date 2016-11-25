@@ -55,7 +55,7 @@
             android:layout_centerVertical="true"
             android:layout_alignParentStart="true"
             android:layout_marginStart="18dp"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@drawable/happy" />
 
         <TextView
             android:layout_width="wrap_content"
