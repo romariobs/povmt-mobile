@@ -1,5 +1,6 @@
 package com.les.povmt;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,7 +23,6 @@ import org.json.JSONObject;
 public class RegisterActivity extends AppCompatActivity {
 
     private final static String TAG = RegisterActivity.class.getSimpleName();
-    private Context context = null;
     private final static int HTTP_CREATED = 201;
     private final static String TAG_STATUS = "status";
     private final static String TAG_USER = "user";
@@ -44,9 +44,15 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+
                 final String name = etName.getText().toString();
                 final String email = etEmail.getText().toString();
                 final String password = etPassword.getText().toString();
+
+                final ProgressDialog loading = new ProgressDialog(RegisterActivity.this);
+                loading.setTitle("New account");
+                loading.setMessage("Loading, Please Wait...");
+                loading.show();
 
                 Response.Listener<String> responseListener = new Response.Listener<String>() {
                     @Override
@@ -68,10 +74,11 @@ public class RegisterActivity extends AppCompatActivity {
                             }
 
                             if (status == HTTP_CREATED) {
-                                Intent loginIntent = new Intent(RegisterActivity.this, LoginActivity.class);
-                                RegisterActivity.this.startActivity(loginIntent);
+                                loading.cancel();
+                                backToLogin();
                                 Log.d(TAG + " created new user ", user);
                             } else {
+                                loading.cancel();
                                 AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
 
                                 builder.setMessage("Fail registering user account!")
@@ -80,6 +87,7 @@ public class RegisterActivity extends AppCompatActivity {
                                         .show();
                             }
                         } catch (JSONException e) {
+                            loading.cancel();
                             Log.e(TAG, e.getMessage());
                         }
                     }
@@ -91,5 +99,20 @@ public class RegisterActivity extends AppCompatActivity {
             };
 
         });
+    }
+
+    /**
+     * Returning the user to login view after 500ms.
+     *
+     */
+    private void backToLogin(){
+
+        new android.os.Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent loginIntent = new Intent(RegisterActivity.this, LoginActivity.class);
+                RegisterActivity.this.startActivity(loginIntent);
+            }
+        },500);
     }
 }
