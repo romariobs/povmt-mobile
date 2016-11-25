@@ -27,10 +27,10 @@ public class User {
     /**
      * Creating a new User
      *
-     * @param id - the account identifier
-     * @param name - the account user name
-     * @param email - the account user email
-     * @param password - the account user passord
+     * @param id - the user identifier
+     * @param name - the user user name
+     * @param email - the user user email
+     * @param password - the user password
      */
     public User(String id, String name, String email, String password, String role, String pictureUrl){
         this.id = id;

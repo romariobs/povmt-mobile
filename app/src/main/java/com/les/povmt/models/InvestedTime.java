@@ -15,5 +15,5 @@ public class InvestedTime {
     private int duration;
     private Calendar createAt;
     private Calendar updateAt;
-    
+
 }
