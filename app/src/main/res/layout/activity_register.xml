@@ -8,15 +8,32 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/ColorBackground"
     tools:context="com.les.povmt.RegisterActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
+        <TextView
+            android:text="PovMT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btnLogin"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:layout_gravity="center"
+            android:typeface="normal"
+            android:textSize="30sp"
+            android:textStyle="normal|bold"
+            android:textColor="@color/textColorPrimary" />
+
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:textColorHint="@color/textColorPrimary">
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -26,14 +43,15 @@
                 android:layout_alignParentStart="true"
                 android:id="@+id/etName"
                 android:layout_alignParentEnd="true"
-                android:hint="Nome"/>
+                android:textColor="@color/textColorPrimary"
+                android:hint="Email"/>
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            >
+            android:textColorHint="@color/textColorPrimary">
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -43,11 +61,12 @@
                 android:layout_alignParentStart="true"
                 android:id="@+id/etPassword"
                 android:layout_alignParentEnd="true"
+                android:textColor="@color/textColorPrimary"
                 android:hint="Senha" />
         </android.support.design.widget.TextInputLayout>
 
         <Button
-            android:text="Criar Conta"
+            android:text="Registrar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
@@ -58,6 +77,17 @@
             style="@style/Widget.AppCompat.Button.Borderless"
             android:background="@color/colorPrimary"
             android:textColor="@color/colorWhite"/>
+
+        <TextView
+            android:text="Já cadastrado? Entre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btnLogin"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:layout_gravity="center"
+            android:textColor="@color/textColorPrimary"
+            android:id="@+id/tvAreadyRegister" />
 
     </LinearLayout>
 </RelativeLayout>

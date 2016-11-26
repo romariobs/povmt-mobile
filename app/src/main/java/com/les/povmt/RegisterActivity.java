@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.les.povmt.network.RegisterRequest;
@@ -37,20 +38,29 @@ public class RegisterActivity extends AppCompatActivity {
         final EditText etEmail = (EditText) findViewById(R.id.etEmail);
         final EditText etPassword  = (EditText) findViewById(R.id.etPassword);
 
+        final TextView tvAlreadyRegiter = (TextView) findViewById(R.id.tvAreadyRegister);
+
+        tvAlreadyRegiter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RegisterActivity.super.finish();
+            }
+        });
+
         final Button btnRegister = (Button) findViewById(R.id.btnRegister);
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
+                if (etName.getText() == null || etEmail.getText() == null || etPassword.getText() == null) return;
 
                 final String name = etName.getText().toString();
                 final String email = etEmail.getText().toString();
                 final String password = etPassword.getText().toString();
 
-                final ProgressDialog loading = new ProgressDialog(RegisterActivity.this);
-                loading.setTitle("New account");
-                loading.setMessage("Loading, Please Wait...");
+                final ProgressDialog loading = new ProgressDialog(RegisterActivity.this, R.style.AppThemeDarkDialog);
+                loading.setMessage("Registrando...");
                 loading.show();
 
                 Response.Listener<String> responseListener = new Response.Listener<String>() {
@@ -94,7 +104,6 @@ public class RegisterActivity extends AppCompatActivity {
 
                 RegisterRequest registerRequest = new RegisterRequest(name, email, password, responseListener);
                 VolleySingleton.getInstance(mContext).addToRequestQueue(registerRequest);
-
             };
 
         });

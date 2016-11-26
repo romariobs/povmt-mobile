@@ -80,10 +80,8 @@ public class LoginActivity extends AppCompatActivity {
                 final String email = etEmail.getText().toString();
                 final String password = etPassword.getText().toString();
 
-                final ProgressDialog loading = new ProgressDialog(LoginActivity.this);
-
-                loading.setTitle("Authentication");
-                loading.setMessage("Loading, Please Wait...");
+                final ProgressDialog loading = new ProgressDialog(LoginActivity.this, R.style.AppThemeDarkDialog);
+                loading.setMessage("Autenticando...");
                 loading.show();
 
                 Response.Listener<String> responseListener = new Response.Listener<String>(){
