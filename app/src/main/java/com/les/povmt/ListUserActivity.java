@@ -2,6 +2,7 @@ package com.les.povmt;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
@@ -84,10 +85,16 @@ public class ListUserActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(ListUserActivity.this, "Cesar", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ListUserActivity.this, "Cesar", Toast.LENGTH_SHORT).show();
+                startCreateEditActivity();
             }
         });
 
+    }
+
+    private void startCreateEditActivity() {
+        Intent intent = new Intent(this, CreateEditActivity.class);
+        startActivity(intent);
     }
 
     private void closeDialog() {

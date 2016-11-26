@@ -42,6 +42,10 @@
         <activity android:name=".ListUserActivity"
             android:screenOrientation="portrait"></activity>
 
+        <activity android:name=".CreateEditActivity"
+            android:label="Create and Edit">
+        </activity>
+
     </application>
 
 </manifest>
