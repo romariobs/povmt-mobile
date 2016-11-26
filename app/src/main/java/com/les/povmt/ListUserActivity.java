@@ -62,13 +62,43 @@ public class ListUserActivity extends AppCompatActivity {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         this.recyclerView.setLayoutManager(linearLayoutManager);
 
+        SwipeableRecyclerViewTouchListener swipeTouchListener =
+                new SwipeableRecyclerViewTouchListener(recyclerView,
+                        new SwipeableRecyclerViewTouchListener.SwipeListener() {
+                            @Override
+                            public boolean canSwipeLeft(int position) {
+                                return true;
+                            }
+
+                            @Override
+                            public boolean canSwipeRight(int position) {
+                                return false;
+                            }
+
+                            @Override
+                            public void onDismissedBySwipeLeft(RecyclerView recyclerView, int[] reverseSortedPositions) {
+                                for (int position : reverseSortedPositions) {
+                                    activities.remove(position);
+                                    activitiesAdapter.notifyItemRemoved(position);
+                                }
+                                activitiesAdapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onDismissedBySwipeRight(RecyclerView recyclerView, int[] reverseSortedPositions) {
+                                return;
+                            }
+                        });
+
+        recyclerView.addOnItemTouchListener(swipeTouchListener);
+
         StringRequest activitiesRequest = new StringRequest(Request.Method.GET, apiEndpointUrl, new Response.Listener<String>(){
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, response);
                 closeDialog();
                 ActivityParser dataParser = new ActivityParser();
-                List<Activity> activities = dataParser.parse(response);
+                activities = dataParser.parse(response);
                 activitiesAdapter.update(activities);
             }
         }, new Response.ErrorListener() {
