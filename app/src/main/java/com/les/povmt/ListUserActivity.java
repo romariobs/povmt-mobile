@@ -4,7 +4,9 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -40,6 +42,7 @@ public class ListUserActivity extends AppCompatActivity {
     private ActivitiesAdapter activitiesAdapter;
     private final Context context = this;
     private ProgressDialog loading;
+    private CoordinatorLayout coordinatorLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,7 @@ public class ListUserActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list_user);
         ActionBar actionbar = getSupportActionBar();
         actionbar.setTitle(getString(R.string.app_name));
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coodinator_layout);;
 
         loading = new ProgressDialog(this);
         loading.setMessage("Loading Accounts");
@@ -58,8 +62,10 @@ public class ListUserActivity extends AppCompatActivity {
         registerForContextMenu(recyclerView);
         this.recyclerView.setAdapter(activitiesAdapter);
         this.recyclerView.setItemAnimator(new DefaultItemAnimator());
+
         LinearLayoutManager linearLayoutManager =  new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
         this.recyclerView.setLayoutManager(linearLayoutManager);
 
         SwipeableRecyclerViewTouchListener swipeTouchListener =
@@ -77,10 +83,42 @@ public class ListUserActivity extends AppCompatActivity {
 
                             @Override
                             public void onDismissedBySwipeLeft(RecyclerView recyclerView, int[] reverseSortedPositions) {
+                                int pos = 0;
+                                Activity activity = null;
+
                                 for (int position : reverseSortedPositions) {
-                                    activities.remove(position);
+                                    activity = activities.remove(position);
                                     activitiesAdapter.notifyItemRemoved(position);
+                                    pos = position;
+                                    break;
                                 }
+
+                                final int fPos = pos;
+                                final Activity fActivity = activity;
+
+                                Snackbar.make(coordinatorLayout, "Atividade deletada", Snackbar.LENGTH_LONG)
+                                        .setCallback(new Snackbar.Callback() {
+                                            @Override
+                                            public void onDismissed(Snackbar snackbar, int event) {
+                                                switch (event) {
+                                                    case Snackbar.Callback.DISMISS_EVENT_ACTION:
+                                                        activities.add(fPos, fActivity);
+                                                        activitiesAdapter.notifyItemInserted(fPos);
+                                                        break;
+                                                    default:
+                                                        //TODO Send server delete
+                                                        break;
+                                                }
+                                            }
+                                        })
+                                        .setAction("DESFAZER", new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                Snackbar snackbar = Snackbar.make(coordinatorLayout, "Atividade restaurada", Snackbar.LENGTH_SHORT);
+                                                snackbar.show();
+                                            }
+                                        }).show();
+
                                 activitiesAdapter.notifyDataSetChanged();
                             }
 
