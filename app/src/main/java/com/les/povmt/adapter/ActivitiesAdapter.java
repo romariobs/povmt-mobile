@@ -13,6 +13,8 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.les.povmt.CreateActivity;
+import com.les.povmt.EditActivity;
 import com.les.povmt.R;
 import com.les.povmt.RegisterTi;
 import com.les.povmt.models.Activity;
@@ -94,8 +96,7 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.vi
         }
     }
 
-
-    public class viewHolder extends RecyclerView.ViewHolder{
+    public class viewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private TextView title;
         private TextView description;
         private ImageView imageViewMenuOverflow;
@@ -105,7 +106,21 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.vi
 
             title = (TextView) itemView.findViewById(R.id.title_activity);
            // imageViewMenuOverflow = (ImageView) itemView.findViewById(R.id.imageViewMenuOverflow);
-           // description = (TextView) itemView.findViewById(R.id.description);
+            description = (TextView) itemView.findViewById(R.id.description);
+            itemView.setOnClickListener(this);
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(v.getContext(), EditActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("title" , title.getText().toString());
+            intent.putExtra("description" , description.getText().toString());
+            intent.putExtra("id" , activities.get(getPosition()).getId());
+            v.getContext().startActivity(intent);
+
         }
     }
+
 }

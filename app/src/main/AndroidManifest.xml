@@ -42,9 +42,14 @@
         <activity android:name=".ListUserActivity"
             android:screenOrientation="portrait"></activity>
 
-        <activity android:name=".CreateEditActivity"
+        <activity android:name=".CreateActivity"
             android:theme="@style/AppTheme"
-            android:label="Create and Edit">
+            android:label="Create">
+        </activity>
+
+        <activity android:name=".EditActivity"
+            android:theme="@style/AppTheme"
+            android:label="Edit">
         </activity>
 
     </application>

@@ -181,7 +181,7 @@ public class ListUserActivity extends AppCompatActivity {
     }
 
     private void startCreateEditActivity() {
-        Intent intent = new Intent(this, CreateEditActivity.class);
+        Intent intent = new Intent(this, CreateActivity.class);
         startActivity(intent);
     }
 
@@ -227,5 +227,6 @@ public class ListUserActivity extends AppCompatActivity {
         ReportFragment profileUserFragment = ReportFragment.newInstance();
         profileUserFragment.show(fragmentTransaction, "ReportsType");
     }
+
 
 }
