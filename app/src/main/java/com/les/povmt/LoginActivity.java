@@ -102,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             if (status == HTTP_OK){
                                 loading.cancel();
-                                Intent accountIntent = new Intent(LoginActivity.this, PovMTActivity.class);
+                                Intent accountIntent = new Intent(LoginActivity.this, ListUserActivity.class);
                                 LoginActivity.this.startActivity(accountIntent);
                             }
                             else{

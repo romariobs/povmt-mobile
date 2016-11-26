@@ -13,24 +13,31 @@
         <activity
             android:name=".PovMTActivity"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoBar">
         </activity>
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity"></activity>
+        <activity android:name=".RegisterActivity"
+            android:screenOrientation="portrait">
+        </activity>
 
         <activity
             android:name=".WeekReportActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_week_report" />
-        <activity android:name=".RegisterTi"></activity>
-        <activity android:name=".ListUserActivity"></activity>
+        <activity android:name=".RegisterTi"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".ListUserActivity"
+            android:screenOrientation="portrait"></activity>
 
     </application>
 
