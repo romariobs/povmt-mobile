@@ -39,7 +39,6 @@ public class LoginActivity extends AppCompatActivity {
     private static final String TAG = LoginActivity.class.getSimpleName();
 
     private static final String TAG_STATUS = "status";
-    private static final String TAG_USER = "user";
 
     private static final String debugEmail = "samuel.santos@mail.com";
     private static final String debugPassword = "admin#123";
@@ -96,14 +95,9 @@ public class LoginActivity extends AppCompatActivity {
                             JSONObject json = new JSONObject(response);
 
                             int status = 0;
-                            String user = "";
 
                             if (json.has(TAG_STATUS)){
                                 status = json.getInt(TAG_STATUS);
-                            }
-
-                            if (json.has(TAG_USER)){
-                                user = json.getString(TAG_USER);
                             }
 
                             if (status == HTTP_OK){
