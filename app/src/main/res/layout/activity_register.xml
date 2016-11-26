@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@color/ColorBackground"
+    android:background="@color/colorBackground"
     tools:context="com.les.povmt.RegisterActivity">
 
     <LinearLayout
@@ -42,6 +42,24 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentStart="true"
                 android:id="@+id/etName"
+                android:layout_alignParentEnd="true"
+                android:textColor="@color/textColorPrimary"
+                android:hint="Nome"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:textColorHint="@color/textColorPrimary">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:id="@+id/etEmail"
                 android:layout_alignParentEnd="true"
                 android:textColor="@color/textColorPrimary"
                 android:hint="Email"/>

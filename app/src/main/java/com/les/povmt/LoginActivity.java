@@ -81,6 +81,7 @@ public class LoginActivity extends AppCompatActivity {
                 final String password = etPassword.getText().toString();
 
                 final ProgressDialog loading = new ProgressDialog(LoginActivity.this, R.style.AppThemeDarkDialog);
+
                 loading.setMessage("Autenticando...");
                 loading.show();
 
