@@ -44,12 +44,12 @@
 
         <activity android:name=".CreateActivity"
             android:theme="@style/AppTheme"
-            android:label="Create">
+            android:label="Criar Atividade">
         </activity>
 
         <activity android:name=".EditActivity"
             android:theme="@style/AppTheme"
-            android:label="Edit">
+            android:label="Editar Atividade">
         </activity>
 
     </application>

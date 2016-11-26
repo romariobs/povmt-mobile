@@ -35,7 +35,6 @@ public class EditActivity extends AppCompatActivity {
         description = (EditText) findViewById(R.id.description_activity);
         button_create = (Button) findViewById(R.id.button_create);
 
-        button_create.setText("Editar");
         button_create.setOnClickListener(
                 new View.OnClickListener() {
                     public void onClick(View view) {
