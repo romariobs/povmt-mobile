@@ -83,7 +83,7 @@ public class RegisterTiActivity extends AppCompatActivity {
         final JSONObject jsonBody = new JSONObject();
         try {
             jsonBody.put("duration", mDurationTi.getText().toString());
-            jsonBody.put("investedTimeAt", "1"); //Atividade ID = TODO
+            jsonBody.put("investedTimeAt", getIntent().getStringExtra("id")); //Atividade ID
         } catch (JSONException e) {
             e.printStackTrace();
         }
