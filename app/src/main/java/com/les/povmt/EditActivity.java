@@ -10,6 +10,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.les.povmt.models.User;
 import com.les.povmt.network.VolleySingleton;
 
 import org.json.JSONException;
@@ -36,24 +37,20 @@ public class EditActivity extends AppCompatActivity {
         button_create = (Button) findViewById(R.id.button_create);
 
         button_create.setOnClickListener(
-                new View.OnClickListener() {
-                    public void onClick(View view) {
-                        send();
-                        finish();
-                    }
-                });
-
-
+            new View.OnClickListener() {
+                public void onClick(View view) {
+                    edit();
+                    finish();
+                }
+            });
     }
 
-    public void send() {
+    public void edit() {
         final JSONObject jsonBody = new JSONObject();
         try {
             jsonBody.put("title", title.getText().toString());
             jsonBody.put("description", description.getText().toString());
-
-            jsonBody.put("creator", "58323866cd184d432276a839");
-
+            jsonBody.put("creator", User.getCurrentUser().getId());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -73,5 +70,4 @@ public class EditActivity extends AppCompatActivity {
 
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(activitiesRequest);
     }
-
 }

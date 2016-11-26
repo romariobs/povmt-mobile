@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.android.volley.Response;
+import com.les.povmt.models.User;
 import com.les.povmt.network.LoginRequest;
 import com.les.povmt.network.VolleySingleton;
 
@@ -103,6 +104,10 @@ public class LoginActivity extends AppCompatActivity {
                                 loading.cancel();
                                 Intent accountIntent = new Intent(LoginActivity.this, ListUserActivity.class);
                                 LoginActivity.this.startActivity(accountIntent);
+
+                                JSONObject user = json.getJSONObject("user");
+
+                                User.setCurrentUser(user.getString("id"), user.getString("name"), user.getString("email"));
                             }
                             else{
                                 loading.cancel();

@@ -1,5 +1,7 @@
 package com.les.povmt.models;
 
+import android.content.SharedPreferences;
+
 import java.util.Calendar;
 
 /**
@@ -17,6 +19,8 @@ public class User {
     private String password;
     private Calendar createAt;
     private Calendar updateAt;
+
+    private static User currentUser;
 
     /**
      * Default constructor
@@ -97,4 +101,11 @@ public class User {
                 '}';
     }
 
+    public static User getCurrentUser () {
+        return currentUser;
+    }
+
+    public static void setCurrentUser (String id, String name, String email) {
+        currentUser = new User(id, name, email, null, null, null);
+    }
 }

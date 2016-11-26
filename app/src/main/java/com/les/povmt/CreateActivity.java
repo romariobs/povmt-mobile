@@ -13,6 +13,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.les.povmt.models.Activity;
+import com.les.povmt.models.User;
 import com.les.povmt.network.VolleySingleton;
 import com.les.povmt.parser.ActivityParser;
 
@@ -64,8 +65,7 @@ public class CreateActivity extends AppCompatActivity {
         try {
             jsonBody.put("title", title.getText().toString());
             jsonBody.put("description", description.getText().toString());
-            jsonBody.put("creator", "58323866cd184d432276a839");
-
+            jsonBody.put("creator", User.getCurrentUser().getId());
         } catch (JSONException e) {
             e.printStackTrace();
         }
