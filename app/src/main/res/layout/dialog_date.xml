@@ -9,16 +9,23 @@
     <DatePicker
         android:id="@+id/date_picker"
         android:layout_width="match_parent"
-        android:calendarViewShown="true"
+        android:layout_height="wrap_content"
+        android:dayOfWeekBackground="@color/colorBackground"
+        android:headerDayOfMonthTextAppearance="@color/colorBackground"
+        android:background="@color/colorBackground"
+        android:headerBackground="@color/colorBackground"
         android:spinnersShown="false"
-        android:layout_weight="4"
-        android:layout_height="0dp" />
+        android:hapticFeedbackEnabled="false"
+        android:headerMonthTextAppearance="@style/TextAppearance.AppCompat"
+        android:headerYearTextAppearance="@style/TextAppearance.AppCompat.Body1"
+        style="@android:style/Widget.DatePicker" />
 
     <Button
         android:id="@+id/date_time_set"
-        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:text="Alterar"
-        android:layout_height="0dp" />
+        android:layout_height="wrap_content"
+        android:text="Aplicar"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/colorWhite"/>
 
 </LinearLayout>

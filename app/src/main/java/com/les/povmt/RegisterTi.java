@@ -32,7 +32,6 @@ public class RegisterTi extends AppCompatActivity {
 
                 final AlertDialog alertDialog = new AlertDialog.Builder(RegisterTi.this).create();
 
-
                 final TimePicker timePicker = (TimePicker) dialogView.findViewById(R.id.duration_picker);
                 timePicker.setIs24HourView(true);
                 timePicker.setCurrentHour(00);
@@ -60,7 +59,6 @@ public class RegisterTi extends AppCompatActivity {
                 final View dialogView = View.inflate(RegisterTi.this, R.layout.dialog_date, null);
 
                 final AlertDialog alertDialog = new AlertDialog.Builder(RegisterTi.this).create();
-
 
                 final DatePicker datePicker = (DatePicker) dialogView.findViewById(R.id.date_picker);
                 datePicker.init(mCalendar.get(Calendar.YEAR),mCalendar.get(Calendar.MONTH),mCalendar.get(Calendar.DAY_OF_MONTH),null);

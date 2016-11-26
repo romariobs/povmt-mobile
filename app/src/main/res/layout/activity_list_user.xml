@@ -5,6 +5,8 @@
     android:id="@+id/activity_list_user"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp"
     tools:context="com.les.povmt.ListUserActivity">
 
     <android.support.v7.widget.RecyclerView
@@ -23,9 +25,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:src="@drawable/ic_add_white_18dp"
-        android:layout_marginLeft="280dp"
-        android:layout_marginTop="430dp"
-        app:backgroundTint="?android:attr/textColorPrimaryNoDisable"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        app:backgroundTint="@color/colorPrimary"
         app:rippleColor="?android:attr/textColorPrimaryNoDisable" />
 
 </RelativeLayout>

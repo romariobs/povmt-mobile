@@ -6,7 +6,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#ff4081</color>
     <color name="cardsBackground">#ededed</color>
-    <color name="colorWhite">#ffffff</color>
+    <color name="colorWhite">#CCCCCC</color>
     <color name="colorTransparent">#00ffffff</color>
     <color name="colorBlack">#000000</color>
     <color name="colorGray">#808080</color>
