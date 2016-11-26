@@ -2,9 +2,10 @@
 <resources>
     <color name="colorPrimary">#283593</color>
     <color name="colorBackground">#3F51B5</color>
-    <color name="textColorPrimary">#CCCCCC</color>
+    <color name="textColorPrimaryDark">#CCC</color>
+    <color name="textColorPrimaryLight">#666</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#ff4081</color>
+    <color name="colorAccent">#666</color>
     <color name="cardsBackground">#ededed</color>
     <color name="colorWhite">#CCCCCC</color>
     <color name="colorTransparent">#00ffffff</color>
