@@ -130,7 +130,7 @@ public class WeekReportActivity extends AppCompatActivity {
 
         int i = 0;
         for (PieEntry pie: entries1) {
-            activities.add(new RankingItem(new Activity("Title", "Description"), GRAPH_COLORS[i % GRAPH_COLORS.length], pie.getValue()));
+            //activities.add(new RankingItem(new Activity("Title", "Description"), GRAPH_COLORS[i % GRAPH_COLORS.length], pie.getValue()));
             i++;
         }
         setList();

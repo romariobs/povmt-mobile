@@ -22,9 +22,22 @@ public class Activity {
 
     }
 
-    public Activity(String title, String description) {
+    /**
+     * Create a new activity.
+     * @param id - the activity identifier
+     * @param userId - the user owner
+     * @param title - the activity's title
+     * @param description
+     * @param createAt
+     * @param updateAt
+     */
+    public Activity(String id, String userId, String title, String description, Calendar createAt, Calendar updateAt) {
+        this.id = id;
         this.title = title;
         this.description = description;
+        this.userId = userId;
+        this.createAt = createAt;
+        this.updateAt = updateAt;
     }
 
     public String getTitle() {

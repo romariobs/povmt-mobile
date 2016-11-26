@@ -13,6 +13,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.les.povmt.adapter.ActivitiesAdapter;
 import com.les.povmt.fragment.ReportFragment;
 import com.les.povmt.models.Activity;
@@ -21,6 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListUserActivity extends AppCompatActivity {
+
+    private final String apiEndpointUrl = "http://povmt.herokuapp.com/activity";
+
     private List<Activity> activities = new ArrayList<>();
     private RecyclerView recyclerView;
     private ActivitiesAdapter activitiesAdapter;
@@ -42,14 +49,20 @@ public class ListUserActivity extends AppCompatActivity {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         this.recyclerView.setLayoutManager(linearLayoutManager);
 
+        StringRequest activitiesRequest = new StringRequest(Request.Method.GET, apiEndpointUrl, new Response.Listener<String>(){
+            @Override
+            public void onResponse(String response) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
         //TODO THE MAGICIAN
-        activities.add(new Activity("Title", "description"));
-        activities.add(new Activity("Title", "description"));
-        activities.add(new Activity("Title", "description"));
-        activities.add(new Activity("Title", "description"));
-        activities.add(new Activity("Title", "description"));
-        activities.add(new Activity("Title", "description"));
-        activities.add(new Activity("Title", "description"));
+        //activities.add(new Activity("Title", "description"));
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -63,6 +76,7 @@ public class ListUserActivity extends AppCompatActivity {
 
         activitiesAdapter.update(activities);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
