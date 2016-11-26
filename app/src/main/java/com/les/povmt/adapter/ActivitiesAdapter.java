@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.les.povmt.CreateActivity;
 import com.les.povmt.EditActivity;
 import com.les.povmt.R;
-import com.les.povmt.RegisterTi;
+import com.les.povmt.RegisterTiActivity;
 import com.les.povmt.models.Activity;
 
 import java.util.List;
@@ -80,7 +80,7 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.vi
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.option1:
-                Intent intent = new Intent(context, RegisterTi.class);
+                Intent intent = new Intent(context, RegisterTiActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
                 return true;

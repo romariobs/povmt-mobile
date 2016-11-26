@@ -35,7 +35,7 @@
             android:name=".WeekReportActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_week_report" />
-        <activity android:name=".RegisterTi"
+        <activity android:name=".RegisterTiActivity"
             android:screenOrientation="portrait"
             android:label="Novo TI"
             android:theme="@style/AppTheme.Dialog"></activity>
