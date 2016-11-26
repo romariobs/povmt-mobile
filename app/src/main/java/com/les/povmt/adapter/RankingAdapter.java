@@ -2,25 +2,15 @@ package com.les.povmt.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.ColorFilter;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.les.povmt.R;
-import com.les.povmt.RegisterTi;
-import com.les.povmt.WeekReportActivity;
-import com.les.povmt.models.Activity;
+import com.les.povmt.RegisterTiActivity;
 import com.les.povmt.models.RankingItem;
 
 import java.text.DecimalFormat;
@@ -93,7 +83,7 @@ public class RankingAdapter extends RecyclerView.Adapter<RankingAdapter.viewHold
 
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(context, RegisterTi.class);
+            Intent intent = new Intent(context, RegisterTiActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         }
