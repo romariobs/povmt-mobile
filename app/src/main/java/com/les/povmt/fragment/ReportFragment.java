@@ -1,6 +1,5 @@
 package com.les.povmt.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -12,7 +11,6 @@ import android.widget.Toast;
 
 import com.les.povmt.R;
 import com.les.povmt.WeekReportActivity;
-import com.les.povmt.listUserActivity;
 
 public class ReportFragment extends DialogFragment {
     public void ReportFragment(){

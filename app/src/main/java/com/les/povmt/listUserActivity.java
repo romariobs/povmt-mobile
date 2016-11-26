@@ -20,7 +20,7 @@ import com.les.povmt.models.Activity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class listUserActivity extends AppCompatActivity {
+public class ListUserActivity extends AppCompatActivity {
     private List<Activity> activities = new ArrayList<>();
     private RecyclerView recyclerView;
     private ActivitiesAdapter activitiesAdapter;
@@ -55,7 +55,7 @@ public class listUserActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(listUserActivity.this, "Cesar", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ListUserActivity.this, "Cesar", Toast.LENGTH_SHORT).show();
                 // Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 //         .setAction("Action", null).show();
             }
@@ -82,7 +82,7 @@ public class listUserActivity extends AppCompatActivity {
                 startReportFragment();
                 return true;
             case R.id.action_options:
-                Toast.makeText(listUserActivity.this, "Options", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ListUserActivity.this, "Options", Toast.LENGTH_SHORT).show();
                 return true;
         }
         return super.onOptionsItemSelected(item);

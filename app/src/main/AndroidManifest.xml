@@ -29,7 +29,7 @@
             android:name=".WeekReportActivity"
             android:label="@string/title_activity_week_report" />
         <activity android:name=".RegisterTi"></activity>
-        <activity android:name=".listUserActivity"></activity>
+        <activity android:name=".ListUserActivity"></activity>
 
     </application>
 

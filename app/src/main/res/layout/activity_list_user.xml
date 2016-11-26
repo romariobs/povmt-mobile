@@ -5,7 +5,7 @@
     android:id="@+id/activity_list_user"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.les.povmt.listUserActivity">
+    tools:context="com.les.povmt.ListUserActivity">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_trade_in_progress"
