@@ -45,14 +45,14 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.vi
         Activity activity = activities.get(position);
 
         holder.title.setText(activity.getTitle());
-        holder.description.setText(activity.getDescription());
+//        holder.description.setText(activity.getDescription());
 
-        holder.imageViewMenuOverflow.setOnClickListener(new View.OnClickListener() {
+ /*       holder.imageViewMenuOverflow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showPopup(v);
             }
-        });
+        });*/
     }
 
     private void showPopup(View v) {
@@ -104,8 +104,8 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.vi
             super(itemView);
 
             title = (TextView) itemView.findViewById(R.id.title_activity);
-            imageViewMenuOverflow = (ImageView) itemView.findViewById(R.id.imageViewMenuOverflow);
-            description = (TextView) itemView.findViewById(R.id.description);
+           // imageViewMenuOverflow = (ImageView) itemView.findViewById(R.id.imageViewMenuOverflow);
+           // description = (TextView) itemView.findViewById(R.id.description);
         }
     }
 }

@@ -1,19 +1,26 @@
 package com.les.povmt;
 
-import android.content.ContentValues;
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.les.povmt.models.Activity;
+import com.les.povmt.network.VolleySingleton;
+import com.les.povmt.parser.ActivityParser;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -22,7 +29,8 @@ import android.widget.EditText;
 
 public class CreateEditActivity extends AppCompatActivity {
 
-
+    private final String apiEndpointUrl = "http://povmt.herokuapp.com/activity";
+    //private ActivitiesAdapter activitiesAdapter;
     private EditText title;
     private EditText description;
     private Button button_create;
@@ -44,16 +52,39 @@ public class CreateEditActivity extends AppCompatActivity {
             button_create.setOnClickListener(
                     new View.OnClickListener() {
                         public void onClick(View view) {
-                            Log.i("Title--", title.getText().toString());
-                            Log.i("Desc--", description.getText().toString());
-
+                            send();
+                            finish();
                         }
                     });
 
 
         }
 
+    public void send() {
+        final JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("title", "Meu titulo");
+            jsonBody.put("description", "Minha descrição");
+            jsonBody.put("creator", "58323866cd184d432276a839");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
+        JsonObjectRequest activitiesRequest = new JsonObjectRequest(Request.Method.POST, apiEndpointUrl, jsonBody,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(activitiesRequest);
+    }
 
 }
 

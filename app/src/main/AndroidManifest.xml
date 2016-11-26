@@ -43,6 +43,7 @@
             android:screenOrientation="portrait"></activity>
 
         <activity android:name=".CreateEditActivity"
+            android:theme="@style/AppTheme"
             android:label="Create and Edit">
         </activity>
 
