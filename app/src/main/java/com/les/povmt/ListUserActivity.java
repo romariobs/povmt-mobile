@@ -48,6 +48,7 @@ public class ListUserActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_user);
+
         ActionBar actionbar = getSupportActionBar();
         actionbar.setTitle(getString(R.string.app_name));
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coodinator_layout);;
@@ -216,6 +217,7 @@ public class ListUserActivity extends AppCompatActivity {
                 startReportFragment();
                 return true;
             case R.id.action_options:
+
                 Toast.makeText(ListUserActivity.this, "Options", Toast.LENGTH_SHORT).show();
                 return true;
         }

@@ -130,18 +130,17 @@ public class WeekReportActivity extends AppCompatActivity {
 
         int i = 0;
         for (PieEntry pie: entries1) {
-            //activities.add(new RankingItem(new Activity("Title", "Description"), GRAPH_COLORS[i % GRAPH_COLORS.length], pie.getValue()));
+            activities.add(new RankingItem(new Activity("0","1","Title", "Description",null,null), GRAPH_COLORS[i % GRAPH_COLORS.length], pie.getValue()));
             i++;
         }
-        setList();
 
+        setList();
         PieDataSet ds1 = new PieDataSet(entries1, "");
         ds1.setColors(GRAPH_COLORS);
         ds1.setSliceSpace(2f);
         ds1.setValueTextColor(Color.WHITE);
         ds1.setValueTextSize(12f);
         PieData d = new PieData(ds1);
-
         return d;
     }
 

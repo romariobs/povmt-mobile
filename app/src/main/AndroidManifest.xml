@@ -49,7 +49,12 @@
 
         <activity android:name=".EditActivity"
             android:theme="@style/AppTheme"
-            android:label="Editar Atividade">
+            android:label="Editar Atividade"
+            android:screenOrientation="portrait"/>
+
+
+        <activity android:name=".ActivityProfileActivity"
+            android:screenOrientation="portrait">
         </activity>
 
     </application>

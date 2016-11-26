@@ -13,6 +13,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.les.povmt.ActivityProfileActivity;
 import com.les.povmt.CreateActivity;
 import com.les.povmt.EditActivity;
 import com.les.povmt.R;
@@ -113,13 +114,14 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.vi
 
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(v.getContext(), EditActivity.class);
+            Intent intent = new Intent(v.getContext(), ActivityProfileActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("title" , title.getText().toString());
-            intent.putExtra("description" , description.getText().toString());
-            intent.putExtra("id" , activities.get(getPosition()).getId());
-            v.getContext().startActivity(intent);
 
+            // intent.putExtra("title" , title.getText().toString());
+            // intent.putExtra("description" , description.getText().toString());
+            // intent.putExtra("id" , activities.get(getPosition()).getId());
+            intent.putExtra("activity", activities.get(getPosition()));
+            v.getContext().startActivity(intent);
         }
     }
 
