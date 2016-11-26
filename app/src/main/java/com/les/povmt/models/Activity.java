@@ -47,6 +47,9 @@ public class Activity {
     public String getDescription(){
         return this.description;
     }
+    public String getId(){
+        return this.id;
+    }
 
 
 

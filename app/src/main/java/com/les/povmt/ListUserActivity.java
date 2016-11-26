@@ -105,8 +105,9 @@ public class ListUserActivity extends AppCompatActivity {
                                                         activities.add(fPos, fActivity);
                                                         activitiesAdapter.notifyItemInserted(fPos);
                                                         break;
-                                                    default:
+                                                    case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
                                                         //TODO Send server delete
+                                                        deleteActivity(fActivity.getId());
                                                         break;
                                                 }
                                             }
@@ -130,6 +131,20 @@ public class ListUserActivity extends AppCompatActivity {
 
         recyclerView.addOnItemTouchListener(swipeTouchListener);
 
+        PopulateList();
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Toast.makeText(ListUserActivity.this, "Cesar", Toast.LENGTH_SHORT).show();
+                startCreateEditActivity();
+            }
+        });
+    }
+
+    private void PopulateList() {
         StringRequest activitiesRequest = new StringRequest(Request.Method.GET, apiEndpointUrl, new Response.Listener<String>(){
             @Override
             public void onResponse(String response) {
@@ -148,16 +163,21 @@ public class ListUserActivity extends AppCompatActivity {
         });
 
         VolleySingleton.getInstance(context).addToRequestQueue(activitiesRequest);
+    }
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+    private void deleteActivity(String id) {
+        StringRequest activitiesRequest = new StringRequest(Request.Method.DELETE, apiEndpointUrl + "/" + id, new Response.Listener<String>(){
             @Override
-            public void onClick(View view) {
-                //Toast.makeText(ListUserActivity.this, "Cesar", Toast.LENGTH_SHORT).show();
-                startCreateEditActivity();
+            public void onResponse(String response) {
+                Log.d(TAG, response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
             }
         });
 
+        VolleySingleton.getInstance(context).addToRequestQueue(activitiesRequest);
     }
 
     private void startCreateEditActivity() {
