@@ -26,7 +26,7 @@ public class ReportFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(DialogFragment.STYLE_NO_FRAME, android.R.style.Theme_Dialog);
+        setStyle(DialogFragment.STYLE_NO_FRAME, R.style.AppTheme_Dialog);
     }
 
     @Override
