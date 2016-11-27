@@ -24,4 +24,15 @@
     <string name="title_activity_list">listActivity</string>
     <string name="options">Configurações</string>
     <string name="txtRanking">Ranking</string>
+    <string name="historic_title">Comparação com as 2 últimas semanas</string>
+
+    <array name="days">
+        <item>Dom</item>
+        <item>Seg</item>
+        <item>Ter</item>
+        <item>Qua</item>
+        <item>Qui</item>
+        <item>Sex</item>
+        <item>Sab</item>
+    </array>
 </resources>

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.les.povmt.HistoricActivity;
 import com.les.povmt.R;
 import com.les.povmt.WeekReportActivity;
 
@@ -47,12 +48,9 @@ public class ReportFragment extends DialogFragment {
         buttonHistoric.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Felipe", Toast.LENGTH_SHORT).show();
-                    try {
-                        finalize();
-                    } catch (Throwable throwable) {
-                        throwable.printStackTrace();
-                    }
+
+                Intent intent = new Intent(getContext(), HistoricActivity.class);
+                startActivity(intent);
                 dismiss();
             }
         });
