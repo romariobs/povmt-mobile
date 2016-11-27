@@ -30,7 +30,10 @@ import com.les.povmt.network.VolleySingleton;
 import com.les.povmt.parser.ActivityParser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class ListUserActivity extends AppCompatActivity {
 
@@ -43,6 +46,8 @@ public class ListUserActivity extends AppCompatActivity {
     private final Context context = this;
     private ProgressDialog loading;
     private CoordinatorLayout coordinatorLayout;
+
+    private Map<Integer, Activity> map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +62,7 @@ public class ListUserActivity extends AppCompatActivity {
         loading.setMessage("Loading Accounts");
         loading.show();
 
+        map = new HashMap<>();
         this.activitiesAdapter = new ActivitiesAdapter(getApplicationContext(), activities);
 
         this.recyclerView = (RecyclerView) findViewById(R.id.recycler_view_trade_in_progress);
@@ -85,30 +91,35 @@ public class ListUserActivity extends AppCompatActivity {
                             @Override
                             public void onDismissedBySwipeLeft(RecyclerView recyclerView, int[] reverseSortedPositions) {
                                 int pos = 0;
-                                Activity activity = null;
 
                                 for (int position : reverseSortedPositions) {
-                                    activity = activities.remove(position);
+                                    map.put(position, activities.remove(position));
                                     activitiesAdapter.notifyItemRemoved(position);
                                     pos = position;
-                                    break;
                                 }
 
-                                final int fPos = pos;
-                                final Activity fActivity = activity;
+                                final int lastPos = pos;
 
                                 Snackbar.make(coordinatorLayout, "Atividade deletada", Snackbar.LENGTH_LONG)
                                         .setCallback(new Snackbar.Callback() {
                                             @Override
                                             public void onDismissed(Snackbar snackbar, int event) {
                                                 switch (event) {
-                                                    case Snackbar.Callback.DISMISS_EVENT_ACTION:
-                                                        activities.add(fPos, fActivity);
-                                                        activitiesAdapter.notifyItemInserted(fPos);
-                                                        break;
-                                                    case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
-                                                        //TODO Send server delete
-                                                        deleteActivity(fActivity.getId());
+                                                    // Warning
+                                                    // Doesn't change order!!
+                                                    case DISMISS_EVENT_ACTION:
+                                                        activities.add(lastPos, map.get(lastPos));
+                                                        activitiesAdapter.notifyItemInserted(lastPos);
+                                                        map.remove(lastPos);
+                                                    case DISMISS_EVENT_TIMEOUT:
+                                                        for(Iterator<Map.Entry<Integer, Activity>> it = map.entrySet().iterator(); it.hasNext(); ) {
+                                                            Map.Entry<Integer, Activity> entry = it.next();
+
+                                                            if (entry.getValue().getId().equals(lastPos)) {
+                                                                deleteActivity(entry.getValue().getId());
+                                                                it.remove();
+                                                            }
+                                                        }
                                                         break;
                                                 }
                                             }
