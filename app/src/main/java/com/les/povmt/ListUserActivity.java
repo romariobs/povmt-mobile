@@ -234,6 +234,7 @@ public class ListUserActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        clear();
         closeDialog();
     }
 
