@@ -40,22 +40,29 @@ public class CreateActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_edit);
+        button_create = (Button) findViewById(R.id.button_create);
 
-        if (((EditText) findViewById(R.id.title_activity) != null) &&
-                ((EditText) findViewById(R.id.description_activity)) != null) {
-            title = (EditText) findViewById(R.id.title_activity);
-            description = (EditText) findViewById(R.id.description_activity);
 
-        }
-            button_create = (Button) findViewById(R.id.button_create);
+        button_create.setOnClickListener(
+                new View.OnClickListener() {
+                    public void onClick(View view) {
+                        title = (EditText) findViewById(R.id.title_activity);
+                        description = (EditText) findViewById(R.id.description_activity);
 
-            button_create.setOnClickListener(
-                    new View.OnClickListener() {
-                        public void onClick(View view) {
+                        if ((!title.getText().toString().trim().isEmpty()) &&
+                                (!description.getText().toString().trim().isEmpty())) {
                             send();
                             finish();
+                        }else{
+                            title.setError("Requerido");
+                            description.setError("Requerido");
                         }
-                    });
+                    }
+                });
+
+
+
+
 
 
         }

@@ -39,8 +39,15 @@ public class EditActivity extends AppCompatActivity {
         button_create.setOnClickListener(
             new View.OnClickListener() {
                 public void onClick(View view) {
-                    edit();
-                    finish();
+
+                    if ((!title.getText().toString().trim().isEmpty()) &&
+                            (!description.getText().toString().trim().isEmpty())) {
+                        edit();
+                        finish();
+                    }else{
+                        title.setError("Requerido");
+                        description.setError("Requerido");
+                    }
                 }
             });
     }
