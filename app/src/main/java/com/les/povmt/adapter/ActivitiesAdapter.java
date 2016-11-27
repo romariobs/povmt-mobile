@@ -116,10 +116,6 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.vi
         public void onClick(View v) {
             Intent intent = new Intent(v.getContext(), ActivityProfileActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-            // intent.putExtra("title" , title.getText().toString());
-            // intent.putExtra("description" , description.getText().toString());
-            // intent.putExtra("id" , activities.get(getPosition()).getId());
             intent.putExtra("activity", activities.get(getPosition()));
             v.getContext().startActivity(intent);
         }

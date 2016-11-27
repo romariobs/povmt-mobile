@@ -43,7 +43,7 @@ public class RankingAdapter extends RecyclerView.Adapter<RankingAdapter.viewHold
         RankingItem rankingItem = activities.get(position);
         DecimalFormat df = new DecimalFormat("0.00");
         String percentTime = df.format(100 * (rankingItem.getTimeSpend()/ totalTimeInvested));
-        holder.timeSpend.setText("Total time invested: " + (int)rankingItem.getTimeSpend() + " h (%" + percentTime + ")");
+        holder.timeSpend.setText("Tempo total investido: " + (int)rankingItem.getTimeSpend() + " h (%" + percentTime + ")");
         holder.title.setText(rankingItem.getActivity().getTitle());
         holder.position.setText("" + (position + 1));
 

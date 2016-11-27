@@ -30,7 +30,6 @@ import java.util.Map;
  */
 
 public class CreateActivity extends AppCompatActivity {
-
     private final String apiEndpointUrl = "http://povmt.herokuapp.com/activity";
     private EditText title;
     private EditText description;

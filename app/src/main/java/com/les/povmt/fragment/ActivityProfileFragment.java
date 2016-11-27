@@ -4,14 +4,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.TextViewCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.les.povmt.EditActivity;
 import com.les.povmt.R;
 import com.les.povmt.models.Activity;
+
+import org.w3c.dom.Text;
 
 public class ActivityProfileFragment extends Fragment {
     private Activity activity;
@@ -40,6 +44,9 @@ public class ActivityProfileFragment extends Fragment {
                 startEditActivity();
             }
         });
+
+        TextView description = (TextView) v.findViewById(R.id.description);
+        description.setText(activity.getDescription());
         return v;
     }
 
@@ -48,6 +55,11 @@ public class ActivityProfileFragment extends Fragment {
         Intent intent = new Intent(getContext(), EditActivity.class);
         intent.putExtra("activity", activity);
         startActivity(intent);
+        try {
+            getActivity().finish();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 
 }

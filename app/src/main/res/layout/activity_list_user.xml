@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:paddingLeft="4dp"
     android:paddingRight="4dp"
-    tools:context="com.les.povmt.ListUserActivity">
+    tools:context="com.les.povmt.ListUserActivity" >
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_trade_in_progress"

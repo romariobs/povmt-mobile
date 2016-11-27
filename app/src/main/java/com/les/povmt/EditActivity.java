@@ -1,5 +1,6 @@
 package com.les.povmt;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -53,7 +54,9 @@ public class EditActivity extends AppCompatActivity {
                             (!description.getText().toString().trim().isEmpty())) {
                         edit();
                         setResult(RESULT_OK);
-                       finish();
+                        activity.setTitle(title.getText().toString());
+                        activity.setDescription(description.getText().toString());
+                       onBackPressed();
                     }else{
                         title.setError("Requerido");
                         description.setError("Requerido");
@@ -86,5 +89,14 @@ public class EditActivity extends AppCompatActivity {
         });
 
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(activitiesRequest);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(getApplication(), ActivityProfileActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("activity", activity);
+        getApplication().startActivity(intent);
     }
 }

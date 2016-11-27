@@ -57,7 +57,7 @@ public class ListUserActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list_user);
         ActionBar actionbar = getSupportActionBar();
         actionbar.setTitle(getString(R.string.app_name));
-        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coodinator_layout);;
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coodinator_layout);
 
         loading = new ProgressDialog(this);
         loading.setMessage("Loading Accounts");

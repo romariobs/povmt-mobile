@@ -20,8 +20,8 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="txtDivisionTime">Time Division</string>
+    <string name="txtDivisionTime">Divisão do tempo</string>
     <string name="title_activity_list">listActivity</string>
-    <string name="options">Settings</string>
+    <string name="options">Configurações</string>
     <string name="txtRanking">Ranking</string>
 </resources>
