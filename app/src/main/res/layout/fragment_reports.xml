@@ -23,7 +23,8 @@
         android:text="Historic"
         android:textSize="15dp"
         android:layout_marginTop="60dp"
-        android:background="#00ffffff" android:textColor="@color/textColorPrimaryLight"
+        android:background="#00ffffff"
+        android:textColor="@color/textColorPrimaryLight"
         android:id="@+id/buttonHistoric"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal" />

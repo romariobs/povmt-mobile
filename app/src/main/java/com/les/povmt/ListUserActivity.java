@@ -145,8 +145,6 @@ public class ListUserActivity extends AppCompatActivity {
 
         recyclerView.addOnItemTouchListener(swipeTouchListener);
 
-        PopulateList();
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -268,5 +266,9 @@ public class ListUserActivity extends AppCompatActivity {
         profileUserFragment.show(fragmentTransaction, "ReportsType");
     }
 
-
+    @Override
+    public void onResume(){
+        super.onResume();
+        refresh();
+    }
 }

@@ -9,6 +9,10 @@
         <item name="android:navigationBarColor">@color/colorPrimary</item>
     </style>
 
+    <style name="AppCardTheme" parent="AppTheme">
+        <item name="colorControlHighlight">@color/colorGreen</item>
+    </style>
+
     <style name="AppThemeDarkDialog" parent="Theme.AppCompat.Dialog">
         <item name="colorAccent">@color/colorWhite</item>
         <item name="android:textColorPrimary">@color/colorPrimary</item>
