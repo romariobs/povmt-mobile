@@ -2,7 +2,9 @@ package com.les.povmt.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,16 +14,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.les.povmt.DividerItemDecoration;
 import com.les.povmt.R;
 import com.les.povmt.RegisterTiActivity;
+import com.les.povmt.SwipeableRecyclerViewTouchListener;
 import com.les.povmt.adapter.ITListAdapter;
 import com.les.povmt.adapter.RankingAdapter;
+import com.les.povmt.models.Activity;
 import com.les.povmt.models.InvestedTime;
 import com.les.povmt.models.RankingItem;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class ITListFragment extends Fragment {
     private ITListAdapter itList;
@@ -55,6 +62,7 @@ public class ITListFragment extends Fragment {
         this.itList = new ITListAdapter(getContext(), investedTimes, this);
 
         this.recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
         registerForContextMenu(recyclerView);
         this.recyclerView.setAdapter(itList);
         this.recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -62,43 +70,22 @@ public class ITListFragment extends Fragment {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         this.recyclerView.setLayoutManager(linearLayoutManager);
 
+        final CoordinatorLayout coordinatorLayout = (CoordinatorLayout) ((android.app.Activity) getContext()).findViewById(R.id.coodinator_layout);
 
         addFab = (FloatingActionButton) v.findViewById(R.id.addFab);
-        editFab = (FloatingActionButton) v.findViewById(R.id.editFab);
-        deleteFab = (FloatingActionButton) v.findViewById(R.id.deleteFab);
         itList.update(investedTimes);
 
         addFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), RegisterTiActivity.class);
-                getContext().startActivity(intent);
+
+                if (itList.getCurrentAction().equals(ITListAdapter.AdapterAction.CREATE)) {
+                    Intent intent = new Intent(getContext(), RegisterTiActivity.class);
+                    getContext().startActivity(intent);
+                }
             }
         });
 
         return v;
     }
-
-    public void itSelect(int index){
-        listSelectedIndex.add(index);
-        Log.d("sizeS", listSelectedIndex.size() + "");
-        if(listSelectedIndex.size() > 1){
-            editFab.setVisibility(View.INVISIBLE);
-        } else {
-            editFab.setVisibility(View.VISIBLE);
-            deleteFab.setVisibility(View.VISIBLE);
-        }
-    }
-
-    public void itDeselect(int index){
-        listSelectedIndex.remove(index);
-        Log.d("sizeD", listSelectedIndex.size() + "");
-        if(listSelectedIndex.size() < 1){
-            editFab.setVisibility(View.INVISIBLE);
-            deleteFab.setVisibility(View.INVISIBLE);
-        } else if (listSelectedIndex.size() == 1) {
-            editFab.setVisibility(View.VISIBLE);
-        }
-    }
-
 }
