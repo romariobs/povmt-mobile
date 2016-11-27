@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.les.povmt.fragment.ActivityProfileFragment;
@@ -33,7 +34,6 @@ public class ActivityProfileActivity extends AppCompatActivity{
         setContentView(R.layout.activity_profile);
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
-        setupViewPager(viewPager);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
@@ -46,6 +46,7 @@ public class ActivityProfileActivity extends AppCompatActivity{
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setTitle(activity.getTitle());
         actionbar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_18dp);
+        setupViewPager(viewPager);
     }
 
 

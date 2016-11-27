@@ -85,6 +85,7 @@ public class Activity implements Parcelable {
         parcel.writeString(id);
         parcel.writeString(userId);
         parcel.writeString(title);
+        parcel.writeString(description);
         parcel.writeValue(createAt);
         parcel.writeValue(updateAt);
     }
