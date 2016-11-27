@@ -14,6 +14,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.les.povmt.R;
 import com.les.povmt.RegisterTiActivity;
@@ -81,7 +82,8 @@ public class ITListAdapter extends RecyclerView.Adapter<ITListAdapter.viewHolder
 
             description = (TextView) itemView.findViewById(R.id.description);
             selected = (CheckBox) itemView.findViewById(R.id.checkBox);
-            selected.setClickable(false);
+            selected.setClickable(true);
+
             selected.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -105,11 +107,14 @@ public class ITListAdapter extends RecyclerView.Adapter<ITListAdapter.viewHolder
                     }
                 }
             );
+
+            itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
             //TODO implements edit
+            Toast.makeText(context, "Editar", Toast.LENGTH_SHORT).show();
         }
     }
 
