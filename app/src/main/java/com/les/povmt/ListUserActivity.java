@@ -37,6 +37,8 @@ import java.util.Map;
 
 public class ListUserActivity extends AppCompatActivity {
 
+    private final int CREATE_ATIVITY = 1;
+
     private final String apiEndpointUrl = "http://povmt.herokuapp.com/activity";
     private final String TAG = this.getClass().getSimpleName();
 
@@ -53,7 +55,6 @@ public class ListUserActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_user);
-
         ActionBar actionbar = getSupportActionBar();
         actionbar.setTitle(getString(R.string.app_name));
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coodinator_layout);;
@@ -90,15 +91,14 @@ public class ListUserActivity extends AppCompatActivity {
 
                             @Override
                             public void onDismissedBySwipeLeft(RecyclerView recyclerView, int[] reverseSortedPositions) {
-                                int pos = 0;
+                                clear();
 
-                                for (int position : reverseSortedPositions) {
-                                    map.put(position, activities.remove(position));
-                                    activitiesAdapter.notifyItemRemoved(position);
-                                    pos = position;
+                                for (int i = 0; i < reverseSortedPositions.length; i++) {
+                                    map.put(reverseSortedPositions[i], activities.remove(reverseSortedPositions[i]));
+                                    activitiesAdapter.notifyItemRemoved(reverseSortedPositions[i]);
                                 }
 
-                                final int lastPos = pos;
+                                final int lastPos = reverseSortedPositions[0];
 
                                 Snackbar.make(coordinatorLayout, "Atividade deletada", Snackbar.LENGTH_LONG)
                                         .setCallback(new Snackbar.Callback() {
@@ -107,15 +107,11 @@ public class ListUserActivity extends AppCompatActivity {
                                                 switch (event) {
                                                     // Warning
                                                     // Doesn't change order!!
-                                                    case DISMISS_EVENT_ACTION:
-                                                        activities.add(lastPos, map.get(lastPos));
-                                                        activitiesAdapter.notifyItemInserted(lastPos);
-                                                        map.remove(lastPos);
-                                                    case DISMISS_EVENT_TIMEOUT:
+                                                    case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
                                                         for(Iterator<Map.Entry<Integer, Activity>> it = map.entrySet().iterator(); it.hasNext(); ) {
                                                             Map.Entry<Integer, Activity> entry = it.next();
 
-                                                            if (entry.getValue().getId().equals(lastPos)) {
+                                                            if (entry.getValue() != null && !entry.getValue().getId().equals(lastPos)) {
                                                                 deleteActivity(entry.getValue().getId());
                                                                 it.remove();
                                                             }
@@ -127,6 +123,12 @@ public class ListUserActivity extends AppCompatActivity {
                                         .setAction("DESFAZER", new View.OnClickListener() {
                                             @Override
                                             public void onClick(View view) {
+                                                activities.add(lastPos, map.get(lastPos));
+                                                activitiesAdapter.notifyItemInserted(lastPos);
+                                                map.remove(lastPos);
+
+                                                clear();
+
                                                 Snackbar snackbar = Snackbar.make(coordinatorLayout, "Atividade restaurada", Snackbar.LENGTH_SHORT);
                                                 snackbar.show();
                                             }
@@ -150,10 +152,24 @@ public class ListUserActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Toast.makeText(ListUserActivity.this, "Cesar", Toast.LENGTH_SHORT).show();
-                startCreateEditActivity();
+                startCreateActivity();
             }
         });
+    }
+
+    public void refresh () {
+        PopulateList();
+    }
+
+    public void clear () {
+        for(Iterator<Map.Entry<Integer, Activity>> it = map.entrySet().iterator(); it.hasNext(); ) {
+            Map.Entry<Integer, Activity> entry = it.next();
+
+            if (entry.getValue() != null) {
+                deleteActivity(entry.getValue().getId());
+                it.remove();
+            }
+        }
     }
 
     private void PopulateList() {
@@ -192,9 +208,20 @@ public class ListUserActivity extends AppCompatActivity {
         VolleySingleton.getInstance(context).addToRequestQueue(activitiesRequest);
     }
 
-    private void startCreateEditActivity() {
+    private void startCreateActivity() {
         Intent intent = new Intent(this, CreateActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, CREATE_ATIVITY);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == CREATE_ATIVITY) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                refresh();
+            }
+        }
     }
 
     private void closeDialog() {
@@ -228,7 +255,6 @@ public class ListUserActivity extends AppCompatActivity {
                 startReportFragment();
                 return true;
             case R.id.action_options:
-
                 Toast.makeText(ListUserActivity.this, "Options", Toast.LENGTH_SHORT).show();
                 return true;
         }

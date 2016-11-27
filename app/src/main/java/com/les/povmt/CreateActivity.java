@@ -1,5 +1,6 @@
 package com.les.povmt;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -35,13 +36,11 @@ public class CreateActivity extends AppCompatActivity {
     private EditText description;
     private Button button_create;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_edit);
         button_create = (Button) findViewById(R.id.button_create);
-
 
         button_create.setOnClickListener(
                 new View.OnClickListener() {
@@ -52,6 +51,7 @@ public class CreateActivity extends AppCompatActivity {
                         if ((!title.getText().toString().trim().isEmpty()) &&
                                 (!description.getText().toString().trim().isEmpty())) {
                             send();
+                            setResult(RESULT_OK);
                             finish();
                         }else{
                             title.setError("Requerido");
@@ -59,12 +59,6 @@ public class CreateActivity extends AppCompatActivity {
                         }
                     }
                 });
-
-
-
-
-
-
         }
 
     public void send() {
@@ -92,7 +86,6 @@ public class CreateActivity extends AppCompatActivity {
 
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(activitiesRequest);
     }
-
 }
 
 
