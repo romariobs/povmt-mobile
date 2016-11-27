@@ -48,7 +48,7 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.vi
         Activity activity = activities.get(position);
 
         holder.title.setText(activity.getTitle());
-//        holder.description.setText(activity.getDescription());
+        holder.description.setText(activity.getDescription());
 
  /*       holder.imageViewMenuOverflow.setOnClickListener(new View.OnClickListener() {
             @Override

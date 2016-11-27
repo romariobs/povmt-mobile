@@ -73,6 +73,9 @@ public class ActivityParser {
                     if (it.has(TAG_TITLE)){
                         title = it.getString(TAG_TITLE);
                     }
+                    if (it.has(TAG_DESCRIPTION)){
+                        description = it.getString(TAG_DESCRIPTION);
+                    }
                     if (it.has(TAG_CREATED_AT)){
                         createdAt = Util.parseDateFromUTC(it.getString(TAG_CREATED_AT));
                     }
