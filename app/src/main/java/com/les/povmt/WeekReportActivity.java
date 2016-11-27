@@ -55,7 +55,7 @@ public class WeekReportActivity extends AppCompatActivity {
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setTitle(getString(R.string.title_activity_week_report));
-        actionbar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_18dp);
+        actionbar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
 
         mChart = (PieChart) findViewById(R.id.pieChart);
         mChart.getDescription().setEnabled(false);

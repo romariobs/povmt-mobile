@@ -38,7 +38,7 @@ public class ActivityProfileActivity extends AppCompatActivity{
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setTitle(activity.getTitle());
-        actionbar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_18dp);
+        actionbar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
         setupViewPager(viewPager);
     }
 

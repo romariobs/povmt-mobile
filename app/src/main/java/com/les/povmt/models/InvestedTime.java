@@ -37,6 +37,10 @@ public class InvestedTime {
         return id;
     }
 
+    public String getDate(){
+        return String.valueOf((""));
+    }
+
     public void setId(String id) {
         this.id = id;
     }
