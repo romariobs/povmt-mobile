@@ -7,9 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
-import com.les.povmt.HistoricActivity;
+import com.les.povmt.HistoryTabsActivity;
 import com.les.povmt.R;
 import com.les.povmt.WeekReportActivity;
 
@@ -48,8 +47,9 @@ public class ReportFragment extends DialogFragment {
         buttonHistoric.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Intent intent = new Intent(getContext(), HistoricActivity.class);
+                // Conteúdo de HistoricActivity deve ser colocado no FourthTabFragment
+                // que é a última tab com titulo "TODOS" na HistoryTabsActivity
+                Intent intent = new Intent(getContext(), HistoryTabsActivity.class);
                 startActivity(intent);
                 dismiss();
             }
