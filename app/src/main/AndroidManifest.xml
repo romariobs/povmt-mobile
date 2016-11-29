@@ -29,20 +29,24 @@
         <activity
             android:name=".RegisterActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoBar"></activity>
+            android:theme="@style/AppTheme.NoBar"
+            android:parentActivityName=".LoginActivity"></activity>
         <activity
             android:name=".WeekReportActivity"
             android:label="@string/title_activity_week_report"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:parentActivityName=".PovMTActivity"/>
         <activity android:name=".HistoryTabsActivity"
             android:label="@string/history_tabs_activity"
             android:screenOrientation="portrait"
+            android:parentActivityName=".PovMTActivity"
             />
         <activity
             android:name=".RegisterTiActivity"
             android:label="Novo TI"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Dialog" />
+            android:theme="@style/AppTheme.Dialog"
+            android:parentActivityName=".ActivityProfileActivity"/>
         <activity
             android:name=".ListUserActivity"
             android:screenOrientation="portrait" />
@@ -58,7 +62,8 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".ActivityProfileActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:parentActivityName=".ListUserActivity"></activity>
         <activity
             android:name=".HistoricActivity"
             android:screenOrientation="portrait"/>

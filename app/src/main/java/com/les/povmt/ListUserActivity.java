@@ -253,9 +253,6 @@ public class ListUserActivity extends AppCompatActivity {
             case R.id.action_report:
                 startReportFragment();
                 return true;
-            case R.id.action_options:
-                Toast.makeText(ListUserActivity.this, "Options", Toast.LENGTH_SHORT).show();
-                return true;
         }
         return super.onOptionsItemSelected(item);
     }
