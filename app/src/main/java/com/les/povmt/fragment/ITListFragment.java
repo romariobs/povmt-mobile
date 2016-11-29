@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.github.mikephil.charting.data.PieEntry;
 import com.les.povmt.DividerItemDecoration;
@@ -33,6 +34,9 @@ import com.les.povmt.models.RankingItem;
 import com.les.povmt.network.VolleySingleton;
 import com.les.povmt.parser.ActivityParser;
 import com.les.povmt.parser.InvestedTimeParser;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -92,6 +96,10 @@ public class ITListFragment extends Fragment {
                     intent.putExtra("editar", false);
                     intent.putExtra("id", idActivity);
                     getContext().startActivity(intent);
+                } else {
+                    for (String i : itList.getListSelected()){
+                        deleteIT(Integer.valueOf(i));
+                    }
                 }
             }
         });
@@ -127,5 +135,26 @@ public class ITListFragment extends Fragment {
         });
 
         VolleySingleton.getInstance(getContext()).addToRequestQueue(activitiesRequest);
+    }
+
+    private void deleteIT(Integer i) {
+        final int j = i;
+        String finalRequest = apiEndpointUrl + "/" + investedTimes.get(i).getId();
+        StringRequest activitiesRequest = new StringRequest(Request.Method.DELETE, finalRequest, new Response.Listener<String>(){
+            @Override
+            public void onResponse(String response) {
+                Log.d("lucas", response);
+                investedTimes.remove(j);
+                itList.update(investedTimes);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("lucas", error.toString());
+            }
+        });
+
+        VolleySingleton.getInstance(getContext()).addToRequestQueue(activitiesRequest);
+
     }
 }

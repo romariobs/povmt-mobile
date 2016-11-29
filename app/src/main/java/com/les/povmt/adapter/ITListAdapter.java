@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -135,5 +136,9 @@ public class ITListAdapter extends RecyclerView.Adapter<ITListAdapter.viewHolder
 
     public AdapterAction getCurrentAction() {
         return  currentAction;
+    }
+
+    public List<String> getListSelected(){
+        return this.selectedItens;
     }
 }

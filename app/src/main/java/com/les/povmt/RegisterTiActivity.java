@@ -91,7 +91,7 @@ public class RegisterTiActivity extends AppCompatActivity {
         mBtAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(true)
+                if(!editar)
                     addInvestedTime();
                 else
                     editInvestedTime();
