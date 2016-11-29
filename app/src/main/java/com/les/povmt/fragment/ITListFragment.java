@@ -3,6 +3,7 @@ package com.les.povmt.fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -112,7 +113,6 @@ public class ITListFragment extends Fragment {
         StringRequest activitiesRequest = new StringRequest(Request.Method.GET, finalRequest, new Response.Listener<String>(){
             @Override
             public void onResponse(String response) {
-                Log.d("lucas", response);
                 InvestedTimeParser dataParser = new InvestedTimeParser();
                 investedTimes = dataParser.parse(response);
                 Collections.sort(investedTimes, new Comparator<InvestedTime>() {
@@ -130,7 +130,7 @@ public class ITListFragment extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("lucas", error.toString());
+                Log.d("error", error.toString());
             }
         });
 
@@ -143,18 +143,23 @@ public class ITListFragment extends Fragment {
         StringRequest activitiesRequest = new StringRequest(Request.Method.DELETE, finalRequest, new Response.Listener<String>(){
             @Override
             public void onResponse(String response) {
-                Log.d("lucas", response);
                 investedTimes.remove(j);
                 itList.update(investedTimes);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("lucas", error.toString());
+                Log.d("error", error.toString());
             }
         });
 
         VolleySingleton.getInstance(getContext()).addToRequestQueue(activitiesRequest);
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        investedTimes = new ArrayList<>();
+        populateList();
     }
 }
