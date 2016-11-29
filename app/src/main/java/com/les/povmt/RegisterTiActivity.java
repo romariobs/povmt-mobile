@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -69,7 +70,7 @@ public class RegisterTiActivity extends AppCompatActivity {
                     timePicker.setCurrentMinute(getIntent().getIntExtra("time", 0) % 60);
                 } else {
                     timePicker.setCurrentHour(00);
-                    timePicker.setCurrentMinute(01);
+                    timePicker.setCurrentMinute(00);
                 }
 
                 dialogView.findViewById(R.id.duration_set).setOnClickListener(new View.OnClickListener()
@@ -91,10 +92,14 @@ public class RegisterTiActivity extends AppCompatActivity {
         mBtAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!editar)
-                    addInvestedTime();
-                else
-                    editInvestedTime();
+                if(mDurationTi != null && !mDurationTi.getText().toString().equals("00:00")) {
+                    if (!editar)
+                        addInvestedTime();
+                    else
+                        editInvestedTime();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Duração deve ser maior que 00:00", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
