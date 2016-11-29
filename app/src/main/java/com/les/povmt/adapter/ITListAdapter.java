@@ -17,6 +17,7 @@ import com.les.povmt.RegisterTiActivity;
 import com.les.povmt.fragment.ITListFragment;
 import com.les.povmt.models.InvestedTime;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class ITListAdapter extends RecyclerView.Adapter<ITListAdapter.viewHolder
     private List<String> selectedItens;
     private ITListFragment fragment;
     private AdapterAction currentAction;
+    private FloatingActionButton f;
 
     public enum AdapterAction {
         CREATE, DELETE, EDIT
@@ -113,7 +115,7 @@ public class ITListAdapter extends RecyclerView.Adapter<ITListAdapter.viewHolder
                             currentAction = AdapterAction.CREATE;
                         }
 
-                        FloatingActionButton f = (FloatingActionButton) ((Activity) context).findViewById(R.id.addFab);
+                        f = (FloatingActionButton) ((Activity) context).findViewById(R.id.addFab);
                         f.setImageResource(resource);
                     }
                 }
@@ -139,6 +141,10 @@ public class ITListAdapter extends RecyclerView.Adapter<ITListAdapter.viewHolder
     }
 
     public List<String> getListSelected(){
-        return this.selectedItens;
+        List<String> result = this.selectedItens;
+        selectedItens = new ArrayList<>();
+        int resource = R.drawable.ic_add_white_18dp;
+        f.setImageResource(resource);
+        return result;
     }
 }
