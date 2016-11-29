@@ -1,5 +1,9 @@
 package com.les.povmt.models;
 
+import android.util.Log;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 /**
@@ -38,7 +42,12 @@ public class InvestedTime {
     }
 
     public String getDate(){
-        return String.valueOf((""));
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        return df.format(createAt.getTime());
+    }
+
+    public Calendar getOriginalDate(){
+        return this.createAt;
     }
 
     public void setId(String id) {

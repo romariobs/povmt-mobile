@@ -1,7 +1,9 @@
 package com.les.povmt.fragment;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -14,6 +16,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.github.mikephil.charting.data.PieEntry;
 import com.les.povmt.DividerItemDecoration;
 import com.les.povmt.R;
 import com.les.povmt.RegisterTiActivity;
@@ -23,8 +30,13 @@ import com.les.povmt.adapter.RankingAdapter;
 import com.les.povmt.models.Activity;
 import com.les.povmt.models.InvestedTime;
 import com.les.povmt.models.RankingItem;
+import com.les.povmt.network.VolleySingleton;
+import com.les.povmt.parser.ActivityParser;
+import com.les.povmt.parser.InvestedTimeParser;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
@@ -34,24 +46,21 @@ public class ITListFragment extends Fragment {
     private ITListAdapter itList;
     private List<InvestedTime> investedTimes = new ArrayList<>();
     private RecyclerView recyclerView;
+    private String idActivity;
 
-    private List<Integer> listSelectedIndex = new ArrayList<>();
+    private final String apiEndpointUrl = "http://povmt.herokuapp.com/it";
 
-    private FloatingActionButton addFab, deleteFab, editFab;
+    private FloatingActionButton addFab;
 
-    public ITListFragment(){
-        carregaITs();
+    public ITListFragment(String idActivity){
+        this.idActivity = idActivity;
+        populateList();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
-    private void carregaITs() {
-        for(int i = 0; i < 15; i++){
-            investedTimes.add(new InvestedTime("i","1",(10 + i),new GregorianCalendar(2016,11,12 + i),new GregorianCalendar(2016,11,12)));
-        }
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -78,14 +87,45 @@ public class ITListFragment extends Fragment {
         addFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if (itList.getCurrentAction().equals(ITListAdapter.AdapterAction.CREATE)) {
                     Intent intent = new Intent(getContext(), RegisterTiActivity.class);
+                    intent.putExtra("editar", false);
+                    intent.putExtra("id", idActivity);
                     getContext().startActivity(intent);
                 }
             }
         });
 
         return v;
+    }
+
+    private void populateList() {
+        String finalRequest = apiEndpointUrl + "?timeInvestedAt=" + idActivity;
+        StringRequest activitiesRequest = new StringRequest(Request.Method.GET, finalRequest, new Response.Listener<String>(){
+            @Override
+            public void onResponse(String response) {
+                Log.d("lucas", response);
+                InvestedTimeParser dataParser = new InvestedTimeParser();
+                investedTimes = dataParser.parse(response);
+                Collections.sort(investedTimes, new Comparator<InvestedTime>() {
+                    @Override
+                    public int compare(InvestedTime it, InvestedTime it1) {
+                        if (it.getOriginalDate().after(it1.getOriginalDate())) {
+                            return -1;
+                        } else {
+                            return 1;
+                        }
+                    }
+                });
+                itList.update(investedTimes);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("lucas", error.toString());
+            }
+        });
+
+        VolleySingleton.getInstance(getContext()).addToRequestQueue(activitiesRequest);
     }
 }

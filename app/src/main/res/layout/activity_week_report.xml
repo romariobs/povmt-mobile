@@ -18,9 +18,21 @@
     tools:context="com.les.povmt.WeekReportActivity"
     android:descendantFocusability="blocksDescendants">
 
+
+    <TextView
+        android:text="25/11/2016 • 03/12/2016"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/weekDays"
+        android:textSize="18dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:textAlignment="center"
+        android:textStyle="normal|bold" />
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="400dp"
+        android:layout_marginTop="30dp"
         android:background="@color/cardsBackground"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true">
@@ -49,7 +61,7 @@
         android:background="@color/cardsBackground"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="410dp">
+        android:layout_marginTop="440dp">
 
         <TextView
             android:text="@string/txtRanking"

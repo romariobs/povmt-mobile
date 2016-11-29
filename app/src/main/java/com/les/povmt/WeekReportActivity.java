@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
@@ -23,9 +24,14 @@ import com.les.povmt.adapter.RankingAdapter;
 import com.les.povmt.models.Activity;
 import com.les.povmt.models.RankingItem;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 public class WeekReportActivity extends AppCompatActivity {
@@ -34,6 +40,10 @@ public class WeekReportActivity extends AppCompatActivity {
     private List<RankingItem> activities = new ArrayList<>();
     private RecyclerView recyclerView;
     private RankingAdapter rankingAdapter;
+
+    private Date startDay;
+    private Date endDay;
+    DateFormat dfServer = new SimpleDateFormat("yyyy-MM-dd");
 
     private ScrollView scroll;
     private float totalTimeInvested;
@@ -76,6 +86,23 @@ public class WeekReportActivity extends AppCompatActivity {
 
         mChart.setData(generatePieData());
 
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 0); // ! clear would not reset the hour of day !
+        cal.clear(Calendar.MINUTE);
+        cal.clear(Calendar.SECOND);
+        cal.clear(Calendar.MILLISECOND);
+        DateFormat df = new SimpleDateFormat("dd/MM");
+
+// get start of this week
+        cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+        startDay = cal.getTime();
+
+// start of the next week
+        cal.add(Calendar.WEEK_OF_YEAR, 1);
+        endDay =  cal.getTime();
+
+        TextView weekDays = (TextView) findViewById(R.id.weekDays);
+        weekDays.setText(df.format(startDay) + " • " + df.format(endDay));
 
         mChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
@@ -130,7 +157,7 @@ public class WeekReportActivity extends AppCompatActivity {
 
         int i = 0;
         for (PieEntry pie: entries1) {
-            activities.add(new RankingItem(new Activity("0","1","Title", "Description",null,null), GRAPH_COLORS[i % GRAPH_COLORS.length], pie.getValue()));
+            activities.add(new RankingItem(new Activity("0","1","Title", "Description",null,null), GRAPH_COLORS[i % GRAPH_COLORS.length], (int) pie.getValue()));
             i++;
         }
 

@@ -9,7 +9,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="Week Report"
+            android:text="Relatório semanal"
             android:textSize="15dp"
             android:background="#00ffffff"
             android:textColor="@color/textColorPrimaryLight"
@@ -20,7 +20,7 @@
         <Button
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="History"
+        android:text="Histórico"
         android:textSize="15dp"
         android:layout_marginTop="60dp"
         android:background="#00ffffff"

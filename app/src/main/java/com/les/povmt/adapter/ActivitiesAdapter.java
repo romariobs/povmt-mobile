@@ -92,7 +92,6 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.vi
                 Toast.makeText(context, "option4", Toast.LENGTH_SHORT).show();
                 return true;
             default:
-                Toast.makeText(context, "You do not have proposals for this game", Toast.LENGTH_SHORT).show();
                 return false;
         }
     }

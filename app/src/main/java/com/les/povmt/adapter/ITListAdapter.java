@@ -4,26 +4,18 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.les.povmt.R;
 import com.les.povmt.RegisterTiActivity;
 import com.les.povmt.fragment.ITListFragment;
 import com.les.povmt.models.InvestedTime;
-import com.les.povmt.models.RankingItem;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -59,7 +51,25 @@ public class ITListAdapter extends RecyclerView.Adapter<ITListAdapter.viewHolder
     public void onBindViewHolder(viewHolder holder, int position) {
         InvestedTime itItem = investedTimes.get(position);
 
-        holder.description.setText("27/11/2016" + "  •  " + "00:" + itItem.getDuration());
+        String time = "";
+        int timeDuration = itItem.getDuration();
+        int hours = timeDuration / 60;
+        if (hours < 10) {
+            time += "0" + hours + ":";
+            timeDuration -= hours * 60;
+            if (timeDuration < 10)
+                time += "0" + timeDuration;
+            else
+                time += timeDuration;
+        } else {
+            time += hours + ":";
+            if (timeDuration < 10)
+                time += "0" + timeDuration;
+            else
+                time += timeDuration;
+        }
+
+        holder.description.setText(itItem.getDate() + "  •  " + time);
     }
 
     @Override
@@ -113,8 +123,13 @@ public class ITListAdapter extends RecyclerView.Adapter<ITListAdapter.viewHolder
 
         @Override
         public void onClick(View view) {
-            //TODO implements edit
-            Toast.makeText(context, "Editar", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(context, RegisterTiActivity.class);
+            intent.putExtra("id", investedTimes.get(getAdapterPosition()).getActivityId());
+            intent.putExtra("time", investedTimes.get(getAdapterPosition()).getDuration());
+            intent.putExtra("date", investedTimes.get(getAdapterPosition()).getDate());
+            intent.putExtra("idTI", investedTimes.get(getAdapterPosition()).getId());
+            intent.putExtra("editar", true);
+            context.startActivity(intent);
         }
     }
 

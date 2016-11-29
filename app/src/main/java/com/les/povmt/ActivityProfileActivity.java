@@ -1,6 +1,8 @@
 package com.les.povmt;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.les.povmt.fragment.ActivityProfileFragment;
@@ -35,6 +38,7 @@ public class ActivityProfileActivity extends AppCompatActivity{
 
         activity = getIntent().getExtras().getParcelable("activity");
 
+
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setTitle(activity.getTitle());
@@ -58,7 +62,7 @@ public class ActivityProfileActivity extends AppCompatActivity{
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new ActivityProfileFragment(activity), "Resumo");
-        adapter.addFragment(new ITListFragment(), "TI");
+        adapter.addFragment(new ITListFragment(activity.getId()), "TI");
         viewPager.setAdapter(adapter);
     }
 

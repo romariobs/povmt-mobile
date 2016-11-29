@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -75,7 +76,12 @@ public class InvestedTimeParser {
                         investedTimeAt = it.getString(TAG_INVESTED_TIME_AT);
                     }
                     if (it.has(TAG_CREATED_AT)){
-                        createdAt = Util.parseDateFromUTC(it.getString(TAG_CREATED_AT));
+                        String date = it.getString(TAG_CREATED_AT).substring(0,10);
+                        int year = Integer.valueOf(date.substring(0,4));
+                        int month = Integer.valueOf(date.substring(5,7));
+                        int day = Integer.valueOf(date.substring(8,10));
+                        createdAt.set(year,month-1,day);
+
                     }
 
                     if (it.has(TAG_UPDATED_AT)){

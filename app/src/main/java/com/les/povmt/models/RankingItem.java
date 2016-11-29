@@ -6,10 +6,10 @@ package com.les.povmt.models;
  */
 public class RankingItem {
     private Activity activity;
-    private float timeSpend;
+    private int timeSpend;
     private int color;
 
-    public RankingItem(Activity activity, int graphColor, float time) {
+    public RankingItem(Activity activity, int graphColor, int time) {
         this.activity = activity;
         this.timeSpend = time;
         this.color = graphColor;
@@ -19,7 +19,7 @@ public class RankingItem {
         return this.activity;
     }
 
-    public float getTimeSpend(){
+    public int getTimeSpend(){
         return this.timeSpend;
     }
 
