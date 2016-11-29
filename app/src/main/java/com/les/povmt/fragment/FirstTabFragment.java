@@ -21,14 +21,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static java.net.HttpURLConnection.HTTP_OK;
 
 public class FirstTabFragment extends Fragment{
-    private static String URL = "http://povmt.herokuapp.com/history?startDate=%s&endDate=%s&creator=1";
+    private static String hostURL = "http://povmt.herokuapp.com/history?startDate=%s&endDate=%s&creator=1";
+    String sampleURL = "http://povmt.herokuapp.com/history?startDate=2016-11-01&endDate=2016-11-07&creator=1";
     TextView mTextView;
     StringRequest stringRequest;
     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -42,9 +42,9 @@ public class FirstTabFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        URL = String.format(URL,weekSunday,today);
+        hostURL = String.format(hostURL,weekSunday,today);
 
-        System.out.println(URL);
+        System.out.println(hostURL);
         System.out.println(weekSunday);
         System.out.println(today);
 
@@ -71,8 +71,8 @@ public class FirstTabFragment extends Fragment{
         loading.setMessage("Carregando...");
         loading.show();
 
-        // Request a string response from the provided URL.
-        stringRequest = new StringRequest(Request.Method.GET, "http://povmt.herokuapp.com/history?startDate=2016-11-01&endDate=2016-11-07&creator=1", new Response.Listener<String>() {
+        // Request a string response from the provided hostURL.
+        stringRequest = new StringRequest(Request.Method.GET, sampleURL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
 
@@ -111,13 +111,15 @@ public class FirstTabFragment extends Fragment{
             @Override
             public void onErrorResponse(VolleyError error) {
                 loading.cancel();
-                mTextView.setText("That didn't work!");
-                System.out.println(error);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Volley Error");
+                builder.setMessage(error.toString()).setNegativeButton("OK", null)
+                        .create().show();
+                mTextView.setText(error.toString());
             }
         });
 
         VolleySingleton.getInstance(getContext()).addToRequestQueue(stringRequest);
-        //mTextView.setText("Test");
         return view;
     }
 }

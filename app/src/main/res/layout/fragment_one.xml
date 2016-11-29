@@ -9,7 +9,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/textview_frag1"
         android:textSize="16dp"
-        android:textStyle="bold"
-        android:layout_centerInParent="true"/>
+        android:textStyle="bold"/>
 
 </RelativeLayout>
