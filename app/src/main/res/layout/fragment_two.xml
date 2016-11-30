@@ -1,15 +1,19 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragment.SecondTabFragment">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="two"
-        android:textSize="40dp"
-        android:textStyle="bold" />
-
-</RelativeLayout>
+    <ScrollView
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textview_frag2"
+            android:textSize="12sp"
+            android:textColor="#000000"
+            android:padding="8dp"
+            android:textAppearance="@android:style/TextAppearance.Material.Small"/>
+    </ScrollView>
+</LinearLayout>
