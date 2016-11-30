@@ -100,6 +100,60 @@ public class ActivityParser {
         return activities;
     }
 
+    public List<Activity> parseFromHistory(String json){
 
+        List<Activity> activities = new ArrayList<Activity>();
+
+        if (json != null){
+            try {
+                JSONObject history = new JSONObject(json);
+                JSONArray groupedHistory = history.getJSONArray("groupedHistory");
+
+                for (int i=0; i< groupedHistory.length(); i++){
+                    JSONObject it = groupedHistory.getJSONObject(i).getJSONObject("activity");
+
+                    String id = "";
+                    String creator = "";
+                    String title = "";
+                    String description = "";
+
+                    Calendar createdAt = Calendar.getInstance();
+                    Calendar updatedAt = Calendar.getInstance();
+
+                    if (it.has(TAG_ID)){
+                        id = it.getString(TAG_ID);
+                    }
+                    if (it.has(TAG_CREATOR)){
+                        creator = it.getString(TAG_CREATOR);
+                    }
+                    if (it.has(TAG_TITLE)){
+                        title = it.getString(TAG_TITLE);
+                    }
+                    if (it.has(TAG_DESCRIPTION)){
+                        description = it.getString(TAG_DESCRIPTION);
+                    }
+                    if (it.has(TAG_CREATED_AT)){
+                        createdAt = Util.parseDateFromUTC(it.getString(TAG_CREATED_AT));
+                    }
+
+                    if (it.has(TAG_UPDATED_AT)){
+                        updatedAt = Util.parseDateFromUTC(it.getString(TAG_UPDATED_AT));
+                    }
+
+                    Activity newActivity = new Activity(id, creator, title, description, createdAt, updatedAt);
+                    activities.add(newActivity);
+                }
+
+            }
+            catch(JSONException e){
+                Log.e(TAG, e.getMessage());
+            }
+        }
+        else {
+            Log.e(TAG, "Invalid data received from server");
+        }
+
+        return activities;
+    }
 }
 

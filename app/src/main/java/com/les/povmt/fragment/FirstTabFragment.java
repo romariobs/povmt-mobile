@@ -18,6 +18,7 @@ import com.les.povmt.R;
 import com.les.povmt.models.Activity;
 import com.les.povmt.models.InvestedTime;
 import com.les.povmt.network.VolleySingleton;
+import com.les.povmt.parser.ActivityParser;
 import com.les.povmt.parser.InvestedTimeParser;
 
 import org.json.JSONArray;
@@ -25,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -87,13 +89,21 @@ public class FirstTabFragment extends Fragment{
 
 
                     //PARSING ITs FROM HISTORY
+                    List<Activity> activities = (new ActivityParser()).parseFromHistory(json.getJSONObject("history").toString());
                     List<InvestedTime> itsList = (new InvestedTimeParser()).parse(group.toString());
                     String text = "";
 
                     for (int it = 0; it < arraySize; it++) {
                         InvestedTime invTime = itsList.get(it);
-                        text = text + "Id do TI: " + invTime.getId()  + "\nId da Atividade: " + invTime.getActivityId() +
-                                "\nDuração: " + invTime.getDuration() + "\nData de Criação: " + invTime.getDate() + "\n\n";
+                        String actName = "";
+
+                        for(Activity act: activities){
+                                actName = act.getId().equals(invTime.getActivityId()) ? act.getTitle(): "";
+                        }
+
+                        Calendar cal = invTime.getOriginalDate();
+                        text = text + "Atividade: " + actName + "\nTempo Investido: " + invTime.getDuration()+ " minutos"
+                                + "\nEm " + invTime.getDate() +" às " + cal.get(Calendar.HOUR_OF_DAY) +":"+ cal.get(Calendar.MINUTE)  + "\n\n";
                         System.out.println(itsList.get(it));
                     }
 
