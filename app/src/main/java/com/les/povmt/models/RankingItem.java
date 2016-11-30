@@ -27,4 +27,11 @@ public class RankingItem {
         return this.color;
     }
 
+    public void plusTime(int time){
+        timeSpend += time;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
 }

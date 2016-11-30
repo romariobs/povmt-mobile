@@ -143,6 +143,7 @@ public class RegisterTiActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        JSONObject json = response;
                         closeThis();
                     }
 

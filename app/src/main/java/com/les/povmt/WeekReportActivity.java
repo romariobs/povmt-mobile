@@ -1,5 +1,8 @@
 package com.les.povmt;
 
+import android.app.AlertDialog;
+import android.app.IntentService;
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -12,6 +15,10 @@ import android.view.MenuItem;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
@@ -22,7 +29,16 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.les.povmt.adapter.RankingAdapter;
 import com.les.povmt.models.Activity;
+import com.les.povmt.models.InvestedTime;
 import com.les.povmt.models.RankingItem;
+import com.les.povmt.models.User;
+import com.les.povmt.network.VolleySingleton;
+import com.les.povmt.parser.ActivityParser;
+import com.les.povmt.parser.InvestedTimeParser;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -34,6 +50,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import static java.net.HttpURLConnection.HTTP_OK;
+
 public class WeekReportActivity extends AppCompatActivity {
     private PieChart mChart;
 
@@ -44,6 +62,9 @@ public class WeekReportActivity extends AppCompatActivity {
     private Date startDay;
     private Date endDay;
     DateFormat dfServer = new SimpleDateFormat("yyyy-MM-dd");
+    String sampleURL = "http://povmt.herokuapp.com/history?startDate=";
+    // 2016-11-27&endDate=2016-12-04&creator=1";
+
 
     private ScrollView scroll;
     private float totalTimeInvested;
@@ -84,8 +105,6 @@ public class WeekReportActivity extends AppCompatActivity {
         l.setDrawInside(false);
         l.setEnabled(false);
 
-        mChart.setData(generatePieData());
-
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.HOUR_OF_DAY, 0); // ! clear would not reset the hour of day !
         cal.clear(Calendar.MINUTE);
@@ -100,6 +119,11 @@ public class WeekReportActivity extends AppCompatActivity {
 // start of the next week
         cal.add(Calendar.WEEK_OF_YEAR, 1);
         endDay =  cal.getTime();
+        sampleURL += dfServer.format(startDay) + "&endDate=";
+        sampleURL += dfServer.format(endDay) + "&creator=";
+        sampleURL += User.getCurrentUser().getId();
+
+        generatePieData();
 
         TextView weekDays = (TextView) findViewById(R.id.weekDays);
         weekDays.setText(df.format(startDay) + " • " + df.format(endDay));
@@ -129,46 +153,110 @@ public class WeekReportActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    protected PieData generatePieData() {
-        int count = 15;
-        ArrayList<PieEntry> entries1 = new ArrayList<>();
+    protected void generatePieData() {
 
-        for (int i = 0; i < count; i++) {
-            float value = (float) (Math.random() * 20) + 10 ;
-            totalTimeInvested += value;
-            entries1.add(new PieEntry((float) value, ""));
-        }
+        final ProgressDialog loading = new ProgressDialog(WeekReportActivity.this, R.style.AppThemeDarkDialog);
 
-        int min =  (int) ((totalTimeInvested % 1) * 100);
-        if (min >= 60)
-            min = min % 60;
-
-        mChart.setCenterText( (int)(totalTimeInvested/1) + " h\n" + min +" min");
-        Collections.sort(entries1, new Comparator<PieEntry>() {
+        loading.setMessage("Autenticando...");
+        loading.show();
+        // Request a string response from the provided hostURL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, sampleURL, new Response.Listener<String>() {
             @Override
-            public int compare(PieEntry pieEntry, PieEntry t1) {
-                if (pieEntry.getValue() > t1.getValue()) {
-                    return -1;
-                } else {
-                    return 1;
+            public void onResponse(String response) {
+                JSONObject json;
+                try {
+                    json = new JSONObject(response);
+                    int status = 0;
+
+                    if (json.has("status")){
+                        status = json.getInt("status");
+                    }
+
+                    if (status != HTTP_OK) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+                        builder.setMessage(status).setNegativeButton("ok", null)
+                                .create().show();
+                    }
+
+                    JSONArray jIts = json.getJSONObject("history").optJSONArray("its");
+
+                    //PARSING ITs FROM HISTORY
+                    List<InvestedTime> itsList = (new InvestedTimeParser()).parse(json.getJSONObject("history").toString());
+                    //PARSING Activities
+                    List<Activity> activitiesList = (new ActivityParser()).parse(json.getJSONObject("history").toString());
+
+                    activities = new ArrayList<>();
+                    ArrayList<PieEntry> entries1 = new ArrayList<>();
+
+                    for (Activity ac : activitiesList){
+                        RankingItem rk = new RankingItem(ac, 0, 0);
+                        for(InvestedTime it : itsList){
+                            if(it.getActivityId().equals(ac.getId())){
+                                rk.plusTime(it.getDuration());
+                            }
+                        }
+                        totalTimeInvested += rk.getTimeSpend();
+                        entries1.add(new PieEntry(rk.getTimeSpend(), ""));
+                        activities.add(rk);
+                    }
+
+
+                    mChart.setCenterText(((int)totalTimeInvested + " min"));
+                    Collections.sort(entries1, new Comparator<PieEntry>() {
+                        @Override
+                        public int compare(PieEntry pieEntry, PieEntry t1) {
+                             if (pieEntry.getValue() > t1.getValue()) {
+                                return -1;
+                            } else {
+                                return 1;
+                            }
+                        }
+                     });
+
+                    Collections.sort(activities, new Comparator<RankingItem>() {
+                        @Override
+                        public int compare(RankingItem rankingItem, RankingItem t1) {
+                            if (rankingItem.getTimeSpend() > t1.getTimeSpend()) {
+                                return -1;
+                            } else {
+                                return 1;
+                            }
+                        }
+                    });
+
+                    for(int k = 0; k < activities.size(); k++){
+                        activities.get(k).setColor(GRAPH_COLORS[k % GRAPH_COLORS.length]);
+                    }
+
+                    loading.cancel();
+                    setList();
+                    PieDataSet ds1 = new PieDataSet(entries1, "");
+                    ds1.setColors(GRAPH_COLORS);
+                    ds1.setSliceSpace(2f);
+                    ds1.setValueTextColor(Color.WHITE);
+                    ds1.setValueTextSize(12f);
+                    PieData d = new PieData(ds1);
+                    mChart.setData(d);
+
+                    setList();
+                } catch (JSONException e){
+                    System.out.println(response);
+                    Log.e("JSON","FAILED");
                 }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                loading.cancel();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+                builder.setTitle("Volley Error");
+                builder.setMessage(error.toString()).setNegativeButton("OK", null)
+                        .create().show();
             }
         });
 
-        int i = 0;
-        for (PieEntry pie: entries1) {
-            activities.add(new RankingItem(new Activity("0","1","Title", "Description",null,null), GRAPH_COLORS[i % GRAPH_COLORS.length], (int) pie.getValue()));
-            i++;
-        }
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
 
-        setList();
-        PieDataSet ds1 = new PieDataSet(entries1, "");
-        ds1.setColors(GRAPH_COLORS);
-        ds1.setSliceSpace(2f);
-        ds1.setValueTextColor(Color.WHITE);
-        ds1.setValueTextSize(12f);
-        PieData d = new PieData(ds1);
-        return d;
     }
 
     private void setList() {
