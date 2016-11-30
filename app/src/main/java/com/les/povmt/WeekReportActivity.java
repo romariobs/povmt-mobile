@@ -157,7 +157,7 @@ public class WeekReportActivity extends AppCompatActivity {
 
         final ProgressDialog loading = new ProgressDialog(WeekReportActivity.this, R.style.AppThemeDarkDialog);
 
-        loading.setMessage("Autenticando...");
+        loading.setMessage("Carregando...");
         loading.show();
         // Request a string response from the provided hostURL.
         Log.d("Lucas", sampleURL);
@@ -165,6 +165,7 @@ public class WeekReportActivity extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 JSONObject json;
+                Log.d("Lucas2", response);
                 try {
                     json = new JSONObject(response);
                     int status = 0;
@@ -179,67 +180,87 @@ public class WeekReportActivity extends AppCompatActivity {
                                 .create().show();
                     }
 
-                    JSONArray jIts = json.getJSONObject("history").optJSONArray("its");
+                    // CAIO AQUI
+                    JSONObject group = json.getJSONObject("history").getJSONArray("groupedHistory")
+                            .optJSONObject(0);
+
+                    if (group!= null) {
+                        JSONArray arrayIts = group.getJSONArray("its");
+
+                        int arraySize = arrayIts != null ? arrayIts.length() : 0;
+
+
+                        //PARSING ITs FROM HISTORY
+                        List<Activity> activitiesList = (new ActivityParser()).parseFromHistory(json.getJSONObject("history").toString());
+                        List<InvestedTime> itsList = (new InvestedTimeParser()).parse(group.toString());
+                        for(int j = 1; j < json.getJSONObject("history").getJSONArray("groupedHistory").length();j++){
+                            group = json.getJSONObject("history").getJSONArray("groupedHistory").optJSONObject(j);
+                            List<InvestedTime> varList = (new InvestedTimeParser()).parse(group.toString());
+                            itsList.addAll(varList);
+                        }
+
+                        activities = new ArrayList<>();
+                        ArrayList<PieEntry> entries1 = new ArrayList<>();
+
+                        for (Activity ac : activitiesList){
+                            RankingItem rk = new RankingItem(ac, 0, 0);
+                            for(InvestedTime it : itsList){
+                                Log.d("LucasAQ", it.getDuration() + " - " + ac.getTitle());
+                                if(it.getActivityId().equals(ac.getId())){
+                                    rk.plusTime(it.getDuration());
+                                }
+                            }
+
+                            totalTimeInvested += rk.getTimeSpend();
+                            entries1.add(new PieEntry(rk.getTimeSpend(), ""));
+                            activities.add(rk);
+                        }
+
+
+                        mChart.setCenterText(((int)totalTimeInvested + " min"));
+                        Collections.sort(entries1, new Comparator<PieEntry>() {
+                            @Override
+                            public int compare(PieEntry pieEntry, PieEntry t1) {
+                                if (pieEntry.getValue() > t1.getValue()) {
+                                    return -1;
+                                } else {
+                                    return 1;
+                                }
+                            }
+                        });
+
+                        Collections.sort(activities, new Comparator<RankingItem>() {
+                            @Override
+                            public int compare(RankingItem rankingItem, RankingItem t1) {
+                                if (rankingItem.getTimeSpend() > t1.getTimeSpend()) {
+                                    return -1;
+                                } else {
+                                    return 1;
+                                }
+                            }
+                        });
+
+                        for(int k = 0; k < activities.size(); k++){
+                            activities.get(k).setColor(GRAPH_COLORS[k % GRAPH_COLORS.length]);
+                        }
+
+                        loading.cancel();
+                        setList();
+                        PieDataSet ds1 = new PieDataSet(entries1, "");
+                        ds1.setColors(GRAPH_COLORS);
+                        ds1.setSliceSpace(2f);
+                        ds1.setValueTextColor(Color.WHITE);
+                        ds1.setValueTextSize(12f);
+                        PieData d = new PieData(ds1);
+                        mChart.setData(d);
+
+                        setList();
+
+                    }
+
+                    //
 
                     //PARSING ITs FROM HISTORY
-                    List<InvestedTime> itsList = (new InvestedTimeParser()).parse(json.getJSONObject("history").toString());
-                    //PARSING Activities
-                    List<Activity> activitiesList = (new ActivityParser()).parse(json.getJSONObject("history").toString());
-
-                    activities = new ArrayList<>();
-                    ArrayList<PieEntry> entries1 = new ArrayList<>();
-
-                    for (Activity ac : activitiesList){
-                        RankingItem rk = new RankingItem(ac, 0, 0);
-                        for(InvestedTime it : itsList){
-                            if(it.getActivityId().equals(ac.getId())){
-                                rk.plusTime(it.getDuration());
-                            }
-                        }
-                        totalTimeInvested += rk.getTimeSpend();
-                        entries1.add(new PieEntry(rk.getTimeSpend(), ""));
-                        activities.add(rk);
-                    }
-
-
-                    mChart.setCenterText(((int)totalTimeInvested + " min"));
-                    Collections.sort(entries1, new Comparator<PieEntry>() {
-                        @Override
-                        public int compare(PieEntry pieEntry, PieEntry t1) {
-                             if (pieEntry.getValue() > t1.getValue()) {
-                                return -1;
-                            } else {
-                                return 1;
-                            }
-                        }
-                     });
-
-                    Collections.sort(activities, new Comparator<RankingItem>() {
-                        @Override
-                        public int compare(RankingItem rankingItem, RankingItem t1) {
-                            if (rankingItem.getTimeSpend() > t1.getTimeSpend()) {
-                                return -1;
-                            } else {
-                                return 1;
-                            }
-                        }
-                    });
-
-                    for(int k = 0; k < activities.size(); k++){
-                        activities.get(k).setColor(GRAPH_COLORS[k % GRAPH_COLORS.length]);
-                    }
-
-                    loading.cancel();
-                    setList();
-                    PieDataSet ds1 = new PieDataSet(entries1, "");
-                    ds1.setColors(GRAPH_COLORS);
-                    ds1.setSliceSpace(2f);
-                    ds1.setValueTextColor(Color.WHITE);
-                    ds1.setValueTextSize(12f);
-                    PieData d = new PieData(ds1);
-                    mChart.setData(d);
-
-                    setList();
                 } catch (JSONException e){
                     System.out.println(response);
                     Log.e("JSON","FAILED");
