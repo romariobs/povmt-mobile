@@ -17,6 +17,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.les.povmt.R;
 import com.les.povmt.models.Activity;
 import com.les.povmt.models.InvestedTime;
+import com.les.povmt.models.User;
 import com.les.povmt.network.VolleySingleton;
 import com.les.povmt.parser.ActivityParser;
 import com.les.povmt.parser.InvestedTimeParser;
@@ -33,7 +34,7 @@ import java.util.List;
 import static java.net.HttpURLConnection.HTTP_OK;
 
 public class FirstTabFragment extends Fragment{
-    private static String hostURL = "http://povmt.herokuapp.com/history?startDate=2016-11-27&endDate=2016-11-30&creator=583e454a7eccdc0400798c29";
+    private static String hostURL = "http://povmt.herokuapp.com/history?startDate=2016-11-27&endDate=2016-11-30&creator=" + "583e151c7eccdc0400798c21";
     String sampleURL = "http://povmt.herokuapp.com/history?startDate=2016-11-01&endDate=2016-11-07&creator=1";
     TextView mTextView;
     StringRequest stringRequest;
@@ -43,6 +44,7 @@ public class FirstTabFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        System.out.println(User.getCurrentUser().getId());
     }
 
     @Override
@@ -80,36 +82,41 @@ public class FirstTabFragment extends Fragment{
                         builder.setMessage(status).setNegativeButton("ok", null)
                                 .create().show();
                     }
-                    JSONObject group = json.getJSONObject("history").getJSONArray("groupedHistory")
-                            .getJSONObject(0);
-
-                    JSONArray arrayIts = group.getJSONArray("its");
-
-                    int arraySize = arrayIts != null ? arrayIts.length() : 0;
-
-
-                    //PARSING ITs FROM HISTORY
-                    List<Activity> activities = (new ActivityParser()).parseFromHistory(json.getJSONObject("history").toString());
-                    List<InvestedTime> itsList = (new InvestedTimeParser()).parse(group.toString());
                     String text = "";
 
-                    for (int it = 0; it < arraySize; it++) {
-                        InvestedTime invTime = itsList.get(it);
-                        String actName = "";
 
-                        for(Activity act: activities){
-                                actName = act.getId().equals(invTime.getActivityId()) ? act.getTitle(): "";
+                    JSONObject group = json.getJSONObject("history").getJSONArray("groupedHistory")
+                                .optJSONObject(0);
+
+                    System.out.println(response);
+
+                    if (group!= null) {
+                        JSONArray arrayIts = group.getJSONArray("its");
+
+                        int arraySize = arrayIts != null ? arrayIts.length() : 0;
+
+
+                        //PARSING ITs FROM HISTORY
+                        List<Activity> activities = (new ActivityParser()).parseFromHistory(json.getJSONObject("history").toString());
+                        List<InvestedTime> itsList = (new InvestedTimeParser()).parse(group.toString());
+
+
+                        for (int it = 0; it < arraySize; it++) {
+                            InvestedTime invTime = itsList.get(it);
+                            String actName = "";
+
+                            for (Activity act : activities) {
+                                actName = act.getId().equals(invTime.getActivityId()) ? act.getTitle() : "";
+                            }
+
+                            Calendar cal = invTime.getOriginalDate();
+                            text = text + "Atividade: " + actName + "\nTempo Investido: " + invTime.getDuration() + " minutos"
+                                    + "\nEm " + invTime.getDate() + " às " + cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE) + "\n\n";
+                            System.out.println(itsList.get(it));
                         }
-
-                        Calendar cal = invTime.getOriginalDate();
-                        text = text + "Atividade: " + actName + "\nTempo Investido: " + invTime.getDuration()+ " minutos"
-                                + "\nEm " + invTime.getDate() +" às " + cal.get(Calendar.HOUR_OF_DAY) +":"+ cal.get(Calendar.MINUTE)  + "\n\n";
-                        System.out.println(itsList.get(it));
                     }
-
                     mTextView.setText(text);
                 } catch (JSONException e){
-                    System.out.println(response);
                     Log.e("JSON","FAILED");
                 }
             }
