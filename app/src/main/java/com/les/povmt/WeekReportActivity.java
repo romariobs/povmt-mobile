@@ -160,7 +160,6 @@ public class WeekReportActivity extends AppCompatActivity {
         loading.setMessage("Carregando...");
         loading.show();
         // Request a string response from the provided hostURL.
-        Log.d("Lucas", sampleURL);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, sampleURL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -180,7 +179,6 @@ public class WeekReportActivity extends AppCompatActivity {
                                 .create().show();
                     }
 
-                    // CAIO AQUI
                     JSONObject group = json.getJSONObject("history").getJSONArray("groupedHistory")
                             .optJSONObject(0);
 
@@ -205,7 +203,6 @@ public class WeekReportActivity extends AppCompatActivity {
                         for (Activity ac : activitiesList){
                             RankingItem rk = new RankingItem(ac, 0, 0);
                             for(InvestedTime it : itsList){
-                                Log.d("LucasAQ", it.getDuration() + " - " + ac.getTitle());
                                 if(it.getActivityId().equals(ac.getId())){
                                     rk.plusTime(it.getDuration());
                                 }

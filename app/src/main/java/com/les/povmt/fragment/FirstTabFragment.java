@@ -34,12 +34,15 @@ import java.util.List;
 import static java.net.HttpURLConnection.HTTP_OK;
 
 public class FirstTabFragment extends Fragment{
-    private static String hostURL = "http://povmt.herokuapp.com/history?startDate=2016-11-27&endDate=2016-11-30&creator=" + "583e151c7eccdc0400798c21";
-    String sampleURL = "http://povmt.herokuapp.com/history?startDate=2016-11-01&endDate=2016-11-07&creator=1";
+    private String hostURL = "http://povmt.herokuapp.com/history?startDate=2016-11-27&endDate=2016-12-04&creator=";
     TextView mTextView;
     StringRequest stringRequest;
 
-    public FirstTabFragment() {}
+    public FirstTabFragment() {
+        // TODO SETAR AS DATAS DA SEMANA CORRETAMENTE
+        // substituindo na hostURL, faz concatenação de string mesmo, colocando as datas
+        hostURL += User.getCurrentUser().getId();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,7 +60,6 @@ public class FirstTabFragment extends Fragment{
 
         loading.setMessage("Carregando...");
         loading.show();
-
         // Request a string response from the provided hostURL.
         stringRequest = new StringRequest(Request.Method.GET, hostURL, new Response.Listener<String>() {
             @Override
@@ -67,7 +69,6 @@ public class FirstTabFragment extends Fragment{
                 //mTextView.setText("Response is: "+ response.substring(0,500));
 
                 JSONObject json;
-
                 try {
                     json = new JSONObject(response);
                     int status = 0;
@@ -93,20 +94,24 @@ public class FirstTabFragment extends Fragment{
                     if (group!= null) {
                         JSONArray arrayIts = group.getJSONArray("its");
 
-                        int arraySize = arrayIts != null ? arrayIts.length() : 0;
-
 
                         //PARSING ITs FROM HISTORY
                         List<Activity> activities = (new ActivityParser()).parseFromHistory(json.getJSONObject("history").toString());
                         List<InvestedTime> itsList = (new InvestedTimeParser()).parse(group.toString());
+                        for(int j = 1; j < json.getJSONObject("history").getJSONArray("groupedHistory").length();j++){
+                            group = json.getJSONObject("history").getJSONArray("groupedHistory").optJSONObject(j);
+                            List<InvestedTime> varList = (new InvestedTimeParser()).parse(group.toString());
+                            itsList.addAll(varList);
+                        }
 
 
-                        for (int it = 0; it < arraySize; it++) {
+                        for (int it = 0; it < itsList.size(); it++) {
                             InvestedTime invTime = itsList.get(it);
                             String actName = "";
 
                             for (Activity act : activities) {
-                                actName = act.getId().equals(invTime.getActivityId()) ? act.getTitle() : "";
+                                if(act.getId().equals(invTime.getActivityId()))
+                                    actName = act.getTitle();
                             }
 
                             Calendar cal = invTime.getOriginalDate();
