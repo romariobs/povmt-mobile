@@ -103,9 +103,10 @@ public class LoginActivity extends AppCompatActivity {
                             if (status == HTTP_OK){
                                 loading.cancel();
                                 Intent accountIntent = new Intent(LoginActivity.this, ListUserActivity.class);
-                                LoginActivity.this.startActivity(accountIntent);
 
                                 JSONObject user = json.getJSONObject("user");
+                                accountIntent.putExtra("id", user.getString("id") );
+                                LoginActivity.this.startActivity(accountIntent);
 
                                 User.setCurrentUser(user.getString("id"), user.getString("name"), user.getString("email"));
                             }

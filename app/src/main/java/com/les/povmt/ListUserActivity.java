@@ -17,7 +17,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -39,7 +38,8 @@ public class ListUserActivity extends AppCompatActivity {
 
     private final int CREATE_ATIVITY = 1;
 
-    private final String apiEndpointUrl = "http://povmt.herokuapp.com/activity";
+    private final String apiEndpointUrl = "http://povmt.herokuapp.com/activity?creator=";
+    private static String userID;
     private final String TAG = this.getClass().getSimpleName();
 
     private List<Activity> activities = new ArrayList<>();
@@ -55,6 +55,12 @@ public class ListUserActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_user);
+
+        Bundle bd = getIntent().getExtras();
+        if (bd != null) {
+            userID = (String) bd.get("id");
+        }
+
         ActionBar actionbar = getSupportActionBar();
         actionbar.setTitle(getString(R.string.app_name));
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coodinator_layout);
@@ -171,7 +177,7 @@ public class ListUserActivity extends AppCompatActivity {
     }
 
     private void PopulateList() {
-        StringRequest activitiesRequest = new StringRequest(Request.Method.GET, apiEndpointUrl, new Response.Listener<String>(){
+        StringRequest activitiesRequest = new StringRequest(Request.Method.GET, apiEndpointUrl + userID, new Response.Listener<String>(){
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, response);
