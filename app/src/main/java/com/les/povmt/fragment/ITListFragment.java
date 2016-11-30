@@ -109,7 +109,7 @@ public class ITListFragment extends Fragment {
     }
 
     private void populateList() {
-        String finalRequest = apiEndpointUrl + "?timeInvestedAt=" + idActivity;
+        String finalRequest = apiEndpointUrl + "?investedTimeAt=" + idActivity;
         StringRequest activitiesRequest = new StringRequest(Request.Method.GET, finalRequest, new Response.Listener<String>(){
             @Override
             public void onResponse(String response) {

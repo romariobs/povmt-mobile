@@ -160,6 +160,7 @@ public class WeekReportActivity extends AppCompatActivity {
         loading.setMessage("Autenticando...");
         loading.show();
         // Request a string response from the provided hostURL.
+        Log.d("Lucas", sampleURL);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, sampleURL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
