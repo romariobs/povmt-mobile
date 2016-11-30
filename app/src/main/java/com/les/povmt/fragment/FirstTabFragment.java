@@ -89,12 +89,13 @@ public class FirstTabFragment extends Fragment{
                     List<InvestedTime> itsList = (new InvestedTimeParser()).parse(json.getJSONObject("history").toString());
                     String text = "";
 
-                    for (int it = 0; it < jIts.length(); it++) {
-                        InvestedTime invTime = itsList.get(it);
-                        text = text + "Id do TI: " + invTime.getId()  + "\nId da Atividade: " + invTime.getActivityId() +
-                                "\nDuração: " + invTime.getDuration() + "\nData de Criação: " + invTime.getDate() + "\n\n";
-                        System.out.println(itsList.get(it));
-                    }
+                    if(jIts != null)
+                        for (int it = 0; it < jIts.length(); it++) {
+                            InvestedTime invTime = itsList.get(it);
+                            text = text + "Id do TI: " + invTime.getId()  + "\nId da Atividade: " + invTime.getActivityId() +
+                                    "\nDuração: " + invTime.getDuration() + "\nData de Criação: " + invTime.getDate() + "\n\n";
+                            System.out.println(itsList.get(it));
+                        }
 
                     mTextView.setText(text);
                 } catch (JSONException e){
