@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.les.povmt.ActivityProfileActivity;
 import com.les.povmt.R;
 import com.les.povmt.RegisterTiActivity;
 import com.les.povmt.models.RankingItem;
@@ -43,7 +44,7 @@ public class RankingAdapter extends RecyclerView.Adapter<RankingAdapter.viewHold
         RankingItem rankingItem = activities.get(position);
         DecimalFormat df = new DecimalFormat("0.00");
         String percentTime = df.format(100 * (rankingItem.getTimeSpend()/ totalTimeInvested));
-        holder.timeSpend.setText("Tempo total investido: " + (int)rankingItem.getTimeSpend() + " h (%" + percentTime + ")");
+        holder.timeSpend.setText("Tempo total investido: " + (int)rankingItem.getTimeSpend() + " m (%" + percentTime + ")");
         holder.title.setText(rankingItem.getActivity().getTitle());
         holder.position.setText("" + (position + 1));
 
@@ -83,8 +84,9 @@ public class RankingAdapter extends RecyclerView.Adapter<RankingAdapter.viewHold
 
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(context, RegisterTiActivity.class);
+            Intent intent = new Intent(context, ActivityProfileActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("activity", activities.get(getPosition()).getActivity());
             context.startActivity(intent);
         }
     }

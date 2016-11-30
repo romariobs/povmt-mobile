@@ -31,20 +31,16 @@ import java.util.List;
 import static java.net.HttpURLConnection.HTTP_OK;
 
 public class FirstTabFragment extends Fragment{
-    private static String hostURL = "http://povmt.herokuapp.com/history?startDate=%s&endDate=%s&creator=583e15b27eccdc0400798c22";
+    private static String hostURL = "http://povmt.herokuapp.com/history?startDate=2016-11-27&endDate=2016-11-30&creator=583e454a7eccdc0400798c29";
     String sampleURL = "http://povmt.herokuapp.com/history?startDate=2016-11-01&endDate=2016-11-07&creator=1";
     TextView mTextView;
     StringRequest stringRequest;
-    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-    String weekSunday = "2016-11-27";
-    String today = df.format(new Date());
 
     public FirstTabFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        hostURL = String.format(hostURL,weekSunday,today);
     }
 
     @Override
@@ -59,7 +55,7 @@ public class FirstTabFragment extends Fragment{
         loading.show();
 
         // Request a string response from the provided hostURL.
-        stringRequest = new StringRequest(Request.Method.GET, sampleURL, new Response.Listener<String>() {
+        stringRequest = new StringRequest(Request.Method.GET, hostURL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
 
@@ -82,20 +78,24 @@ public class FirstTabFragment extends Fragment{
                         builder.setMessage(status).setNegativeButton("ok", null)
                                 .create().show();
                     }
+                    JSONObject group = json.getJSONObject("history").getJSONArray("groupedHistory")
+                            .getJSONObject(0);
 
-                    JSONArray jIts = json.getJSONObject("history").optJSONArray("its");
+                    JSONArray arrayIts = group.getJSONArray("its");
+
+                    int arraySize = arrayIts != null ? arrayIts.length() : 0;
+
 
                     //PARSING ITs FROM HISTORY
-                    List<InvestedTime> itsList = (new InvestedTimeParser()).parse(json.getJSONObject("history").toString());
+                    List<InvestedTime> itsList = (new InvestedTimeParser()).parse(group.toString());
                     String text = "";
 
-                    if(jIts != null)
-                        for (int it = 0; it < jIts.length(); it++) {
-                            InvestedTime invTime = itsList.get(it);
-                            text = text + "Id do TI: " + invTime.getId()  + "\nId da Atividade: " + invTime.getActivityId() +
-                                    "\nDuração: " + invTime.getDuration() + "\nData de Criação: " + invTime.getDate() + "\n\n";
-                            System.out.println(itsList.get(it));
-                        }
+                    for (int it = 0; it < arraySize; it++) {
+                        InvestedTime invTime = itsList.get(it);
+                        text = text + "Id do TI: " + invTime.getId()  + "\nId da Atividade: " + invTime.getActivityId() +
+                                "\nDuração: " + invTime.getDuration() + "\nData de Criação: " + invTime.getDate() + "\n\n";
+                        System.out.println(itsList.get(it));
+                    }
 
                     mTextView.setText(text);
                 } catch (JSONException e){
