@@ -40,7 +40,6 @@ public class HistoryTabsActivity extends AppCompatActivity {
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
-
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
     }
@@ -48,7 +47,7 @@ public class HistoryTabsActivity extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new FirstTabFragment(), "SEMANA ATUAL");
-        adapter.addFragment(new FirstTabFragment(), "SEMANA PASSADA");
+        adapter.addFragment(new SecondTabFragment(), "SEMANA PASSADA");
         adapter.addFragment(new FirstTabFragment(), "PENÚLTIMA SEMANA");
         adapter.addFragment(new FourthTabFragment(), "2 ÚLTIMAS SEMANAS");
         viewPager.setAdapter(adapter);
