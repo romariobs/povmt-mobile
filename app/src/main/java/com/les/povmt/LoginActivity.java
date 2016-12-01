@@ -38,12 +38,7 @@ import org.json.JSONObject;
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
-
     private static final String TAG_STATUS = "status";
-
-    private static final String debugEmail = "samuel.santos@mail.com";
-    private static final String debugPassword = "admin#123";
-
     private static final int HTTP_OK = 200;
 
     private EditText etEmail;
@@ -60,9 +55,6 @@ public class LoginActivity extends AppCompatActivity {
         etEmail = (EditText) findViewById(R.id.etUserEmail);
         etPassword = (EditText) findViewById(R.id.etUserPass);
         btnLogin = (Button) findViewById(R.id.btnLogin);
-
-        etEmail.setText(debugEmail);
-        etPassword.setText(debugPassword);
 
         tvRegister = (TextView) findViewById(R.id.tvRegister);
 

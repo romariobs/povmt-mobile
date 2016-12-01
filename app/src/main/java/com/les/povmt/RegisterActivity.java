@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.les.povmt.network.RegisterRequest;
 import com.les.povmt.network.VolleySingleton;
-import com.les.povmt.network.VolleySingleton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
