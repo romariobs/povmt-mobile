@@ -121,7 +121,7 @@ public class SecondTabFragment extends Fragment{
 
                             Calendar cal = invTime.getOriginalDate();
                             text = "Atividade: " + actName + "\nTempo Investido: " + invTime.getDuration() + " minutos"
-                                    + "\nEm " + invTime.getDate() + "\n\n";
+                                    + "\nEm " + invTime.getDate();
                             dataSource.add(text);
                         }
                     }

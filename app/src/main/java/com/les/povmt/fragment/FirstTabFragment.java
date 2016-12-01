@@ -120,8 +120,8 @@ public class FirstTabFragment extends Fragment{
                             }
 
                             Calendar cal = invTime.getOriginalDate();
-                            text = text + "Atividade: " + actName + "\nTempo Investido: " + invTime.getDuration() + " minutos"
-                                    + "\nEm " + invTime.getDate() + "\n\n";
+                            text = "Atividade: " + actName + "\nTempo Investido: " + invTime.getDuration() + " minutos"
+                                    + "\nEm " + invTime.getDate();
                             dataSource.add(text);
                         }
                     }
