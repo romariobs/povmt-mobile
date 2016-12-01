@@ -8,7 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -28,6 +29,7 @@ import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -38,8 +40,8 @@ public class SecondTabFragment extends Fragment{
     private Date startDay, endDay;
     private DateFormat dfServer = new SimpleDateFormat("yyyy-MM-dd");
     private String hostURL = "http://povmt.herokuapp.com/history?startDate=";
-    private TextView mTextView;
-    StringRequest stringRequest;
+    private StringRequest stringRequest;
+    private List<String> dataSource;
 
     public SecondTabFragment() {
         Calendar cal = Calendar.getInstance();
@@ -53,29 +55,21 @@ public class SecondTabFragment extends Fragment{
         cal.add(Calendar.WEEK_OF_YEAR, -1);
         startDay = cal.getTime();
 
-        // start of the next week
         hostURL += dfServer.format(startDay) + "&endDate=";
         hostURL += dfServer.format(endDay) + "&creator=";
         hostURL += User.getCurrentUser().getId();
-
-        hostURL = "http://povmt.herokuapp.com/history?startDate=2016-11-27&endDate=2016-12-04&creator=58323866cd184d432276a839";
-        System.out.println(hostURL);
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_two, container, false);
-        mTextView = (TextView) view.findViewById(R.id.textview_frag2);
 
         final ProgressDialog loading = new ProgressDialog(getContext(), R.style.AppThemeDarkDialog);
         loading.setMessage("Carregando...");
         loading.show();
+
+        dataSource = new ArrayList<>();
+        final ListView lView = (ListView)view.findViewById(R.id.list2);
 
         stringRequest = new StringRequest(Request.Method.GET, hostURL, new Response.Listener<String>() {
             @Override
@@ -126,12 +120,13 @@ public class SecondTabFragment extends Fragment{
                             }
 
                             Calendar cal = invTime.getOriginalDate();
-                            text = text + "Atividade: " + actName + "\nTempo Investido: " + invTime.getDuration() + " minutos"
+                            text = "Atividade: " + actName + "\nTempo Investido: " + invTime.getDuration() + " minutos"
                                     + "\nEm " + invTime.getDate() + "\n\n";
-                            System.out.println(itsList.get(it));
+                            dataSource.add(text);
                         }
                     }
-                    mTextView.setText(text);
+                    ArrayAdapter<String> adapter=new ArrayAdapter<String>(getActivity(),R.layout.rowlayout,R.id.txtitem, dataSource);
+                    lView.setAdapter(adapter);
                 } catch (JSONException e){
                     Log.e("JSON","FAILED");
                 }
@@ -144,7 +139,6 @@ public class SecondTabFragment extends Fragment{
                 builder.setTitle("Volley Error");
                 builder.setMessage(error.toString()).setNegativeButton("OK", null)
                         .create().show();
-                mTextView.setText(error.toString());
             }
         });
         VolleySingleton.getInstance(getContext()).addToRequestQueue(stringRequest);
