@@ -17,6 +17,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.les.povmt.models.User;
 import com.les.povmt.network.VolleySingleton;
+import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,7 +32,7 @@ import java.util.Collections;
 public class CreateActivity extends AppCompatActivity {
     private final String apiEndpointUrl = "http://povmt.herokuapp.com/activity";
     private EditText title;
-    private Spinner spn;
+    private MaterialBetterSpinner spn;
     private String priority;
     private EditText description;
     private Button button_create;
@@ -43,18 +44,18 @@ public class CreateActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_edit);
 
         button_create = (Button) findViewById(R.id.button_create);
-        spn = (Spinner) findViewById(R.id.priority_activity);
+        spn = (MaterialBetterSpinner) findViewById(R.id.priority_activity);
         final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.listPriority, android.R.layout.simple_spinner_item);
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        
         spn.setAdapter(adapter);
+
 
         spn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 priority = adapter.getItem(position).toString();
-                Log.i(priority, "RRRRRRRRRRRRRRRRRRRRRRRR");
+                //Log.i(priority, "RRRRRRRRRRRRRRRRRRRRRRRR");
             }
 
             @Override
@@ -89,6 +90,7 @@ public class CreateActivity extends AppCompatActivity {
             jsonBody.put("title", title.getText().toString());
             jsonBody.put("description", description.getText().toString());
             jsonBody.put("creator", User.getCurrentUser().getId());
+            //jsonBody.put("priority", priority);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -112,7 +114,7 @@ public class CreateActivity extends AppCompatActivity {
     private boolean verifyConditions(){
 
         return (!title.getText().toString().trim().isEmpty()) && (!description.getText().toString().trim().isEmpty()) &&
-                (!priority.toString().trim().isEmpty());
+                (!priority.trim().isEmpty());
 
     }
 }
