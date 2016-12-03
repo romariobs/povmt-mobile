@@ -34,6 +34,18 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:textColorHint="@color/textColorPrimaryLight">
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Prioridade"
+            android:id="@+id/priority_activity"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:textColorHint="@color/textColorPrimaryLight">
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -56,6 +68,8 @@
         android:background="@color/colorPrimary"
         android:textColor="@color/colorWhite"
         android:layout_marginTop="30dp"/>
+
+
 
 </LinearLayout>
 
