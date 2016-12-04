@@ -15,10 +15,14 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.les.povmt.models.User;
 import com.les.povmt.network.LoginRequest;
+import com.les.povmt.network.RestClient;
 import com.les.povmt.network.VolleySingleton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *  This class is responsible by Authentication process using the PovMT server.
@@ -38,13 +42,7 @@ import org.json.JSONObject;
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
-
     private static final String TAG_STATUS = "status";
-
-    private static final String debugEmail = "samuel.santos@mail.com";
-    private static final String debugPassword = "admin#123";
-
-    private static final int HTTP_OK = 200;
 
     private EditText etEmail;
     private EditText etPassword;
@@ -60,9 +58,6 @@ public class LoginActivity extends AppCompatActivity {
         etEmail = (EditText) findViewById(R.id.etUserEmail);
         etPassword = (EditText) findViewById(R.id.etUserPass);
         btnLogin = (Button) findViewById(R.id.btnLogin);
-
-        etEmail.setText(debugEmail);
-        etPassword.setText(debugPassword);
 
         tvRegister = (TextView) findViewById(R.id.tvRegister);
 
@@ -90,7 +85,6 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response){
                         Log.d(TAG, response);
-
                         try {
                             JSONObject json = new JSONObject(response);
 
@@ -100,7 +94,7 @@ public class LoginActivity extends AppCompatActivity {
                                 status = json.getInt(TAG_STATUS);
                             }
 
-                            if (status == HTTP_OK){
+                            if (status == RestClient.HTTP_OK){
                                 loading.cancel();
                                 Intent accountIntent = new Intent(LoginActivity.this, ListUserActivity.class);
 
@@ -127,8 +121,11 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 };
 
-                LoginRequest loginRequest = new LoginRequest(email, password,responseListener);
-                VolleySingleton.getInstance(mContext).addToRequestQueue(loginRequest);
+                Map<String, String> parameters = new HashMap<String, String>();
+                parameters.put("email", email);
+                parameters.put("password", password);
+
+                RestClient.post(mContext, RestClient.AUTH_USER_ENDPOINT_URL, parameters, responseListener);
             }
         });
     }
