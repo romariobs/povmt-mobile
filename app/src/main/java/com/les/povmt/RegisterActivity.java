@@ -14,11 +14,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.android.volley.Response;
-import com.les.povmt.network.RegisterRequest;
-import com.les.povmt.network.VolleySingleton;
+import com.les.povmt.network.RestClient;
+import com.les.povmt.util.Constants;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -99,8 +102,12 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 };
 
-                RegisterRequest registerRequest = new RegisterRequest(name, email, password, responseListener);
-                VolleySingleton.getInstance(mContext).addToRequestQueue(registerRequest);
+                Map<String, String> parameters = new HashMap<>();
+                parameters.put(Constants.TAG_NAME, name);
+                parameters.put(Constants.TAG_EMAIL, email);
+                parameters.put(Constants.TAG_PASSWORD, password);
+
+                RestClient.post(mContext, RestClient.USER_ENDPOINT_URL, parameters, responseListener);
             };
 
         });

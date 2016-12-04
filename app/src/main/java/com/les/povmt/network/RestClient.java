@@ -60,7 +60,7 @@ public class RestClient {
      * @param ctx - the current activity context.
      * @param url - the address to call in the server
      */
-    public void get(Context ctx, Map<String, String> parameters, String url, Response.Listener listener){
+    public static void get(Context ctx, Map<String, String> parameters, String url, Response.Listener listener){
 
 
     }
@@ -86,7 +86,7 @@ public class RestClient {
      * @param ctx - the current activity context.
      * @param url - the address to call in the server
      */
-    public void put(Context ctx, String url){
+    public static void put(Context ctx, String url){
 
     }
 
@@ -96,7 +96,7 @@ public class RestClient {
      * @param ctx - the current activity context.
      * @param url - the address to call in the server
      */
-    public void delete(Context ctx, String url){
+    public static void delete(Context ctx, String url){
 
     }
 
@@ -105,7 +105,7 @@ public class RestClient {
      *
      * @return the authorization token.
      */
-    public String getToken(){
+    public static String getToken(){
         return AUTHORIZATION_TOKEN;
     }
 
@@ -114,8 +114,8 @@ public class RestClient {
      *
      * @param token - The current authorization token.
      */
-    public void setToken(String token){
-        this.AUTHORIZATION_TOKEN = token;
+    public static void setToken(String token){
+        RestClient.AUTHORIZATION_TOKEN = token;
     }
 
 }
