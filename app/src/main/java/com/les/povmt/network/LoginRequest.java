@@ -16,14 +16,14 @@ import java.util.Map;
 
 public class LoginRequest extends StringRequest {
 
-    private static final String AUTH_URL = "http://povmt.herokuapp.com/user/auth";
+
     private Map<String, String> parameters;
 
     private static final String KEY_EMAIL = "email";
     private static final String KEY_PASSWORD = "password";
 
     public LoginRequest(String email, String password, Response.Listener<String> listener){
-        super(Request.Method.POST, AUTH_URL, listener, null);
+        super(Request.Method.POST, RestClient.AUTH_USER_ENDPOINT_URL, listener, null);
 
         parameters = new HashMap<>();
         parameters.put(KEY_EMAIL, email);

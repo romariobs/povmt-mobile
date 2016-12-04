@@ -29,15 +29,13 @@ public class PovMTActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 startWeekReport();
-               // Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-               //         .setAction("Action", null).show();
             }
         });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -75,7 +73,6 @@ public class PovMTActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_activities) {
-            // Handle the camera action
         } else if (id == R.id.nav_weekly_report) {
 
         } else if (id == R.id.nav_history) {
