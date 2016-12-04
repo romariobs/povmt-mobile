@@ -16,6 +16,7 @@ public class Activity implements Parcelable {
     private String id;
     private String userId;
     private String title;
+    private String priority;
     private String description;
     private Calendar createAt;
     private Calendar updateAt;
@@ -34,9 +35,10 @@ public class Activity implements Parcelable {
      * @param createAt
      * @param updateAt
      */
-    public Activity(String id, String userId, String title, String description, Calendar createAt, Calendar updateAt) {
+    public Activity(String id, String userId, String title, String priority, String description, Calendar createAt, Calendar updateAt) {
         this.id = id;
         this.title = title;
+        this.priority = priority;
         this.description = description;
         this.userId = userId;
         this.createAt = createAt;
@@ -54,6 +56,10 @@ public class Activity implements Parcelable {
         this.title = title;
     }
 
+    public void setPriority(String title){
+        this.priority = priority;
+    }
+
     public void setDescription(String description){
         this.description = description;
     }
@@ -61,6 +67,8 @@ public class Activity implements Parcelable {
     public String getTitle() {
         return this.title;
     }
+
+    public String getPriority() { return  this.priority; }
 
     public String getDescription(){
         return this.description;

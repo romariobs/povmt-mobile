@@ -5,6 +5,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -48,7 +49,7 @@ public class HistoryTabsActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new FirstTabFragment(), "SEMANA ATUAL");
         adapter.addFragment(new SecondTabFragment(), "SEMANA PASSADA");
-        adapter.addFragment(new FirstTabFragment(), "PENÚLTIMA SEMANA");
+        adapter.addFragment(new ThirdTabFragment(), "PENÚLTIMA SEMANA");
         adapter.addFragment(new FourthTabFragment(), "2 ÚLTIMAS SEMANAS");
         viewPager.setAdapter(adapter);
     }

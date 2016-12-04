@@ -8,7 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -28,6 +29,7 @@ import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -35,12 +37,11 @@ import java.util.List;
 import static java.net.HttpURLConnection.HTTP_OK;
 
 public class FirstTabFragment extends Fragment{
-    private Date startDay;
-    private Date endDay;
-    DateFormat dfServer = new SimpleDateFormat("yyyy-MM-dd");
+    private Date startDay, endDay;
+    private DateFormat dfServer = new SimpleDateFormat("yyyy-MM-dd");
     private String hostURL = "http://povmt.herokuapp.com/history?startDate=";
-    TextView mTextView;
-    StringRequest stringRequest;
+    private StringRequest stringRequest;
+    private List<String> dataSource;
 
     public FirstTabFragment() {
         Calendar cal = Calendar.getInstance();
@@ -49,41 +50,32 @@ public class FirstTabFragment extends Fragment{
         cal.clear(Calendar.SECOND);
         cal.clear(Calendar.MILLISECOND);
 
-        // get start of this week
-        cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
-        startDay = cal.getTime();
-
-        // start of the next week
+        cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek()); // get start of this week
+        startDay =  cal.getTime();
         cal.add(Calendar.WEEK_OF_YEAR, 1);
-        endDay =  cal.getTime();
+        endDay = cal.getTime();
+
         hostURL += dfServer.format(startDay) + "&endDate=";
         hostURL += dfServer.format(endDay) + "&creator=";
         hostURL += User.getCurrentUser().getId();
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        System.out.println(User.getCurrentUser().getId());
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_one, container, false);
-        mTextView = (TextView) view.findViewById(R.id.textview_frag1);
-        final ProgressDialog loading = new ProgressDialog(getContext(), R.style.AppThemeDarkDialog);
 
+        final ProgressDialog loading = new ProgressDialog(getContext(), R.style.AppThemeDarkDialog);
         loading.setMessage("Carregando...");
         loading.show();
+
+        dataSource = new ArrayList<>();
+        final ListView lView = (ListView)view.findViewById(R.id.list1);
 
         stringRequest = new StringRequest(Request.Method.GET, hostURL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                // Display the first 500 characters of the response string.
-                //mTextView.setText("Response is: "+ response.substring(0,500));
-
                 JSONObject json;
+
                 try {
                     json = new JSONObject(response);
                     int status = 0;
@@ -101,7 +93,7 @@ public class FirstTabFragment extends Fragment{
                     String text = "";
 
                     JSONObject group = json.getJSONObject("history").getJSONArray("groupedHistory")
-                                .optJSONObject(0);
+                            .optJSONObject(0);
 
                     System.out.println(response);
 
@@ -111,6 +103,7 @@ public class FirstTabFragment extends Fragment{
                         //PARSING ITs FROM HISTORY
                         List<Activity> activities = (new ActivityParser()).parseFromHistory(json.getJSONObject("history").toString());
                         List<InvestedTime> itsList = (new InvestedTimeParser()).parse(group.toString());
+
                         for(int j = 1; j < json.getJSONObject("history").getJSONArray("groupedHistory").length();j++){
                             group = json.getJSONObject("history").getJSONArray("groupedHistory").optJSONObject(j);
                             List<InvestedTime> varList = (new InvestedTimeParser()).parse(group.toString());
@@ -125,13 +118,15 @@ public class FirstTabFragment extends Fragment{
                                 if(act.getId().equals(invTime.getActivityId()))
                                     actName = act.getTitle();
                             }
-                            Calendar cal = invTime.getOriginalDate();
 
-                            text = text + "Atividade: " + actName + "\nTempo Investido: " + invTime.getDuration() + " minutos"
-                                    + "\nEm " + invTime.getDate() + "\n\n";
+                            Calendar cal = invTime.getOriginalDate();
+                            text = "Atividade: " + actName + "\nTempo Investido: " + invTime.getDuration() + " minutos"
+                                    + "\nEm " + invTime.getDate();
+                            dataSource.add(text);
                         }
                     }
-                    mTextView.setText(text);
+                    ArrayAdapter<String> adapter=new ArrayAdapter<String>(getActivity(),R.layout.rowlayout,R.id.txtitem, dataSource);
+                    lView.setAdapter(adapter);
                 } catch (JSONException e){
                     Log.e("JSON","FAILED");
                 }
@@ -144,7 +139,6 @@ public class FirstTabFragment extends Fragment{
                 builder.setTitle("Volley Error");
                 builder.setMessage(error.toString()).setNegativeButton("OK", null)
                         .create().show();
-                mTextView.setText(error.toString());
             }
         });
         VolleySingleton.getInstance(getContext()).addToRequestQueue(stringRequest);

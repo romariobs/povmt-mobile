@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -52,6 +53,9 @@ public class FourthTabFragment extends Fragment implements OnChartValueSelectedL
 
     @Bind(R.id.linegraph)
     LineChart mChart;
+
+    @Bind(R.id.tv_inf)
+    TextView mTvInf;
 
     //endregion
 
@@ -452,6 +456,21 @@ public class FourthTabFragment extends Fragment implements OnChartValueSelectedL
         for (int i = 0; i < mDays.length; i++) {
             yVals3.add(new Entry(i, mLastWeekTime));
         }
+
+        String text = "";
+        if (mActualWeekTime > mBeforeWeekTime) {
+            text += "Você tem melhorado seu desempenho em relação a útima semana.";
+        } else {
+            text += "Você tem piorado seu desempenho em relação a útima semana.";
+        }
+
+        if (mActualWeekTime > mLastWeekTime) {
+            text += "\n\nEm relação a duas semanas atrás, seu desempenho tem melhorado.";
+        } else {
+            text += "\n\nEm relação a duas semanas atrás, seu desempenho tem piorado.";
+        }
+
+        mTvInf.setText(text);
 
         LineDataSet set1, set2, set3;
 
