@@ -156,7 +156,7 @@ public class ListUserActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startCreateActivity();
+                startEditActivity();
             }
         });
     }
@@ -212,8 +212,8 @@ public class ListUserActivity extends AppCompatActivity {
         VolleySingleton.getInstance(context).addToRequestQueue(activitiesRequest);
     }
 
-    private void startCreateActivity() {
-        Intent intent = new Intent(this, CreateActivity.class);
+    private void startEditActivity() {
+        Intent intent = new Intent(this, EditActivity.class);
         startActivityForResult(intent, CREATE_ATIVITY);
     }
 

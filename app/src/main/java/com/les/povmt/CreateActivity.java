@@ -47,19 +47,24 @@ public class CreateActivity extends AppCompatActivity {
         spn = (MaterialBetterSpinner) findViewById(R.id.priority_activity);
         final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.listPriority, android.R.layout.simple_spinner_item);
-        
+
         spn.setAdapter(adapter);
 
 
-        spn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spn.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                priority = adapter.getItem(position).toString();
-                //Log.i(priority, "RRRRRRRRRRRRRRRRRRRRRRRR");
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0:
+                        priority = "LOW";
+                        break;
+                    case 1:
+                        priority = "MEDIUM";
+                        break;
+                    case 2:
+                        priority = "HIGH";
+                        break;
+                }
 
             }
         });
@@ -90,7 +95,7 @@ public class CreateActivity extends AppCompatActivity {
             jsonBody.put("title", title.getText().toString());
             jsonBody.put("description", description.getText().toString());
             jsonBody.put("creator", User.getCurrentUser().getId());
-            //jsonBody.put("priority", priority);
+            jsonBody.put("priority", priority);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -114,7 +119,7 @@ public class CreateActivity extends AppCompatActivity {
     private boolean verifyConditions(){
 
         return (!title.getText().toString().trim().isEmpty()) && (!description.getText().toString().trim().isEmpty()) &&
-                (!priority.trim().isEmpty());
+                (priority != null && !priority.trim().isEmpty());
 
     }
 }
