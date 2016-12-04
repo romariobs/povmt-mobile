@@ -25,6 +25,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.les.povmt.adapter.ActivitiesAdapter;
 import com.les.povmt.fragment.ReportFragment;
 import com.les.povmt.models.Activity;
+import com.les.povmt.network.RestClient;
 import com.les.povmt.network.VolleySingleton;
 import com.les.povmt.parser.ActivityParser;
 
@@ -38,8 +39,7 @@ public class ListUserActivity extends AppCompatActivity {
 
     private final int CREATE_ATIVITY = 1;
 
-    private final String apiEndpointUrl = "http://povmt.herokuapp.com/activity?creator=";
-    private static String userID;
+    private static String userId;
     private final String TAG = this.getClass().getSimpleName();
 
     private List<Activity> activities = new ArrayList<>();
@@ -58,7 +58,7 @@ public class ListUserActivity extends AppCompatActivity {
 
         Bundle bd = getIntent().getExtras();
         if (bd != null) {
-            userID = (String) bd.get("id");
+            userId = (String) bd.get("id");
         }
 
         ActionBar actionbar = getSupportActionBar();
@@ -177,7 +177,8 @@ public class ListUserActivity extends AppCompatActivity {
     }
 
     private void PopulateList() {
-        StringRequest activitiesRequest = new StringRequest(Request.Method.GET, apiEndpointUrl + userID, new Response.Listener<String>(){
+
+        Response.Listener<String> successListner = new Response.Listener<String>(){
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, response);
@@ -186,19 +187,22 @@ public class ListUserActivity extends AppCompatActivity {
                 activities = dataParser.parse(response);
                 activitiesAdapter.update(activities);
             }
-        }, new Response.ErrorListener() {
+        };
+
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 closeDialog();
                 Log.d(TAG, error.toString());
             }
-        });
+        };
 
-        VolleySingleton.getInstance(context).addToRequestQueue(activitiesRequest);
+        String url = RestClient.ACTIVITY_ENDPOINT_URL + "?creator=" + userId;
+        RestClient.get(context, url, successListner, errorListener);
     }
 
     private void deleteActivity(String id) {
-        StringRequest activitiesRequest = new StringRequest(Request.Method.DELETE, apiEndpointUrl + "/" + id, new Response.Listener<String>(){
+        StringRequest activitiesRequest = new StringRequest(Request.Method.DELETE, RestClient.ACTIVITY_ENDPOINT_URL + "/" + id, new Response.Listener<String>(){
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, response);

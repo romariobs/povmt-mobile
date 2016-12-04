@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.toolbox.StringRequest;
 
 import java.util.Map;
 
@@ -32,7 +33,7 @@ public class RestClient {
     /**
      * API endpoint for request the authentication token and authorize the next api calls.
      */
-    public static final String AUTH_USER_ENDPOINT_URL = USER_ENDPOINT_URL + "/auth";
+    public static final String AUTH_ENDPOINT_URL = USER_ENDPOINT_URL + "/auth";
 
     /**
      * API endpoint to access activity services.
@@ -59,10 +60,12 @@ public class RestClient {
      *
      * @param ctx - the current activity context.
      * @param url - the address to call in the server
+     * @param successListener - the listener to handle the success response
+     * @param errorListener - the listener to handle the fail response
      */
-    public static void get(Context ctx, Map<String, String> parameters, String url, Response.Listener listener){
-
-
+    public static void get(Context ctx,String url, Response.Listener successListener, Response.ErrorListener errorListener){
+        GetRequest request = new GetRequest(Request.Method.GET, url, successListener, errorListener);
+        VolleySingleton.getInstance(ctx).addToRequestQueue(request);
     }
 
     /**
@@ -74,10 +77,8 @@ public class RestClient {
      * @param listener - the listener to handle the server response.
      */
     public static void post(Context ctx, String url, Map<String,String> parameters, Response.Listener<String> listener){
-
         PostRequest request = new PostRequest(Request.Method.POST, parameters, url, listener, null);
         VolleySingleton.getInstance(ctx).addToRequestQueue(request);
-
     }
 
     /**

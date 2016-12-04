@@ -8,6 +8,9 @@ package com.les.povmt.util;
 
 public class Constants {
 
+    //Constants used by request headers
+    public static final String AUTHORIZATION_HEADER = "Authorization";
+
     //Tags used for HTTP responses
     public static final String TAG_STATUS = "status";
 

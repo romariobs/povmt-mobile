@@ -128,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
                 Map<String, String> parameters = new HashMap<String, String>();
                 parameters.put(Constants.TAG_EMAIL, email);
                 parameters.put(Constants.TAG_PASSWORD, password);
-                RestClient.post(mContext, RestClient.AUTH_USER_ENDPOINT_URL, parameters, responseListener);
+                RestClient.post(mContext, RestClient.AUTH_ENDPOINT_URL, parameters, responseListener);
             }
         });
     }
