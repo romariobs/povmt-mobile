@@ -213,7 +213,7 @@ public class ListUserActivity extends AppCompatActivity {
     }
 
     private void startEditActivity() {
-        Intent intent = new Intent(this, EditActivity.class);
+        Intent intent = new Intent(this, CreateActivity.class);
         startActivityForResult(intent, CREATE_ATIVITY);
     }
 
