@@ -96,7 +96,6 @@ public class LoginActivity extends AppCompatActivity {
                             }
 
                             if (status == RestClient.HTTP_OK){
-
                                 if (json.has(Constants.TAG_TOKEN)){
                                     String token = json.getString(Constants.TAG_TOKEN);
                                     RestClient.setToken(token);

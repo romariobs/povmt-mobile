@@ -32,6 +32,7 @@ import com.les.povmt.models.Activity;
 import com.les.povmt.models.InvestedTime;
 import com.les.povmt.models.RankingItem;
 import com.les.povmt.models.User;
+import com.les.povmt.network.RestClient;
 import com.les.povmt.network.VolleySingleton;
 import com.les.povmt.parser.ActivityParser;
 import com.les.povmt.parser.InvestedTimeParser;
@@ -39,8 +40,10 @@ import com.les.povmt.parser.InvestedTimeParser;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -58,6 +61,10 @@ public class WeekReportActivity extends AppCompatActivity {
     private List<RankingItem> activities = new ArrayList<>();
     private RecyclerView recyclerView;
     private RankingAdapter rankingAdapter;
+
+    private TextView spendTimeHigh;
+    private TextView spendTimeMedium;
+    private TextView spendTimeLown;
 
     private Date startDay;
     private Date endDay;
@@ -83,6 +90,9 @@ public class WeekReportActivity extends AppCompatActivity {
 
         scroll = (ScrollView) findViewById(R.id.scrollView);
 
+        spendTimeHigh = (TextView) findViewById(R.id.txtSpendHigh);
+        spendTimeLown = (TextView) findViewById(R.id.txtSpendLown);
+        spendTimeMedium = (TextView) findViewById(R.id.txtSpendMedium);
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setTitle(getString(R.string.title_activity_week_report));
@@ -121,8 +131,10 @@ public class WeekReportActivity extends AppCompatActivity {
         endDay =  cal.getTime();
         sampleURL += dfServer.format(startDay) + "&endDate=";
         sampleURL += dfServer.format(endDay) + "&creator=";
-        sampleURL += User.getCurrentUser().getId();
+        sampleURL += User.getCurrentUser().getId() + "&token=";
+        sampleURL += RestClient.getToken();
 
+        Log.d("url", sampleURL);
         generatePieData();
 
         TextView weekDays = (TextView) findViewById(R.id.weekDays);
@@ -199,12 +211,24 @@ public class WeekReportActivity extends AppCompatActivity {
 
                         activities = new ArrayList<>();
                         ArrayList<PieEntry> entries1 = new ArrayList<>();
+                        int spendHigh = 0;
+                        int spendMedium = 0;
+                        int spendLow = 0;
 
                         for (Activity ac : activitiesList){
                             RankingItem rk = new RankingItem(ac, 0, 0);
                             for(InvestedTime it : itsList){
                                 if(it.getActivityId().equals(ac.getId())){
                                     rk.plusTime(it.getDuration());
+
+                                    if(ac.getPriority().equals("LOW")){
+                                        spendLow += it.getDuration();
+                                    } else if (ac.getPriority().equals("MEDIUM")) {
+                                        spendMedium += it.getDuration();
+                                        //  } else if (ac.getPriority().equals("HIGH")){
+                                    }  else {
+                                        spendHigh += it.getDuration();
+                                    }
                                 }
                             }
 
@@ -215,6 +239,11 @@ public class WeekReportActivity extends AppCompatActivity {
 
 
                         mChart.setCenterText(((int)totalTimeInvested + " min"));
+                        DecimalFormat df = new DecimalFormat("0.00");
+
+                        spendTimeHigh.setText("Prioridade Alta:     " +  spendHigh + " min (% " + df.format(100 * (spendHigh/ totalTimeInvested)) + ")");
+                        spendTimeMedium.setText("Prioridade Média:      " + spendMedium + " min (% " + df.format(100 * (spendMedium/ totalTimeInvested)) + ")");
+                        spendTimeLown.setText("Prioridade Baixa:      " + spendLow + " min (% " +  df.format(100 * (spendLow/ totalTimeInvested)) + ")");
                         Collections.sort(entries1, new Comparator<PieEntry>() {
                             @Override
                             public int compare(PieEntry pieEntry, PieEntry t1) {
@@ -241,7 +270,6 @@ public class WeekReportActivity extends AppCompatActivity {
                             activities.get(k).setColor(GRAPH_COLORS[k % GRAPH_COLORS.length]);
                         }
 
-                        loading.cancel();
                         setList();
                         PieDataSet ds1 = new PieDataSet(entries1, "");
                         ds1.setColors(GRAPH_COLORS);
@@ -251,13 +279,11 @@ public class WeekReportActivity extends AppCompatActivity {
                         PieData d = new PieData(ds1);
                         mChart.setData(d);
 
+                        loading.cancel();
                         setList();
 
                     }
 
-                    //
-
-                    //PARSING ITs FROM HISTORY
                 } catch (JSONException e){
                     System.out.println(response);
                     Log.e("JSON","FAILED");
@@ -270,7 +296,7 @@ public class WeekReportActivity extends AppCompatActivity {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
                 builder.setTitle("Volley Error");
                 builder.setMessage(error.toString()).setNegativeButton("OK", null)
-                        .create().show();
+                       .create().show();
             }
         });
 

@@ -17,6 +17,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.les.povmt.models.Activity;
+import com.les.povmt.network.RestClient;
 import com.les.povmt.network.VolleySingleton;
 import com.les.povmt.parser.ActivityParser;
 
@@ -134,7 +135,7 @@ public class RegisterTiActivity extends AppCompatActivity {
         final JSONObject jsonBody = new JSONObject();
         try {
             jsonBody.put("duration", totalTime);
-            jsonBody.put("investedTimeAt", getIntent().getStringExtra("id")); //Atividade ID
+            jsonBody.put("investedTimeAt", getIntent().getStringExtra("id"));
         } catch (JSONException e) {
             e.printStackTrace();
         }

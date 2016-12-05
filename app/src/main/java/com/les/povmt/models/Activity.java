@@ -20,8 +20,6 @@ public class Activity implements Parcelable {
     private String description;
     private Calendar createAt;
     private Calendar updateAt;
-
-
     public Activity() {
 
     }
