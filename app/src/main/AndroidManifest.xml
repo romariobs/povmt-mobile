@@ -14,7 +14,7 @@
             android:name=".PovMTActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoBar"></activity>
+            android:theme="@style/AppTheme.NoBar" />
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
@@ -28,25 +28,25 @@
         </activity>
         <activity
             android:name=".RegisterActivity"
+            android:parentActivityName=".LoginActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoBar"
-            android:parentActivityName=".LoginActivity"></activity>
+            android:theme="@style/AppTheme.NoBar" />
         <activity
             android:name=".WeekReportActivity"
             android:label="@string/title_activity_week_report"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".PovMTActivity"/>
-        <activity android:name=".HistoryTabsActivity"
-            android:label="@string/history_tabs_activity"
-            android:screenOrientation="portrait"
             android:parentActivityName=".PovMTActivity"
-            />
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".HistoryTabsActivity"
+            android:label="@string/history_tabs_activity"
+            android:parentActivityName=".PovMTActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".RegisterTiActivity"
             android:label="Novo TI"
+            android:parentActivityName=".ActivityProfileActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Dialog"
-            android:parentActivityName=".ActivityProfileActivity"/>
+            android:theme="@style/AppTheme.Dialog" />
         <activity
             android:name=".ListUserActivity"
             android:screenOrientation="portrait" />
@@ -54,7 +54,7 @@
             android:name=".CreateActivity"
             android:label="Criar Atividade"
             android:parentActivityName=".ListUserActivity"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".EditActivity"
             android:label="Editar Atividade"
@@ -62,11 +62,12 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".ActivityProfileActivity"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".ListUserActivity"></activity>
+            android:parentActivityName=".ListUserActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".HistoricActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
+        <activity android:name=".notification.ResultActivity"></activity>
     </application>
 
 </manifest>
