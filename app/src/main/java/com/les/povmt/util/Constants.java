@@ -26,4 +26,14 @@ public class Constants {
     public static final String TAG_USER = "user";
     public static final String TAG_ID = "id";
 
+    //Tags used for register new activity
+    public static final String TAG_CREATOR = "creator";
+    public static final String TAG_TITLE = "title";
+    public static final String TAG_PRIORITY = "priority";
+    public static final String TAG_CATEGORY = "category";
+    public static final String TAG_DESCRIPTION = "description";
+    public static final String TAG_CREATED_AT = "createdAt";
+    public static final String TAG_UPDATED_AT = "updatedAt";
+    public static final String TAG_ROOT = "activities";
+
 }

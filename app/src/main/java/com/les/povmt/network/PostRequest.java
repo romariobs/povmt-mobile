@@ -1,8 +1,11 @@
 package com.les.povmt.network;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
+import com.les.povmt.util.Constants;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -34,4 +37,13 @@ public class PostRequest extends StringRequest {
         return parameters;
     }
 
+
+    @Override
+    public Map<String, String> getHeaders() throws AuthFailureError{
+        Map<String, String> headers = new HashMap<String, String>();
+        String authorization = "Bearer" + RestClient.getToken();
+
+        headers.put(Constants.AUTHORIZATION_HEADER, authorization);
+        return headers;
+    }
 }

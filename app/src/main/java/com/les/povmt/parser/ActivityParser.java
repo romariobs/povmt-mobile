@@ -27,6 +27,7 @@ public class ActivityParser {
     private final String TAG_CREATOR = "creator";
     private final String TAG_TITLE = "title";
     private final String TAG_PRIORITY = "priority";
+    private final String TAG_CATEGORY = "category";
     private final String TAG_DESCRIPTION = "description";
     private final String TAG_CREATED_AT = "createdAt";
     private final String TAG_UPDATED_AT = "updatedAt";
@@ -61,6 +62,7 @@ public class ActivityParser {
                     String creator = "";
                     String title = "";
                     String priority = "";
+                    String category = "";
                     String description = "";
 
                     Calendar createdAt = Calendar.getInstance();
@@ -78,6 +80,9 @@ public class ActivityParser {
                     if (it.has(TAG_PRIORITY)){
                         priority = it.getString(TAG_PRIORITY);
                     }
+                    if (it.has(TAG_CATEGORY)){
+                        category = it.getString(TAG_CATEGORY);
+                    }
                     if (it.has(TAG_DESCRIPTION)){
                         description = it.getString(TAG_DESCRIPTION);
                     }
@@ -89,7 +94,7 @@ public class ActivityParser {
                         updatedAt = Util.parseDateFromUTC(it.getString(TAG_UPDATED_AT));
                     }
 
-                    Activity newActivity = new Activity(id, creator, title, priority, description, createdAt, updatedAt);
+                    Activity newActivity = new Activity(id, creator, title, priority, category ,description, createdAt, updatedAt);
                     activities.add(newActivity);
                 }
 
@@ -121,6 +126,7 @@ public class ActivityParser {
                     String creator = "";
                     String title = "";
                     String priority = "";
+                    String category = "";
                     String description = "";
 
                     Calendar createdAt = Calendar.getInstance();
@@ -138,6 +144,9 @@ public class ActivityParser {
                     if (it.has(TAG_PRIORITY)){
                         priority = it.getString(TAG_PRIORITY);
                     }
+                    if (it.has(TAG_CATEGORY)){
+                        category = it.getString(TAG_CATEGORY);
+                    }
                     if (it.has(TAG_DESCRIPTION)){
                         description = it.getString(TAG_DESCRIPTION);
                     }
@@ -149,7 +158,7 @@ public class ActivityParser {
                         updatedAt = Util.parseDateFromUTC(it.getString(TAG_UPDATED_AT));
                     }
 
-                    Activity newActivity = new Activity(id, creator, priority, title, description, createdAt, updatedAt);
+                    Activity newActivity = new Activity(id, creator, title, priority , category, description, createdAt, updatedAt);
                     activities.add(newActivity);
                 }
 

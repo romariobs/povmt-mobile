@@ -40,25 +40,26 @@
         app:met_floatingLabel="normal" />
 
     <RadioGroup
+        android:id="@+id/group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:orientation="horizontal"
         android:textColorHint="@color/textColorPrimaryLight">
 
-            <RadioButton
-                android:text="Trabalho"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:id="@+id/radioButton_job" />
+        <RadioButton
+            android:text="Trabalho"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/radioButton_job" />
 
-            <RadioButton
-                android:text="Lazer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/radioButton_recreation"
-                android:layout_weight="1" />
+        <RadioButton
+            android:text="Lazer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/radioButton_recreation"
+            android:layout_weight="1" />
     </RadioGroup>
 
     <android.support.design.widget.TextInputLayout
@@ -90,4 +91,3 @@
         android:layout_marginTop="30dp"/>
 
 </LinearLayout>
-
