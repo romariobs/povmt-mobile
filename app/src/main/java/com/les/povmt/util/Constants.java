@@ -35,5 +35,8 @@ public class Constants {
     public static final String TAG_CREATED_AT = "createdAt";
     public static final String TAG_UPDATED_AT = "updatedAt";
     public static final String TAG_ROOT = "activities";
+    public static final String TAG_ACTIVITY = "activity";
+
 
 }
+

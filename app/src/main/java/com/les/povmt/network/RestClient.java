@@ -55,6 +55,8 @@ public class RestClient {
      */
     public static final int HTTP_OK = 200;
 
+    public static final int HTTP_CREATED = 201;
+
     /**
      * Getting date from out web service.
      *
