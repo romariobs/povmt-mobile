@@ -84,13 +84,16 @@ public class CreateActivity extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 RadioButton button = (RadioButton) group.findViewById(checkedId);
                 category = button.getText().toString();
+                Log.i("AAAAAAAAAAAAAAAAAA", category);
                 //Handle the case where the user don't select any thing
                 //In this case no put the parameter to send in the request.
                 if (category.equals("Trabalho")){
                     category = "WORK";
+                    Log.i("AAAAAAAAAAAAAAAAAA", category);
                 }
                 else {
                     category = "LEISURE";
+                    Log.i("AAAAAAAAAAAAAAAAAA", category);
                 }
                 //Check this better!
             }
@@ -123,30 +126,33 @@ public class CreateActivity extends AppCompatActivity {
                         }
 
                         if (status == RestClient.HTTP_CREATED) {
-                            //loading.cancel();
-                            backToListActivity();
-                            //Log.d(TAG + " created new user ", activity);
+
+                            finish();
+
                         } else {
-                            //loading.cancel();
+
                             AlertDialog.Builder builder = new AlertDialog.Builder(CreateActivity.this);
                             builder.setMessage(Messages.CREATE_ACTIVITY_ERROR_MSG).setNegativeButton("Retry", null).create().show();
                         }
                     } catch (JSONException e) {
-                        //loading.cancel();
+
                         Log.e(TAG, e.getMessage());
                     }
                 }
             };
 
-            Map<String, String> parameters = new HashMap<>();
+            if (verifyConditions()){
+                Map<String, String> parameters = new HashMap<>();
 
-            parameters.put(Constants.TAG_TITLE, title.getText().toString());
-            parameters.put(Constants.TAG_DESCRIPTION, description.getText().toString());
-            parameters.put(Constants.TAG_CREATOR, User.getCurrentUser().getId().toString());
-            parameters.put(Constants.TAG_PRIORITY, priority);
-            parameters.put(Constants.TAG_CATEGORY, category);
+                parameters.put(Constants.TAG_TITLE, title.getText().toString());
+                parameters.put(Constants.TAG_DESCRIPTION, description.getText().toString());
+                parameters.put(Constants.TAG_CREATOR, User.getCurrentUser().getId());
+                parameters.put(Constants.TAG_PRIORITY, priority);
+                parameters.put(Constants.TAG_CATEGORY, category);
 
-            RestClient.post(mContext, RestClient.ACTIVITY_ENDPOINT_URL, parameters, responseListener);
+                RestClient.post(mContext, RestClient.ACTIVITY_ENDPOINT_URL, parameters, responseListener);
+            }
+
         };
 
     });
@@ -160,17 +166,6 @@ public class CreateActivity extends AppCompatActivity {
                 (priority != null && !priority.trim().isEmpty()) &&
                 (category != null && !category.trim().isEmpty());
 
-    }
-
-    private void backToListActivity(){
-
-        new android.os.Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent listActivityIntent = new Intent(CreateActivity.this, ListUserActivity.class);
-                CreateActivity.this.startActivity(listActivityIntent);
-            }
-        },500);
     }
 }
 
