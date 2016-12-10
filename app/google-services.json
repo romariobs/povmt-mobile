@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "934954521584",
+    "project_id": "povmt-da5f9"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:934954521584:android:fb176261087968a6",
+        "android_client_info": {
+          "package_name": "com.les.povmt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "934954521584-orsuot8e6o3cma2u1v2ovfid2cj42d3r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.les.povmt",
+            "certificate_hash": "F8E12E3D1AF38C764E85DD9ABFD2547D163358BB"
+          }
+        },
+        {
+          "client_id": "934954521584-pbeiivr4r49bonhu71edo772kaea9h58.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDDBgdiX_9w-AWRF6-54TU-tCDlFhNPiY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
