@@ -89,8 +89,9 @@ public class RestClient {
      * @param ctx - the current activity context.
      * @param url - the address to call in the server
      */
-    public static void put(Context ctx, String url){
-
+    public static void put(Context ctx, String url, Map<String,String> parameters, Response.Listener<String> listener){
+        PutRequest request = new PutRequest(Request.Method.PUT, parameters, url, listener, null);
+        VolleySingleton.getInstance(ctx).addToRequestQueue(request);
     }
 
     /**

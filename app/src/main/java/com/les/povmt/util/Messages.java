@@ -12,7 +12,7 @@ public class Messages {
     //Messages used by authentication
     public static final String AUTH_ERROR_MSG = "Fail trying authentication with server!";
     public static final String CREATE_ACTIVITY_ERROR_MSG = "Fail trying to create an activity!";
-
+    public static final String EDIT_ACTIVITY_ERROR_MSG = "Fail trying to edit an activity!";
     public static final String AUTHENTICATING = "Autenticando...";
 
 }
