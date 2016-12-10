@@ -20,7 +20,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.les.povmt.models.User;
 import com.les.povmt.network.LoginRequest;
+import com.les.povmt.network.RestClient;
 import com.les.povmt.network.VolleySingleton;
+import com.les.povmt.util.Constants;
+import com.les.povmt.util.Messages;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -105,9 +108,6 @@ public class LoginActivity extends AppCompatActivity {
     private void handleSignInResult(GoogleSignInResult result) {
 
         if (result.isSuccess()) {
-            // Signed in successfully, show authenticated UI.
-            GoogleSignInAccount acct = result.getSignInAccount();
-
             Response.Listener<String> responseListener = new Response.Listener<String>(){
                 @Override
                 public void onResponse(String response){
@@ -118,27 +118,29 @@ public class LoginActivity extends AppCompatActivity {
 
                         int status = 0;
 
-                        if (json.has(TAG_STATUS)){
-                            status = json.getInt(TAG_STATUS);
+                        if (json.has(Constants.TAG_STATUS)){
+                            status = json.getInt(Constants.TAG_STATUS);
                         }
 
-                        if (status == HTTP_CREATED || status == HTTP_OK){
+                        if (status == RestClient.HTTP_OK){
+                            if (json.has(Constants.TAG_TOKEN)){
+                                String token = json.getString(Constants.TAG_TOKEN);
+                                RestClient.setToken(token);
+                            }
+
                             loading.cancel();
                             Intent accountIntent = new Intent(LoginActivity.this, ListUserActivity.class);
 
-                            JSONObject user = json.getJSONObject("user");
-                            accountIntent.putExtra("id", user.getString("id") );
+                            JSONObject user = json.getJSONObject(Constants.TAG_USER);
+                            accountIntent.putExtra(Constants.TAG_ID, user.getString(Constants.TAG_ID));
                             LoginActivity.this.startActivity(accountIntent);
 
-                            User.setCurrentUser(user.getString("id"), user.getString("name"), user.getString("email"));
+                            User.setCurrentUser(user.getString(Constants.TAG_ID), user.getString(Constants.TAG_NAME), user.getString(Constants.TAG_EMAIL));
                         }
                         else{
                             loading.cancel();
                             AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                            builder.setMessage("Fail trying authentication with server!")
-                                    .setNegativeButton("Retry", null)
-                                    .create()
-                                    .show();
+                            builder.setMessage(Messages.AUTH_ERROR_MSG).setNegativeButton("Retry", null).create().show();
                         }
 
                     }
@@ -151,8 +153,6 @@ public class LoginActivity extends AppCompatActivity {
 
             LoginRequest loginRequest = new LoginRequest(result.getSignInAccount().getEmail(),responseListener);
             VolleySingleton.getInstance(mContext).addToRequestQueue(loginRequest);
-
-
         } else {
             // Signed out, show unauthenticated UI.
             //updateUI(false);

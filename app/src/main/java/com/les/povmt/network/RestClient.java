@@ -118,7 +118,8 @@ public class RestClient {
      *
      * @param token - The current authorization token.
      */
-    public static void setToken(String token){
+    public static void setToken(String token)
+    {
         RestClient.AUTHORIZATION_TOKEN = token;
     }
 
