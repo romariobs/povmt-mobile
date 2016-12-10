@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -43,7 +44,8 @@ public class EditActivity extends AppCompatActivity {
 
     private EditText title;
     private MaterialBetterSpinner spn;
-    private String priority;
+    private int position;
+    private String priority = "";
     private RadioGroup group;
     private String category;
     private EditText description;
@@ -60,34 +62,38 @@ public class EditActivity extends AppCompatActivity {
         title = (EditText) findViewById(R.id.title_activity);
         description = (EditText) findViewById(R.id.description_activity);
         spn = (MaterialBetterSpinner) findViewById(R.id.priority_activity);
-
-
+        group = (RadioGroup) findViewById(R.id.group);
         final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.listPriority, android.R.layout.simple_spinner_item);
         spn.setAdapter(adapter);
-        spn.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) {
-                    case 0:
-                        priority = "LOW";
-                        break;
-                    case 1:
-                        priority = "MEDIUM";
-                        break;
-                    case 2:
-                        priority = "HIGH";
-                        break;
-                }
 
-            }
-        });
 
-        group = (RadioGroup) findViewById(R.id.group);
+        activity = getIntent().getExtras().getParcelable("activity");
+
+        title.setText(activity.getTitle());
+        description.setText(activity.getDescription());
+
+
+        priority = activity.getPriority();
+
+        switch (priority){
+            case "LOW":
+                position = 0;
+                break;
+
+            case "MEDIUM":
+                position = 1;
+                break;
+            case "HIGH":
+                position = 2;
+                break;
+        }
+
         group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 RadioButton button = (RadioButton) group.findViewById(checkedId);
+
                 category = button.getText().toString();
                 //Handle the case where the user don't select any thing
                 //In this case no put the parameter to send in the request.
@@ -101,10 +107,7 @@ public class EditActivity extends AppCompatActivity {
             }
         });
 
-        activity = getIntent().getExtras().getParcelable("activity");
-        title.setText(activity.getTitle());
-        description.setText(activity.getDescription());
-        priority = activity.getPriority();
+
 
         spn.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -123,6 +126,7 @@ public class EditActivity extends AppCompatActivity {
 
             }
         });
+
         button_create = (Button) findViewById(R.id.button_create);
         button_create.setOnClickListener(
             new View.OnClickListener() {
@@ -164,20 +168,6 @@ public class EditActivity extends AppCompatActivity {
 
                     };
 
-//                    Response.ErrorListener errorListener = new Response.ErrorListener(
-//
-//                    ) {
-//
-//                        @Override
-//                        public void onErrorResponse(VolleyError error) {
-//                            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(EditActivity.this);
-//                            builder.setTitle("Volley Error");
-//                            builder.setMessage(error.toString()).setNegativeButton("OK", null)
-//                                    .create().show();
-//                        }
-//                    };
-
-
                     if (verifyConditions()){
 
                         editActivity();
@@ -188,7 +178,7 @@ public class EditActivity extends AppCompatActivity {
                         parameters.put(Constants.TAG_CREATOR, User.getCurrentUser().getId());
                         parameters.put(Constants.TAG_PRIORITY, priority);
                         parameters.put(Constants.TAG_CATEGORY, category);
-                        RestClient.put(mContext, RestClient.ACTIVITY_ENDPOINT_URL+"/id" , parameters,responseListener);
+                        RestClient.put(mContext, RestClient.ACTIVITY_ENDPOINT_URL+"/"+ activity.getId() , parameters,responseListener);
 
                         onBackPressed();
                     }
