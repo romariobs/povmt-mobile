@@ -25,64 +25,28 @@
             android:layout_marginTop="50dp"
             android:layout_gravity="center"
             android:typeface="normal"
-            android:textSize="30sp"
+            android:textSize="32sp"
             android:textStyle="normal|bold"
             android:textColor="@color/textColorPrimaryDark" />
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:textColorHint="@color/textColorPrimaryDark">
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"
-                android:ems="10"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true"
-                android:id="@+id/etUserEmail"
-                android:layout_alignParentEnd="true"
-                android:textColor="@color/textColorPrimaryDark"
-                android:hint="Email" />
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:textColorHint="@color/textColorPrimaryDark">
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:ems="10"
-                android:layout_below="@+id/etUserEmail"
-                android:layout_alignParentStart="true"
-                android:id="@+id/etUserPass"
-                android:layout_alignParentEnd="true"
-                android:textColor="@color/textColorPrimaryDark"
-                android:hint="Senha" />
-        </android.support.design.widget.TextInputLayout>
-        <Button
-            android:text="Entrar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:id="@+id/btnLogin"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_below="@+id/etUserPass"
-            android:background="@color/colorPrimary"
-            android:textColor="@color/colorWhite" />
         <TextView
-            android:text="Não tem conta? Crie uma"
+            android:text="Autenticação"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/btnLogin"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="100dp"
             android:layout_gravity="center"
-            android:textColor="@color/textColorPrimaryDark"
-            android:id="@+id/tvRegister" />
+            android:typeface="normal"
+            android:textSize="24sp"
+            android:textStyle="normal|bold"
+            android:textColor="@color/textColorPrimaryDark" />
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/sign_in_button"
+            android:layout_width="150dp"
+            android:layout_marginTop="30dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"/>
     </LinearLayout>
 </RelativeLayout>

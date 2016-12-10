@@ -13,16 +13,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.android.volley.Response;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.les.povmt.models.User;
-import com.les.povmt.network.RestClient;
-import com.les.povmt.util.Constants;
-import com.les.povmt.util.Messages;
+import com.les.povmt.network.LoginRequest;
+import com.les.povmt.network.VolleySingleton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  *  This class is responsible by Authentication process using the PovMT server.
@@ -30,7 +31,6 @@ import java.util.Map;
  *  Auth response example:
  *  {
  *   "status": 200,
- *   "token" : "TOKEN_STRING"
  *   "user": {
  *      "email": "samuel.santos@mail.com",
  *       "name": "samuel santos",
@@ -38,97 +38,129 @@ import java.util.Map;
  *       "updatedAt": "2016-11-20T14:52:02.080Z",
  *      "id": 3
  *  }
- * }
- * @author Samuel T. C. Santos
+ } @author Samuel T. C. Santos
  */
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
 
-    private EditText etEmail;
-    private EditText etPassword;
-    private Button btnLogin;
-    private TextView tvRegister;
+    private static final String TAG_STATUS = "status";
+
+    private static final int HTTP_OK = 200;
+    private static final int HTTP_CREATED = 201;
 
     private final Context mContext = this;
+
+    private GoogleApiClient mGoogleApiClient;
+    private static final int RC_SIGN_IN = 1001;
+
+    private ProgressDialog loading;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        etEmail = (EditText) findViewById(R.id.etUserEmail);
-        etPassword = (EditText) findViewById(R.id.etUserPass);
-        btnLogin = (Button) findViewById(R.id.btnLogin);
 
-        tvRegister = (TextView) findViewById(R.id.tvRegister);
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
 
-        tvRegister.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent registerIntent = new Intent(LoginActivity.this, RegisterActivity.class);
-                LoginActivity.this.startActivity(registerIntent);
+                switch (v.getId()) {
+                    case R.id.sign_in_button:
+                        signIn();
+                        break;
+                }
             }
         });
 
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+    }
 
-                final String email = etEmail.getText().toString();
-                final String password = etPassword.getText().toString();
+    private void signIn() {
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
 
-                final ProgressDialog loading = new ProgressDialog(LoginActivity.this, R.style.AppThemeDarkDialog);
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-                loading.setMessage(Messages.AUTHENTICATING);
-                loading.show();
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            loading = new ProgressDialog(LoginActivity.this, R.style.AppThemeDarkDialog);
+            loading.setMessage("Autenticando...");
+            loading.show();
 
-                Response.Listener<String> responseListener = new Response.Listener<String>(){
-                    @Override
-                    public void onResponse(String response){
-                        Log.d(TAG, response);
-                        try {
-                            JSONObject json = new JSONObject(response);
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleSignInResult(result);
+        }
+    }
 
-                            int status = 0;
+    private void handleSignInResult(GoogleSignInResult result) {
 
-                            if (json.has(Constants.TAG_STATUS)){
-                                status = json.getInt(Constants.TAG_STATUS);
-                            }
+        if (result.isSuccess()) {
+            // Signed in successfully, show authenticated UI.
+            GoogleSignInAccount acct = result.getSignInAccount();
 
-                            if (status == RestClient.HTTP_OK){
-                                if (json.has(Constants.TAG_TOKEN)){
-                                    String token = json.getString(Constants.TAG_TOKEN);
-                                    RestClient.setToken(token);
-                                }
+            Response.Listener<String> responseListener = new Response.Listener<String>(){
+                @Override
+                public void onResponse(String response){
+                    Log.d(TAG, response);
 
-                                loading.cancel();
-                                Intent accountIntent = new Intent(LoginActivity.this, ListUserActivity.class);
+                    try {
+                        JSONObject json = new JSONObject(response);
 
-                                JSONObject user = json.getJSONObject(Constants.TAG_USER);
-                                accountIntent.putExtra(Constants.TAG_ID, user.getString(Constants.TAG_ID));
-                                LoginActivity.this.startActivity(accountIntent);
+                        int status = 0;
 
-                                User.setCurrentUser(user.getString(Constants.TAG_ID), user.getString(Constants.TAG_NAME), user.getString(Constants.TAG_EMAIL));
-                            }
-                            else{
-                                loading.cancel();
-                                AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                                builder.setMessage(Messages.AUTH_ERROR_MSG).setNegativeButton("Retry", null).create().show();
-                            }
-
+                        if (json.has(TAG_STATUS)){
+                            status = json.getInt(TAG_STATUS);
                         }
-                        catch (JSONException e){
+
+                        if (status == HTTP_CREATED || status == HTTP_OK){
                             loading.cancel();
-                            Log.d(TAG, e.getMessage());
-                        }
-                    }
-                };
+                            Intent accountIntent = new Intent(LoginActivity.this, ListUserActivity.class);
 
-                Map<String, String> parameters = new HashMap<String, String>();
-                parameters.put(Constants.TAG_EMAIL, email);
-                parameters.put(Constants.TAG_PASSWORD, password);
-                RestClient.post(mContext, RestClient.AUTH_ENDPOINT_URL, parameters, responseListener);
-            }
-        });
+                            JSONObject user = json.getJSONObject("user");
+                            accountIntent.putExtra("id", user.getString("id") );
+                            LoginActivity.this.startActivity(accountIntent);
+
+                            User.setCurrentUser(user.getString("id"), user.getString("name"), user.getString("email"));
+                        }
+                        else{
+                            loading.cancel();
+                            AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                            builder.setMessage("Fail trying authentication with server!")
+                                    .setNegativeButton("Retry", null)
+                                    .create()
+                                    .show();
+                        }
+
+                    }
+                    catch (JSONException e){
+                        loading.cancel();
+                        Log.d(TAG, e.getMessage());
+                    }
+                }
+            };
+
+            LoginRequest loginRequest = new LoginRequest(result.getSignInAccount().getEmail(),responseListener);
+            VolleySingleton.getInstance(mContext).addToRequestQueue(loginRequest);
+
+
+        } else {
+            // Signed out, show unauthenticated UI.
+            //updateUI(false);
+            AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+            builder.setMessage("Erro ao obter dados do Google!")
+                    .setNegativeButton("Retry", null)
+                    .create()
+                    .show();
+        }
     }
 }

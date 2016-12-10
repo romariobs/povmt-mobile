@@ -1,9 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'alias_name'
+            keyPassword '123456'
+            storeFile file('../debug.keystore')
+            storePassword '123456'
+        }
+    }
     compileSdkVersion 24
     buildToolsVersion "24.0.0"
-
     defaultConfig {
         applicationId "com.les.povmt"
         minSdkVersion 21
@@ -16,20 +23,24 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            signingConfig signingConfigs.config
+        }
     }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.+'
-    compile 'com.android.support:support-v4:24.+'
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.android.support:support-v4:24.2.1'
     compile 'de.hdodenhof:circleimageview:2.1.0'
-    compile 'com.android.support:design:24.+'
-    compile 'com.android.support:cardview-v7:23.1.1'
+    compile 'com.android.support:design:24.2.1'
+    compile 'com.android.support:cardview-v7:24.2.1'
     compile 'it.neokree:MaterialTabs:0.11'
     compile 'com.android.volley:volley:1.0.0'
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.weiwangcn.betterspinner:library-material:1.1.0'
+    compile 'com.google.android.gms:play-services-auth:10.0.0'
+    testCompile 'junit:junit:4.12'
 }

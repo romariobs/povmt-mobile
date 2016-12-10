@@ -20,7 +20,7 @@ public class LoginRequest extends StringRequest {
     private Map<String, String> parameters;
 
     private static final String KEY_EMAIL = "email";
-    private static final String KEY_CLIENT_ID = "clientId";
+    private static final String KEY_APP_ID = "appId";
 
     private final String clientId = "0068c83491184dbc83539233890424fd30cbfb4b9716493eb68ef3" +
             "f9c6ad818755b32f573aff4ca9857d584d0628f21c0e12b5894d2a430781c0848a31aab51f";
@@ -30,7 +30,7 @@ public class LoginRequest extends StringRequest {
 
         parameters = new HashMap<>();
         parameters.put(KEY_EMAIL, email);
-        parameters.put(KEY_CLIENT_ID, clientId);
+        parameters.put(KEY_APP_ID, clientId);
     }
 
     @Override

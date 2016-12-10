@@ -27,11 +27,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".RegisterActivity"
-            android:parentActivityName=".LoginActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoBar" />
-        <activity
             android:name=".WeekReportActivity"
             android:label="@string/title_activity_week_report"
             android:parentActivityName=".PovMTActivity"
