@@ -117,7 +117,7 @@ public class EditActivity extends AppCompatActivity {
                 break;
         }
 
-       ((RadioButton) findViewById(activity.getCategory() == WORK_STR ?
+       ((RadioButton) findViewById(activity.getCategory().equals(WORK_STR) ?
                R.id.radioButton_job : R.id.radioButton_recreation)).setChecked(true);
 
 
