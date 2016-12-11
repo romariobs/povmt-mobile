@@ -1,14 +1,9 @@
 package com.les.povmt.fragment;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -18,26 +13,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.github.mikephil.charting.data.PieEntry;
 import com.les.povmt.DividerItemDecoration;
-import com.les.povmt.ListUserActivity;
 import com.les.povmt.R;
 import com.les.povmt.RegisterTiActivity;
-import com.les.povmt.SwipeableRecyclerViewTouchListener;
 import com.les.povmt.adapter.ITListAdapter;
-import com.les.povmt.adapter.RankingAdapter;
-import com.les.povmt.models.Activity;
 import com.les.povmt.models.InvestedTime;
-import com.les.povmt.models.RankingItem;
 import com.les.povmt.network.RestClient;
-import com.les.povmt.network.VolleySingleton;
-import com.les.povmt.parser.ActivityParser;
 import com.les.povmt.parser.InvestedTimeParser;
 import com.les.povmt.util.Constants;
 import com.les.povmt.util.Messages;
@@ -48,11 +33,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 public class ITListFragment extends Fragment {
     private ITListAdapter itList;
@@ -65,6 +46,9 @@ public class ITListFragment extends Fragment {
     private final String apiEndpointUrl = "http://povmt.herokuapp.com/it";
 
     private FloatingActionButton addFab;
+
+    private int delReq = 0;
+    private int delReqCompleted = 0;
 
     public ITListFragment(String idActivity){
         this.idActivity = idActivity;
@@ -107,9 +91,25 @@ public class ITListFragment extends Fragment {
                     intent.putExtra("id", idActivity);
                     getContext().startActivity(intent);
                 } else {
-                    for (String i : itList.getListSelected()){
-                        deleteIT(Integer.valueOf(i));
+                    int size = itList.getSelected().size();
+                    List<String> list = itList.getSelected();
+
+                    delReq = size;
+                    delReqCompleted = 0;
+
+                    for(int i = size - 1; i >= 0 ; i--) {
+                        deleteIT(list.get(i));
+
+                        for (int j = 0; j < investedTimes.size(); j++) {
+                            if (investedTimes.get(j).getId() == list.get(i)) {
+                                investedTimes.remove(j);
+                                break;
+                            }
+                        }
                     }
+//                    for (String i : itList.clearSelected()){
+//                        deleteIT(Integer.valueOf(i));
+//                    }
                 }
             }
         });
@@ -118,12 +118,12 @@ public class ITListFragment extends Fragment {
     }
 
     private void populateList() {
-
         String finalRequest = apiEndpointUrl + "?investedTimeAt=" + idActivity;
 
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+
                 Log.d(TAG, response);
 
                 InvestedTimeParser dataParser = new InvestedTimeParser();
@@ -179,21 +179,20 @@ public class ITListFragment extends Fragment {
         };
 
         RestClient.get(getContext(), finalRequest, responseListener, errorListener);
-
-
     }
 
-    private void deleteIT(Integer i) {
-
-        final int j = i;
-        String finalRequest = apiEndpointUrl + "/" + investedTimes.get(i).getId();
+    private void deleteIT(String id) {
 
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, response);
-                investedTimes.remove(j);
-                itList.update(investedTimes);
+
+                if (++delReqCompleted == delReq) {
+                    itList.clearSelected();
+                    itList.update(investedTimes);
+                    Toast.makeText(getContext(), "Ti's removidas", Toast.LENGTH_SHORT).show();
+                }
 
                 try {
                     JSONObject json = new JSONObject(response);
@@ -229,11 +228,10 @@ public class ITListFragment extends Fragment {
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("error", error.toString());
+                //Log.d("error", error.toString());
             }
         };
-
-        RestClient.delete(getContext(), finalRequest , responseListener, errorListener);
+        RestClient.delete(getContext(), RestClient.INVESTED_TIME_ENDPOINT_URL+"/" + id , responseListener, errorListener);
 
     }
 

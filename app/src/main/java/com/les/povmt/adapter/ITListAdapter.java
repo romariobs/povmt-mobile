@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.les.povmt.ListUserActivity;
 import com.les.povmt.R;
 import com.les.povmt.RegisterTiActivity;
 import com.les.povmt.fragment.ITListFragment;
@@ -101,9 +102,9 @@ public class ITListAdapter extends RecyclerView.Adapter<ITListAdapter.viewHolder
                     @Override
                     public void onClick(View view) {
                         if (selected.isChecked()) {
-                            selectedItens.add(String.valueOf(getAdapterPosition()));
+                            selectedItens.add(String.valueOf(investedTimes.get(getAdapterPosition()).getId()));
                         } else {
-                            selectedItens.remove(String.valueOf(getAdapterPosition()));
+                            selectedItens.remove(String.valueOf(investedTimes.get(getAdapterPosition()).getId()));
                         }
 
                         int resource = R.drawable.ic_add_white_18dp;
@@ -140,11 +141,13 @@ public class ITListAdapter extends RecyclerView.Adapter<ITListAdapter.viewHolder
         return  currentAction;
     }
 
-    public List<String> getListSelected(){
-        List<String> result = this.selectedItens;
+    public List<String> getSelected() {
+        return this.selectedItens;
+    }
+
+    public void clearSelected(){
         selectedItens = new ArrayList<>();
         int resource = R.drawable.ic_add_white_18dp;
         f.setImageResource(resource);
-        return result;
     }
 }
