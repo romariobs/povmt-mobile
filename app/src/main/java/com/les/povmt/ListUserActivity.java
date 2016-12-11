@@ -1,8 +1,5 @@
 package com.les.povmt;
 
-import android.annotation.SuppressLint;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,7 +10,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -36,8 +32,6 @@ import com.les.povmt.fragment.ReportFragment;
 import com.les.povmt.models.Activity;
 import com.les.povmt.network.RestClient;
 import com.les.povmt.network.VolleySingleton;
-import com.les.povmt.notification.ItService;
-import com.les.povmt.notification.ResultActivity;
 import com.les.povmt.parser.ActivityParser;
 import com.les.povmt.util.Constants;
 import com.les.povmt.util.Messages;

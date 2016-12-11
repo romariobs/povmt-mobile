@@ -1,20 +1,20 @@
 package com.les.povmt;
 
 import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -22,6 +22,7 @@ import com.les.povmt.models.User;
 import com.les.povmt.network.LoginRequest;
 import com.les.povmt.network.RestClient;
 import com.les.povmt.network.VolleySingleton;
+import com.les.povmt.notification.NotificationEventReceiver;
 import com.les.povmt.util.Constants;
 import com.les.povmt.util.Messages;
 
@@ -58,7 +59,6 @@ public class LoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 1001;
 
     private ProgressDialog loading;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -34,7 +34,6 @@ import java.util.Map;
 
 public class EditActivity extends AppCompatActivity {
 
-
     private final String TAG = this.getClass().getSimpleName();
 
     private EditText title;
@@ -67,7 +66,6 @@ public class EditActivity extends AppCompatActivity {
 
         title.setText(activity.getTitle());
         description.setText(activity.getDescription());
-
 
         priority = activity.getPriority();
 
