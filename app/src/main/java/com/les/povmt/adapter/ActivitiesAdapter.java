@@ -2,6 +2,7 @@ package com.les.povmt.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -29,6 +30,7 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.vi
     private Context context;
     private List<Activity> activities;
 
+
     public ActivitiesAdapter(Context context, List<Activity> activities) {
         this.context = context;
         this.activities = activities;
@@ -47,8 +49,23 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.vi
     public void onBindViewHolder(viewHolder holder, int position) {
         Activity activity = activities.get(position);
 
+
+
         holder.title.setText(activity.getTitle());
         holder.description.setText(activity.getDescription());
+        switch (activity.getCategory()) {
+            case "WORK":
+                holder.view.setBackgroundColor(context.getResources().getColor(R.color.workColor));
+               // holder.view.setBackgroundColor(Color.GREEN);
+                //view.setBackgroundColor(Color.BLUE);
+                holder.category.setText("Trabalho");
+                break;
+            case "LEISURE":
+                holder.view.setBackgroundColor(context.getResources().getColor(R.color.leisureColor));
+               // holder.view.setBackgroundColor(Color.BLUE);
+                holder.category.setText("Lazer");
+                break;
+        }
 
  /*       holder.imageViewMenuOverflow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,15 +115,19 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.vi
 
     public class viewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private TextView title;
+        private TextView category;
         private TextView description;
+        private View view;
         private ImageView imageViewMenuOverflow;
 
         public viewHolder(View itemView) {
             super(itemView);
 
             title = (TextView) itemView.findViewById(R.id.title_activity);
+            category = (TextView) itemView.findViewById(R.id.category);
            // imageViewMenuOverflow = (ImageView) itemView.findViewById(R.id.imageViewMenuOverflow);
             description = (TextView) itemView.findViewById(R.id.description);
+            view = itemView.findViewById(R.id.view);
             itemView.setOnClickListener(this);
 
         }
