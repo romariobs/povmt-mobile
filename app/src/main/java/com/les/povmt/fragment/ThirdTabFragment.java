@@ -2,6 +2,7 @@ package com.les.povmt.fragment;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -34,6 +36,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 import static java.net.HttpURLConnection.HTTP_OK;
 
 public class ThirdTabFragment extends Fragment {
@@ -42,6 +48,13 @@ public class ThirdTabFragment extends Fragment {
     private String hostURL = "http://povmt.herokuapp.com/history?startDate=";
     private StringRequest stringRequest;
     private List<String> dataSource;
+    private boolean isWorkCategory = false;
+
+    @Bind(R.id.tv_work)
+    TextView mBtWork;
+
+    @Bind(R.id.tv_recreation)
+    TextView mBtRecreation;
 
     public ThirdTabFragment() {
         Calendar cal = Calendar.getInstance();
@@ -64,6 +77,9 @@ public class ThirdTabFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_three, container, false);
+        ButterKnife.bind(this, view);
+
+        selectTypeWork();
 
         final ProgressDialog loading = new ProgressDialog(getContext(), R.style.AppThemeDarkDialog);
         loading.setMessage("Carregando...");
@@ -144,5 +160,29 @@ public class ThirdTabFragment extends Fragment {
         });
         VolleySingleton.getInstance(getContext()).addToRequestQueue(stringRequest);
         return view;
+    }
+
+    @OnClick(R.id.tv_work)
+    void selectTypeWork() {
+        mBtWork.setBackground(getActivity().getResources().getDrawable(R.drawable.borderbg));
+        mBtWork.setTextColor(Color.WHITE);
+
+        mBtRecreation.setBackgroundColor(Color.TRANSPARENT);
+        mBtRecreation.setTextColor(Color.BLACK);
+
+        isWorkCategory = true;
+//        callService();
+    }
+
+    @OnClick(R.id.tv_recreation)
+    void selectTypeRecreation() {
+        mBtRecreation.setBackground(getActivity().getResources().getDrawable(R.drawable.borderbg));
+        mBtRecreation.setTextColor(Color.WHITE);
+
+        mBtWork.setBackgroundColor(Color.TRANSPARENT);
+        mBtWork.setTextColor(Color.BLACK);
+
+        isWorkCategory = false;
+//        callService();
     }
 }
