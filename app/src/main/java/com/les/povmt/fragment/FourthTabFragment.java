@@ -83,6 +83,7 @@ public class FourthTabFragment extends Fragment implements OnChartValueSelectedL
     private int mBeforeWeekTime = 0;
     private int mLastWeekTime = 0;
     private final long SEVEN_DAYS = (long) 6.048e+8;
+    private boolean isWorkCategory = false;
 
     //endregion
 
@@ -103,7 +104,6 @@ public class FourthTabFragment extends Fragment implements OnChartValueSelectedL
 
         setDates();
         prepateUrl();
-        callService();
         selectTypeWork();
 
         return view;
@@ -116,6 +116,9 @@ public class FourthTabFragment extends Fragment implements OnChartValueSelectedL
 
         mBtRecreation.setBackgroundColor(Color.TRANSPARENT);
         mBtRecreation.setTextColor(Color.BLACK);
+
+        isWorkCategory = true;
+        callService();
     }
 
     @OnClick(R.id.tv_recreation)
@@ -125,6 +128,9 @@ public class FourthTabFragment extends Fragment implements OnChartValueSelectedL
 
         mBtWork.setBackgroundColor(Color.TRANSPARENT);
         mBtWork.setTextColor(Color.BLACK);
+
+        isWorkCategory = false;
+        callService();
     }
 
     @Override
@@ -199,7 +205,11 @@ public class FourthTabFragment extends Fragment implements OnChartValueSelectedL
 
                         for (InvestedTime item :
                                 itsList) {
-                            mActualWeekTime += item.getDuration();
+                            if (isWorkCategory) {
+                                mActualWeekTime += item.getDuration();
+                            } else {
+                                mActualWeekTime += item.getDuration();
+                            }
                         }
                         mActualWeekTime = mActualWeekTime / 7 > 24 ? 24 : mActualWeekTime / 7;
                     }
@@ -261,7 +271,11 @@ public class FourthTabFragment extends Fragment implements OnChartValueSelectedL
 
                         for (InvestedTime item :
                                 itsList) {
-                            mBeforeWeekTime += item.getDuration();
+                            if (isWorkCategory) {
+                                mBeforeWeekTime += item.getDuration();
+                            } else {
+                                mBeforeWeekTime += item.getDuration();
+                            }
                         }
                         mBeforeWeekTime = mBeforeWeekTime / 7 > 24 ? 24 : mBeforeWeekTime / 7;
                     }
@@ -323,7 +337,11 @@ public class FourthTabFragment extends Fragment implements OnChartValueSelectedL
 
                         for (InvestedTime item :
                                 itsList) {
-                            mLastWeekTime += item.getDuration();
+                            if (isWorkCategory) {
+                                mLastWeekTime += item.getDuration();
+                            } else {
+                                mLastWeekTime += item.getDuration();
+                            }
                         }
                         mLastWeekTime = mLastWeekTime / 7 > 24 ? 24 : mLastWeekTime / 7;
                     }
