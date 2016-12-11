@@ -20,7 +20,7 @@
         <menu>
             <item
                 android:id="@+id/action_set_schedule"
-                android:title="Alterar horário" />
+                android:title="Horário das notificações" />
             <item
                 android:id="@+id/action_disable_noti"
                 android:title="Desabilitar" />

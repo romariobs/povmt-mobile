@@ -23,7 +23,8 @@ public class NotificationEventReceiver extends WakefulBroadcastReceiver {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         PendingIntent alarmIntent = getStartPendingIntent(context);
 
-        int time = intent.getIntExtra("time", Integer.MAX_VALUE);
+
+        long time = intent.getLongExtra("time", Integer.MAX_VALUE);
 
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
                 getTriggerAt(new Date()),

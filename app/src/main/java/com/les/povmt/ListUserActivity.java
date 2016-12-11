@@ -1,5 +1,6 @@
 package com.les.povmt;
 
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -32,6 +33,8 @@ import com.les.povmt.fragment.ReportFragment;
 import com.les.povmt.models.Activity;
 import com.les.povmt.network.RestClient;
 import com.les.povmt.network.VolleySingleton;
+import com.les.povmt.notification.NotificationEventReceiver;
+import com.les.povmt.notification.NotificationServiceStarterReceiver;
 import com.les.povmt.parser.ActivityParser;
 import com.les.povmt.util.Constants;
 import com.les.povmt.util.Messages;
@@ -40,6 +43,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -162,6 +166,12 @@ public class ListUserActivity extends AppCompatActivity {
                             }
                         });
 
+
+        Intent intent = new Intent();
+        intent.putExtra("time", getTimeMilliNotification());
+
+        NotificationEventReceiver.setupAlarm(getApplicationContext(), intent);
+
         recyclerView.addOnItemTouchListener(swipeTouchListener);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -176,6 +186,21 @@ public class ListUserActivity extends AppCompatActivity {
 
     public void refresh () {
         PopulateList();
+    }
+
+    public long getTimeMilliNotification() {
+
+        SharedPreferences prefs = getSharedPreferences(POVMT_PREFS, MODE_PRIVATE);
+        int timeset_hour = prefs.getInt("TimeScheduleHour", 00);
+        int timeset_min = prefs.getInt("TimeScheduleMin", 00);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, timeset_hour);
+        calendar.set(Calendar.MINUTE, timeset_min);
+        calendar.set(Calendar.SECOND, 00);
+
+        return calendar.getTimeInMillis();
+
+
     }
 
     public void clear () {
