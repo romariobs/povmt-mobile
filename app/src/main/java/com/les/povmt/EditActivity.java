@@ -13,16 +13,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
 
-import com.android.volley.Request;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.les.povmt.models.Activity;
 import com.les.povmt.models.User;
 import com.les.povmt.network.RestClient;
-import com.les.povmt.network.VolleySingleton;
 import com.les.povmt.util.Constants;
 import com.les.povmt.util.Messages;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;

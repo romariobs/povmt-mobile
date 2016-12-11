@@ -12,4 +12,6 @@
     <color name="colorBlack">#000000</color>
     <color name="colorGray">#808080</color>
     <color name="colorGreen">#2d8125</color>
+    <color name="workColor">#42a5f5</color>
+    <color name="leisureColor">#66bb6a</color>
 </resources>
