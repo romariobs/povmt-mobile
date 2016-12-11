@@ -133,6 +133,7 @@ public class LoginActivity extends AppCompatActivity{
         if (email != null) {
             loading = new ProgressDialog(LoginActivity.this, R.style.AppThemeDarkDialog);
             loading.setMessage("Autenticando...");
+            loading.setCancelable(false);
             loading.show();
 
             Response.Listener<String> responseListener = new Response.Listener<String>() {
