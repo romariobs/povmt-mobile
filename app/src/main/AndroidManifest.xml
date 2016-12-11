@@ -62,7 +62,10 @@
         <activity
             android:name=".HistoricActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".notification.ResultActivity"></activity>
+        <activity android:name=".notification.ResultActivity" />
+        <activity
+            android:name=".NotificationActivity"
+            android:label="@string/title_activity_notification" />
     </application>
 
 </manifest>

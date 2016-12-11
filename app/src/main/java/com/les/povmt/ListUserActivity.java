@@ -5,7 +5,9 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -13,6 +15,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,6 +24,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TimePicker;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -43,6 +48,7 @@ import java.util.Map;
 
 public class ListUserActivity extends AppCompatActivity {
 
+    private static final String POVMT_PREFS = "POVMT_PREFS";
     private final int CREATE_ATIVITY = 1;
 
     private static String userId;
@@ -268,6 +274,39 @@ public class ListUserActivity extends AppCompatActivity {
                 return true;
             case R.id.action_report:
                 startReportFragment();
+                return true;
+            case R.id.action_options:
+                final View dialogView = View.inflate(this, R.layout.dialog_notification_schedule, null);
+                final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+
+                final TimePicker timePicker = (TimePicker) dialogView.findViewById(R.id.tp_new_time);
+                timePicker.setIs24HourView(true);
+                SharedPreferences prefs = getSharedPreferences(POVMT_PREFS, MODE_PRIVATE);
+                int timeset_hour = prefs.getInt("TimeScheduleHour", 00);
+                int timeset_min = prefs.getInt("TimeScheduleMin", 00);
+
+                timePicker.setCurrentHour(timeset_hour);
+                timePicker.setCurrentMinute(timeset_min);
+
+                dialogView.findViewById(R.id.bt_dp_set).setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        String time = String.format("%02d:%02d", timePicker.getCurrentHour(), timePicker.getCurrentMinute());
+                        SharedPreferences.Editor editor = getSharedPreferences(POVMT_PREFS, MODE_PRIVATE).edit();
+                        editor.putInt("TimeScheduleHour", timePicker.getCurrentHour());
+                        editor.putInt("TimeScheduleMin", timePicker.getCurrentMinute());
+                        editor.commit();
+                        alertDialog.dismiss();
+                    }
+                });
+
+                alertDialog.setView(dialogView);
+                alertDialog.show();
+
+
+
                 return true;
         }
         return super.onOptionsItemSelected(item);

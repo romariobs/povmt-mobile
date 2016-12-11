@@ -8,7 +8,14 @@
         android:icon="@drawable/ic_assessment_white_24dp"
         android:iconifiedByDefault="false"
         app:showAsAction="always"
-        android:title="Report"/>
+        android:title="Relatório"/>
+
+    <item
+        android:id="@+id/action_options"
+        android:icon="@drawable/ic_settings_white_24dp"
+        android:iconifiedByDefault="false"
+        app:showAsAction="always"
+        android:title="Configurações" />
 
 
 </menu>

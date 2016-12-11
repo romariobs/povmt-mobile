@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:padding="8dp"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="@color/textColorPrimaryDark">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="time"
+            android:ems="10"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/editx_new_time"
+            android:layout_alignParentEnd="true"
+            android:textColor="@color/textColorPrimaryDark"
+            android:focusableInTouchMode="false"
+            android:hint="Alterar a hora de notificação" />
+    </android.support.design.widget.TextInputLayout>
+
+    <TimePicker
+        android:id="@+id/tp_new_time"
+        android:layout_width="match_parent"
+        android:calendarViewShown="true"
+        android:timePickerMode="spinner"
+        android:layout_weight="4"
+        android:layout_height="0dp" />
+
+    <Button
+        android:id="@+id/bt_dp_set"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Salvar"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/colorWhite"/>
+
+</LinearLayout>
