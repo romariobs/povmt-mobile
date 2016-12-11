@@ -266,20 +266,6 @@ public class ListUserActivity extends AppCompatActivity {
         };
 
         RestClient.delete(mContext, RestClient.ACTIVITY_ENDPOINT_URL+"/"+ id , responseListener, errorListener);
-
-//
-//        StringRequest activitiesRequest = new StringRequest(Request.Method.DELETE, RestClient.ACTIVITY_ENDPOINT_URL + "/" + id, new Response.Listener<String>(){
-//            @Override
-//            public void onResponse(String response) {
-//                Log.d(TAG, response);
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//            }
-//        });
-//
-//        VolleySingleton.getInstance(context).addToRequestQueue(activitiesRequest);
     }
 
     private void startEditActivity() {
