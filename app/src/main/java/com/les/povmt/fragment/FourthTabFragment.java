@@ -44,6 +44,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static java.net.HttpURLConnection.HTTP_OK;
 
@@ -56,6 +57,12 @@ public class FourthTabFragment extends Fragment implements OnChartValueSelectedL
 
     @Bind(R.id.tv_inf)
     TextView mTvInf;
+
+    @Bind(R.id.tv_work)
+    TextView mBtWork;
+
+    @Bind(R.id.tv_recreation)
+    TextView mBtRecreation;
 
     //endregion
 
@@ -97,8 +104,27 @@ public class FourthTabFragment extends Fragment implements OnChartValueSelectedL
         setDates();
         prepateUrl();
         callService();
+        selectTypeWork();
 
         return view;
+    }
+
+    @OnClick(R.id.tv_work)
+    void selectTypeWork() {
+        mBtWork.setBackground(getActivity().getResources().getDrawable(R.drawable.borderbg));
+        mBtWork.setTextColor(Color.WHITE);
+
+        mBtRecreation.setBackgroundColor(Color.TRANSPARENT);
+        mBtRecreation.setTextColor(Color.BLACK);
+    }
+
+    @OnClick(R.id.tv_recreation)
+    void selectTypeRecreation() {
+        mBtRecreation.setBackground(getActivity().getResources().getDrawable(R.drawable.borderbg));
+        mBtRecreation.setTextColor(Color.WHITE);
+
+        mBtWork.setBackgroundColor(Color.TRANSPARENT);
+        mBtWork.setTextColor(Color.BLACK);
     }
 
     @Override

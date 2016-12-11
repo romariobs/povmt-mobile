@@ -8,6 +8,33 @@
     android:padding="@dimen/activity_vertical_margin"
     tools:context="com.les.povmt.HistoricActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/border">
+
+        <TextView
+            android:id="@+id/tv_work"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/borderbg"
+            android:gravity="center"
+            android:textColor="@color/colorWhite"
+            android:text="@string/work" />
+
+        <TextView
+            android:id="@+id/tv_recreation"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/recreation" />
+
+    </LinearLayout>
+
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
