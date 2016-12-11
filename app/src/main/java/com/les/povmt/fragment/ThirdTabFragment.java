@@ -124,7 +124,12 @@ public class ThirdTabFragment extends Fragment {
                         for(int j = 1; j < json.getJSONObject("history").getJSONArray("groupedHistory").length();j++){
                             group = json.getJSONObject("history").getJSONArray("groupedHistory").optJSONObject(j);
                             List<InvestedTime> varList = (new InvestedTimeParser()).parse(group.toString());
-                            itsList.addAll(varList);
+                            //TODO Separar por categoria
+                            if (isWorkCategory) {
+                                itsList.addAll(varList);
+                            } else {
+                                itsList.addAll(varList);
+                            }
                         }
 
                         for (int it = 0; it < itsList.size(); it++) {

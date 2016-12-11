@@ -205,6 +205,7 @@ public class FourthTabFragment extends Fragment implements OnChartValueSelectedL
 
                         for (InvestedTime item :
                                 itsList) {
+                            //TODO Separar por categoria
                             if (isWorkCategory) {
                                 mActualWeekTime += item.getDuration();
                             } else {
@@ -271,6 +272,7 @@ public class FourthTabFragment extends Fragment implements OnChartValueSelectedL
 
                         for (InvestedTime item :
                                 itsList) {
+                            //TODO Separar por categoria
                             if (isWorkCategory) {
                                 mBeforeWeekTime += item.getDuration();
                             } else {
@@ -337,6 +339,7 @@ public class FourthTabFragment extends Fragment implements OnChartValueSelectedL
 
                         for (InvestedTime item :
                                 itsList) {
+                            //TODO Separar por categoria
                             if (isWorkCategory) {
                                 mLastWeekTime += item.getDuration();
                             } else {
