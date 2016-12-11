@@ -171,27 +171,31 @@ public class CreateActivity extends AppCompatActivity {
         //Rename to this use camelcase ... should be buttonCreate
         button_create = (Button) findViewById(R.id.button_create);
 
-        button_create.setOnClickListener(
-                new View.OnClickListener() {
-                    public void onClick(View view) {
-
-                        if (verifyConditions()){
-                            onBackPressed();
-                        }
-
-                    };
-
-                });
-
+        button_create.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    validate();
+                    onBackPressed();
+                } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
-    private boolean verifyConditions(){
+    private void validate () throws Exception {
+        String error = null;
 
-        return  (!title.getText().toString().trim().isEmpty()) &&
-                (!description.getText().toString().trim().isEmpty()) &&
-                (priority != null && !priority.trim().isEmpty()) &&
-                (category != null && !category.trim().isEmpty());
+        if (title.getText().toString().trim().isEmpty()) {
+            error = "Título vazio";
+        } else if (priority == null || priority.trim().isEmpty())  {
+            error = "Prioridade vazia";
+        } else if (category == null || category.trim().isEmpty()) {
+            error = "Categoria vazia";
+        }
 
+        if (error != null) throw new Exception(error);
     }
 
     @Override

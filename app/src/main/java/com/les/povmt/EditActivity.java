@@ -225,8 +225,6 @@ public class EditActivity extends AppCompatActivity {
 
         if (title.getText().toString().trim().isEmpty()) {
             error = "Título vazio";
-        } else if (description.getText().toString().trim().isEmpty()) {
-            error = "Descrição vazia";
         } else if (priority == null || priority.trim().isEmpty())  {
             error = "Prioridade vazia";
         } else if (category == null || category.trim().isEmpty()) {
