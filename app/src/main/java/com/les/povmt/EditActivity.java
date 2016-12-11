@@ -104,19 +104,24 @@ public class EditActivity extends AppCompatActivity {
         switch (priority){
             case Constants.LOW:
                 position = 0;
+                spn.setText("Baixa");
                 break;
 
             case Constants.MEDIUM:
                 position = 1;
+                spn.setText("Média");
                 break;
             case Constants.HIGH:
                 position = 2;
+                spn.setText("Alta");
                 break;
         }
 
        ((RadioButton) findViewById(activity.getCategory() == WORK_STR ?
                R.id.radioButton_job : R.id.radioButton_recreation)).setChecked(true);
 
+
+        category = activity.getCategory();
 
         group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -196,14 +201,11 @@ public class EditActivity extends AppCompatActivity {
         button_create.setOnClickListener(
                 new View.OnClickListener() {
                     public void onClick(View view) {
-
-                        if (verifyConditions()){
-
+                        try {
+                            validate();
                             onBackPressed();
-                        }
-                        else{
-                            title.setError("Requerido");
-                            description.setError("Requerido");
+                        } catch (Exception e) {
+                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -218,13 +220,20 @@ public class EditActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private boolean verifyConditions(){
+    private void validate () throws Exception {
+        String error = null;
 
-        return  (!title.getText().toString().trim().isEmpty()) &&
-                (!description.getText().toString().trim().isEmpty()) &&
-                (priority != null && !priority.trim().isEmpty()) &&
-                (category != null && !category.trim().isEmpty());
+        if (title.getText().toString().trim().isEmpty()) {
+            error = "Título vazio";
+        } else if (description.getText().toString().trim().isEmpty()) {
+            error = "Descrição vazia";
+        } else if (priority == null || priority.trim().isEmpty())  {
+            error = "Prioridade vazia";
+        } else if (category == null || category.trim().isEmpty()) {
+            error = "Categoria vazia";
+        }
 
+        if (error != null) throw new Exception(error);
     }
 
     private void editActivity() {
