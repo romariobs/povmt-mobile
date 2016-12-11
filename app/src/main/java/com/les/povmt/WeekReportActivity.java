@@ -70,7 +70,6 @@ public class WeekReportActivity extends AppCompatActivity {
     private Date endDay;
     DateFormat dfServer = new SimpleDateFormat("yyyy-MM-dd");
     String sampleURL = "http://povmt.herokuapp.com/history?startDate=";
-    // 2016-11-27&endDate=2016-12-04&creator=1";
 
 
     private ScrollView scroll;
@@ -129,6 +128,7 @@ public class WeekReportActivity extends AppCompatActivity {
 // start of the next week
         cal.add(Calendar.WEEK_OF_YEAR, 1);
         endDay =  cal.getTime();
+
         sampleURL += dfServer.format(startDay) + "&endDate=";
         sampleURL += dfServer.format(endDay) + "&creator=";
         sampleURL += User.getCurrentUser().getId() + "&token=";
@@ -172,11 +172,11 @@ public class WeekReportActivity extends AppCompatActivity {
         loading.setMessage("Carregando...");
         loading.show();
         // Request a string response from the provided hostURL.
+
         StringRequest stringRequest = new StringRequest(Request.Method.GET, sampleURL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 JSONObject json;
-                Log.d("Lucas2", response);
                 try {
                     json = new JSONObject(response);
                     int status = 0;

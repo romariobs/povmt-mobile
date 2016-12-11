@@ -1,9 +1,7 @@
 package com.les.povmt;
 
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -22,19 +20,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.les.povmt.adapter.ActivitiesAdapter;
 import com.les.povmt.fragment.ReportFragment;
 import com.les.povmt.models.Activity;
 import com.les.povmt.network.RestClient;
-import com.les.povmt.network.VolleySingleton;
 import com.les.povmt.notification.NotificationEventReceiver;
 import com.les.povmt.notification.NotificationServiceStarterReceiver;
 import com.les.povmt.parser.ActivityParser;
@@ -174,7 +167,7 @@ public class ListUserActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.putExtra("time", getTimeMilliNotification());
 
-        NotificationEventReceiver.setupAlarm(getApplicationContext(), intent);
+        NotificationServiceStarterReceiver.setupAlarm(getApplicationContext());
 
         recyclerView.addOnItemTouchListener(swipeTouchListener);
 
