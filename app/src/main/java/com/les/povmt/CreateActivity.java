@@ -103,56 +103,13 @@ public class CreateActivity extends AppCompatActivity {
                 new View.OnClickListener() {
                     public void onClick(View view) {
 
-            Response.Listener<String> responseListener = new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    Log.d(TAG, response);
-
-                    try {
-                        JSONObject json = new JSONObject(response);
-
-                        int status = 0;
-                        String activity = "";
-
-                        if (json.has(Constants.TAG_STATUS)) {
-                            status = json.getInt(Constants.TAG_STATUS);
+                        if (verifyConditions()){
+                            onBackPressed();
                         }
 
-                        if (json.has(Constants.TAG_ACTIVITY)) {
-                            activity = json.getString(Constants.TAG_ACTIVITY);
-                        }
+                    };
 
-                        if (status == RestClient.HTTP_CREATED) {
-
-                            finish();
-
-                        } else {
-
-                            AlertDialog.Builder builder = new AlertDialog.Builder(CreateActivity.this);
-                            builder.setMessage(Messages.CREATE_ACTIVITY_ERROR_MSG).setNegativeButton("Retry", null).create().show();
-                        }
-                    } catch (JSONException e) {
-
-                        Log.e(TAG, e.getMessage());
-                    }
-                }
-            };
-
-            if (verifyConditions()){
-                Map<String, String> parameters = new HashMap<>();
-
-                parameters.put(Constants.TAG_TITLE, title.getText().toString());
-                parameters.put(Constants.TAG_DESCRIPTION, description.getText().toString());
-                parameters.put(Constants.TAG_CREATOR, User.getCurrentUser().getId());
-                parameters.put(Constants.TAG_PRIORITY, priority);
-                parameters.put(Constants.TAG_CATEGORY, category);
-
-                RestClient.post(mContext, RestClient.ACTIVITY_ENDPOINT_URL, parameters, responseListener);
-            }
-
-        };
-
-    });
+                });
 
     }
 
@@ -162,6 +119,70 @@ public class CreateActivity extends AppCompatActivity {
                 (!description.getText().toString().trim().isEmpty()) &&
                 (priority != null && !priority.trim().isEmpty()) &&
                 (category != null && !category.trim().isEmpty());
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        createActivity();
+        Intent intent = new Intent(this, ListUserActivity.class);
+        startActivity(intent);
+
+
+
+//        Intent intent = new Intent(getApplication(), ActivityProfileActivity.class);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        intent.putExtra("activity", activity);
+//        getApplication().startActivity(intent);
+    }
+
+    private void createActivity(){
+
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, response);
+
+                try {
+                    JSONObject json = new JSONObject(response);
+
+                    int status = 0;
+                    String activity = "";
+
+                    if (json.has(Constants.TAG_STATUS)) {
+                        status = json.getInt(Constants.TAG_STATUS);
+                    }
+
+                    if (json.has(Constants.TAG_ACTIVITY)) {
+                        activity = json.getString(Constants.TAG_ACTIVITY);
+                    }
+
+                    if (status == RestClient.HTTP_CREATED) {
+                        //onBackPressed();
+                        finish();
+
+                    } else {
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(CreateActivity.this);
+                        builder.setMessage(Messages.CREATE_ACTIVITY_ERROR_MSG).setNegativeButton("Retry", null).create().show();
+                    }
+                } catch (JSONException e) {
+
+                    Log.e(TAG, e.getMessage());
+                }
+            }
+        };
+
+        Map<String, String> parameters = new HashMap<>();
+
+        parameters.put(Constants.TAG_TITLE, title.getText().toString());
+        parameters.put(Constants.TAG_DESCRIPTION, description.getText().toString());
+        parameters.put(Constants.TAG_CREATOR, User.getCurrentUser().getId());
+        parameters.put(Constants.TAG_PRIORITY, priority);
+        parameters.put(Constants.TAG_CATEGORY, category);
+
+        RestClient.post(mContext, RestClient.ACTIVITY_ENDPOINT_URL, parameters, responseListener);
 
     }
 }

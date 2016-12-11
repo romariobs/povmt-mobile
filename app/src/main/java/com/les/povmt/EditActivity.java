@@ -122,74 +122,36 @@ public class EditActivity extends AppCompatActivity {
 
         button_create = (Button) findViewById(R.id.button_create);
         button_create.setOnClickListener(
-            new View.OnClickListener() {
-                public void onClick(View view) {
+                new View.OnClickListener() {
+                    public void onClick(View view) {
 
-                    Response.Listener<String> responseListener = new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            Log.d(TAG, response);
+                        if (verifyConditions()){
 
-                            try {
-                                JSONObject json = new JSONObject(response);
-
-                                int status = 0;
-                                String activity = "";
-
-                                if (json.has(Constants.TAG_STATUS)) {
-                                    status = json.getInt(Constants.TAG_STATUS);
-                                }
-
-                                if (json.has(Constants.TAG_ACTIVITY)) {
-                                    activity = json.getString(Constants.TAG_ACTIVITY);
-                                }
-
-                                if (status == RestClient.HTTP_OK) {
-
-                                    finish();
-
-                                } else {
-
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(EditActivity.this);
-                                    builder.setMessage(Messages.EDIT_ACTIVITY_ERROR_MSG).setNegativeButton("Retry", null).create().show();
-                                }
-                            } catch (JSONException e) {
-
-                                Log.e(TAG, e.getMessage());
-                            }
-                        };
-
-                    };
-
-                    if (verifyConditions()){
-
-                        editActivity();
-                        Map<String, String> parameters = new HashMap<>();
-
-                        parameters.put(Constants.TAG_TITLE, title.getText().toString());
-                        parameters.put(Constants.TAG_DESCRIPTION, description.getText().toString());
-                        parameters.put(Constants.TAG_CREATOR, User.getCurrentUser().getId());
-                        parameters.put(Constants.TAG_PRIORITY, priority);
-                        parameters.put(Constants.TAG_CATEGORY, category);
-                        RestClient.put(mContext, RestClient.ACTIVITY_ENDPOINT_URL+"/"+ activity.getId() , parameters,responseListener);
-
-                        onBackPressed();
+                            onBackPressed();
+                        }
+                        else{
+                            title.setError("Requerido");
+                            description.setError("Requerido");
+                        }
                     }
-                    else{
-                        title.setError("Requerido");
-                        description.setError("Requerido");
-                    }
-                }
-            });
+                });
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(getApplication(), ActivityProfileActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("activity", activity);
-        getApplication().startActivity(intent);
+
+        editActivity();
+        Intent intent = new Intent(this, ListUserActivity.class);
+        startActivity(intent);
+
+
+
+//        editActivity();
+//        Intent intent = new Intent(getApplication(), ActivityProfileActivity.class);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        intent.putExtra("activity", activity);
+//        getApplication().startActivity(intent);
     }
 
     private boolean verifyConditions(){
@@ -202,9 +164,56 @@ public class EditActivity extends AppCompatActivity {
     }
 
     private void editActivity() {
+
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, response);
+
+                try {
+                    JSONObject json = new JSONObject(response);
+
+                    int status = 0;
+                    String activity = "";
+
+                    if (json.has(Constants.TAG_STATUS)) {
+                        status = json.getInt(Constants.TAG_STATUS);
+                    }
+
+                    if (json.has(Constants.TAG_ACTIVITY)) {
+                        activity = json.getString(Constants.TAG_ACTIVITY);
+                    }
+
+                    if (status == RestClient.HTTP_OK) {
+                        //onBackPressed();
+                        finish();
+
+                    } else {
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(EditActivity.this);
+                        builder.setMessage(Messages.EDIT_ACTIVITY_ERROR_MSG).setNegativeButton("Retry", null).create().show();
+                    }
+                } catch (JSONException e) {
+
+                    Log.e(TAG, e.getMessage());
+                }
+            };
+
+        };
+
         activity.setTitle(title.getText().toString());
         activity.setPriority(priority);
         activity.setCategory(category);
         activity.setDescription(description.getText().toString());
+
+        Map<String, String> parameters = new HashMap<>();
+
+        parameters.put(Constants.TAG_TITLE, title.getText().toString());
+        parameters.put(Constants.TAG_DESCRIPTION, description.getText().toString());
+        parameters.put(Constants.TAG_CREATOR, User.getCurrentUser().getId());
+        parameters.put(Constants.TAG_PRIORITY, priority);
+        parameters.put(Constants.TAG_CATEGORY, category);
+        RestClient.put(mContext, RestClient.ACTIVITY_ENDPOINT_URL+"/"+ activity.getId() , parameters, responseListener);
+
     }
 }
