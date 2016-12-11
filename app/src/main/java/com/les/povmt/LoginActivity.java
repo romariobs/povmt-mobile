@@ -131,7 +131,13 @@ public class LoginActivity extends AppCompatActivity{
         }
 
         if (email != null) {
+
+
+
+
+            this.setFinishOnTouchOutside(false);
             loading = new ProgressDialog(LoginActivity.this, R.style.AppThemeDarkDialog);
+            loading.setCancelable(false);
             loading.setMessage("Autenticando...");
             loading.setCancelable(false);
             loading.show();

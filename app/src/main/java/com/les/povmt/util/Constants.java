@@ -37,6 +37,10 @@ public class Constants {
     public static final String TAG_ROOT = "activities";
     public static final String TAG_ACTIVITY = "activity";
 
+    //Tags used for register new TI
+    public static final String TAG_DURATION = "duration";
+    public static final String TAG_INVESTEDTIMEAT = "investedTimeAt";
+
     // priority
     public static final String LOW = "LOW";
     public static final String MEDIUM = "MEDIUM";

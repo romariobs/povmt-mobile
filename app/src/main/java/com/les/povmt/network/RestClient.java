@@ -43,7 +43,7 @@ public class RestClient {
     /**
      * API endpoint to access invested time services .
      */
-    public static final String INVESTED_TIME_ENDPOINT_URL = SERVER_URL + "/its";
+    public static final String INVESTED_TIME_ENDPOINT_URL = SERVER_URL + "/it";
 
     /**
      * Authorization token used to authenticate api calls.

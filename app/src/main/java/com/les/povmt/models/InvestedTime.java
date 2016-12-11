@@ -1,5 +1,7 @@
 package com.les.povmt.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import java.text.DateFormat;
@@ -13,6 +15,8 @@ import java.util.Calendar;
  */
 
 public class InvestedTime {
+
+
 
     private String id;
     private String activityId;
@@ -69,6 +73,7 @@ public class InvestedTime {
     public void setDuration(int duration) {
         this.duration = duration;
     }
+
 
     @Override
     public String toString() {
