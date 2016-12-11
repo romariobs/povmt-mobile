@@ -15,7 +15,22 @@
         android:icon="@drawable/ic_settings_white_24dp"
         android:iconifiedByDefault="false"
         app:showAsAction="always"
-        android:title="Configurações" />
+        android:title="Configurações"
+        android:orderInCategory="1">
+        <menu>
+            <item
+                android:id="@+id/action_set_schedule"
+                android:title="Alterar horário" />
+            <item
+                android:id="@+id/action_disable_noti"
+                android:title="Desabilitar" />
+        </menu>
+
+
+
+    </item>
+
+
 
 
 </menu>

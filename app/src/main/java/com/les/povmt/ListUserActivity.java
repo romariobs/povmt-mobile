@@ -276,6 +276,8 @@ public class ListUserActivity extends AppCompatActivity {
                 startReportFragment();
                 return true;
             case R.id.action_options:
+                return true;
+            case R.id.action_set_schedule:
                 final View dialogView = View.inflate(this, R.layout.dialog_notification_schedule, null);
                 final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
 
