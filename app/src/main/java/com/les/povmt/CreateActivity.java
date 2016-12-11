@@ -84,16 +84,13 @@ public class CreateActivity extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 RadioButton button = (RadioButton) group.findViewById(checkedId);
                 category = button.getText().toString();
-                Log.i("AAAAAAAAAAAAAAAAAA", category);
                 //Handle the case where the user don't select any thing
                 //In this case no put the parameter to send in the request.
                 if (category.equals("Trabalho")){
                     category = "WORK";
-                    Log.i("AAAAAAAAAAAAAAAAAA", category);
                 }
                 else {
                     category = "LEISURE";
-                    Log.i("AAAAAAAAAAAAAAAAAA", category);
                 }
                 //Check this better!
             }
