@@ -1,28 +1,28 @@
 package com.les.povmt;
 
 import android.app.AlertDialog;
-import android.app.NotificationManager;
 import android.app.ProgressDialog;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.IBinder;
+import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.les.povmt.models.User;
 import com.les.povmt.network.LoginRequest;
 import com.les.povmt.network.RestClient;
 import com.les.povmt.network.VolleySingleton;
-import com.les.povmt.notification.NotificationEventReceiver;
 import com.les.povmt.util.Constants;
 import com.les.povmt.util.Messages;
 
@@ -44,16 +44,13 @@ import org.json.JSONObject;
  *  }
  } @author Samuel T. C. Santos
  */
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity{
 
     private static final String TAG = LoginActivity.class.getSimpleName();
 
-    private static final String TAG_STATUS = "status";
-
-    private static final int HTTP_OK = 200;
-    private static final int HTTP_CREATED = 201;
-
     private final Context mContext = this;
+
+    private final String USER_EMAIL = "USER_EMAIL";
 
     private GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 1001;
@@ -94,23 +91,53 @@ public class LoginActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
-            loading = new ProgressDialog(LoginActivity.this, R.style.AppThemeDarkDialog);
-            loading.setMessage("Autenticando...");
-            loading.show();
-
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
         }
     }
 
-    private void handleSignInResult(GoogleSignInResult result) {
+    @Override
+    protected void onStart() {
+        super.onStart();
+        RequestLogin(null);
+    }
 
+    private void handleSignInResult(GoogleSignInResult result) {
         if (result.isSuccess()) {
-            Response.Listener<String> responseListener = new Response.Listener<String>(){
+
+            String email = result.getSignInAccount().getEmail();
+
+            SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString(USER_EMAIL, email);
+            editor.commit();
+
+            RequestLogin(email);
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+            builder.setMessage("Erro ao obter dados do Google!")
+                    .setNegativeButton("Retry", null)
+                    .create()
+                    .show();
+        }
+    }
+
+    private void RequestLogin (String email) {
+        if (email == null) {
+
+            SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+            email = sharedPref.getString(USER_EMAIL, null);
+        }
+
+        if (email != null) {
+            loading = new ProgressDialog(LoginActivity.this, R.style.AppThemeDarkDialog);
+            loading.setMessage("Autenticando...");
+            loading.show();
+
+            Response.Listener<String> responseListener = new Response.Listener<String>() {
                 @Override
-                public void onResponse(String response){
+                public void onResponse(String response) {
                     Log.d(TAG, response);
 
                     try {
@@ -118,12 +145,12 @@ public class LoginActivity extends AppCompatActivity {
 
                         int status = 0;
 
-                        if (json.has(Constants.TAG_STATUS)){
+                        if (json.has(Constants.TAG_STATUS)) {
                             status = json.getInt(Constants.TAG_STATUS);
                         }
 
-                        if (status == RestClient.HTTP_OK){
-                            if (json.has(Constants.TAG_TOKEN)){
+                        if (status == RestClient.HTTP_OK) {
+                            if (json.has(Constants.TAG_TOKEN)) {
                                 String token = json.getString(Constants.TAG_TOKEN);
                                 RestClient.setToken(token);
                             }
@@ -136,31 +163,21 @@ public class LoginActivity extends AppCompatActivity {
                             LoginActivity.this.startActivity(accountIntent);
 
                             User.setCurrentUser(user.getString(Constants.TAG_ID), user.getString(Constants.TAG_NAME), user.getString(Constants.TAG_EMAIL));
-                        }
-                        else{
+                        } else {
                             loading.cancel();
                             AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                             builder.setMessage(Messages.AUTH_ERROR_MSG).setNegativeButton("Retry", null).create().show();
                         }
 
-                    }
-                    catch (JSONException e){
+                    } catch (JSONException e) {
                         loading.cancel();
                         Log.d(TAG, e.getMessage());
                     }
                 }
             };
 
-            LoginRequest loginRequest = new LoginRequest(result.getSignInAccount().getEmail(),responseListener);
+            LoginRequest loginRequest = new LoginRequest(email, responseListener);
             VolleySingleton.getInstance(mContext).addToRequestQueue(loginRequest);
-        } else {
-            // Signed out, show unauthenticated UI.
-            //updateUI(false);
-            AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-            builder.setMessage("Erro ao obter dados do Google!")
-                    .setNegativeButton("Retry", null)
-                    .create()
-                    .show();
         }
     }
 }
