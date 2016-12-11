@@ -1,8 +1,17 @@
 package com.les.povmt;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -11,8 +20,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.les.povmt.models.User;
@@ -23,6 +34,12 @@ import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +51,10 @@ import java.util.Map;
  */
 
 public class CreateActivity extends AppCompatActivity {
-
+    private final int SELECT_FILE = 1;
+    private final int PICK_CAMERA_IMAGE = 2;
+    private ImageView imgView;
+    private Button button_pick;
     private final String TAG = this.getClass().getSimpleName();
 
     private EditText title;
@@ -51,6 +71,18 @@ public class CreateActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_edit);
+
+        File fdelete = new File(Environment.getExternalStorageDirectory() + File.separator + "tempCreatePic" +".jpg");
+        if (fdelete.exists()) {
+            if (fdelete.delete()) {
+                System.out.println("file Deleted");
+            } else {
+                System.out.println("file not Deleted :");
+            }
+        }
+
+        imgView = (ImageView) findViewById(R.id.photo_thumnail);
+        button_pick = (Button) findViewById(R.id.button_pick);
 
         title = (EditText) findViewById(R.id.title_activity);
         description = (EditText) findViewById(R.id.description_activity);
@@ -93,6 +125,43 @@ public class CreateActivity extends AppCompatActivity {
                     category = Constants.LEISURE;
                 }
                 //Check this better!
+            }
+        });
+
+        button_pick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(CreateActivity.this);
+                builder.setTitle("Imagem da Atividade");
+                builder.setItems(new CharSequence[]{"Galeria", "Câmera"}, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent;
+
+                        switch (which) {
+                            // GET IMAGE FROM GALLERY
+                            case 0:
+                                intent = new Intent(Intent.ACTION_GET_CONTENT);
+                                intent.setType("image/*");
+                                Intent chooser = Intent.createChooser(intent, "Escolha uma Imagem");
+                                startActivityForResult(chooser, SELECT_FILE);
+                                break;
+
+                            // GET IMAGE FROM CAMERA
+                            case 1:
+                                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                                    startActivityForResult(takePictureIntent, PICK_CAMERA_IMAGE);
+                                }
+                                break;
+
+                            default:
+                                break;
+                        }
+                    }
+                });
+                builder.show();
             }
         });
 
@@ -139,9 +208,22 @@ public class CreateActivity extends AppCompatActivity {
 
                 try {
                     JSONObject json = new JSONObject(response);
-
                     int status = 0;
                     String activity = "";
+
+                    String id = json.getJSONObject("activity").getString("id");
+                    Bitmap bMap = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + File.separator + "tempCreatePic" + ".jpg");
+                    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                    bMap.compress(Bitmap.CompressFormat.JPEG, 60, bytes);
+                    File f = null;
+                    f = new File(Environment.getExternalStorageDirectory() + File.separator + id +".jpg");
+                    ActivityCompat.requestPermissions(CreateActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
+
+                    f.createNewFile();
+                    FileOutputStream fo = new FileOutputStream(f);
+                    fo.write(bytes.toByteArray());
+                    fo.close();
+
 
                     if (json.has(Constants.TAG_STATUS)) {
                         status = json.getInt(Constants.TAG_STATUS);
@@ -159,7 +241,7 @@ public class CreateActivity extends AppCompatActivity {
                         AlertDialog.Builder builder = new AlertDialog.Builder(CreateActivity.this);
                         builder.setMessage(Messages.CREATE_ACTIVITY_ERROR_MSG).setNegativeButton("Retry", null).create().show();
                     }
-                } catch (JSONException e) {
+                } catch (Exception e) {
 
                     Log.e(TAG, e.getMessage());
                 }
@@ -176,6 +258,78 @@ public class CreateActivity extends AppCompatActivity {
 
         RestClient.post(mContext, RestClient.ACTIVITY_ENDPOINT_URL, parameters, responseListener);
 
+    }
+
+    public File savebitmap(Bitmap bmp) throws IOException { /////
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG, 60, bytes);
+
+        Date date = new Date() ;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss") ;
+
+        File f = null;
+        f = new File(Environment.getExternalStorageDirectory() + File.separator + "tempCreatePic" +".jpg");
+        ActivityCompat.requestPermissions(CreateActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
+        f.createNewFile();
+        FileOutputStream fo = new FileOutputStream(f);
+        fo.write(bytes.toByteArray());
+        fo.close();
+        return f;
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+
+        if (resultCode != 0){
+            Bitmap imageBitmap = null;
+
+            switch (requestCode) {
+                case SELECT_FILE:
+                    Uri uri = imageReturnedIntent.getData();
+                    try {
+                        imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                        imgView.setImageBitmap(imageBitmap);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case PICK_CAMERA_IMAGE:
+                    if (resultCode == RESULT_OK) {
+                        Bundle extras = imageReturnedIntent.getExtras();
+                        imageBitmap = (Bitmap) extras.get("data");
+                        imgView.setImageBitmap(imageBitmap);
+                    }
+                    break;
+            }
+
+            try {
+                ActivityCompat.requestPermissions(CreateActivity.this,
+                        new String[]{ Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                savebitmap(imageBitmap);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) { /////
+        switch (requestCode) {
+            case 1: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                } else {
+                    Toast.makeText(CreateActivity.this, "Permission Denied", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+            case 2: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                } else {
+                    Toast.makeText(CreateActivity.this, "Permission Denied", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+        }
     }
 }
 

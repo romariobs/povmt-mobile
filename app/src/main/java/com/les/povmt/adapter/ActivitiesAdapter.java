@@ -2,6 +2,9 @@ package com.les.povmt.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -18,6 +21,7 @@ import com.les.povmt.R;
 import com.les.povmt.RegisterTiActivity;
 import com.les.povmt.models.Activity;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -46,13 +50,14 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.vi
     public void onBindViewHolder(viewHolder holder, int position) {
         Activity activity = activities.get(position);
 
-
-
         holder.title.setText(activity.getTitle());
         holder.description.setText(activity.getDescription());
+        Bitmap bMap = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + File.separator + activity.getId() +".jpg");
+        holder.imageViewMenuOverflow.setImageBitmap(bMap);
         switch (activity.getCategory()) {
             case Constants.WORK:
                 holder.view.setBackgroundColor(context.getResources().getColor(R.color.workColor));
+
                 holder.category.setText("Trabalho");
                 break;
             case Constants.LEISURE:
@@ -119,7 +124,8 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.vi
 
             title = (TextView) itemView.findViewById(R.id.title_activity);
             category = (TextView) itemView.findViewById(R.id.category);
-           // imageViewMenuOverflow = (ImageView) itemView.findViewById(R.id.imageViewMenuOverflow);
+            imageViewMenuOverflow = (ImageView) itemView.findViewById(R.id.img_task);
+
             description = (TextView) itemView.findViewById(R.id.description);
             view = itemView.findViewById(R.id.view);
             itemView.setOnClickListener(this);
