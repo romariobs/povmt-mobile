@@ -61,9 +61,11 @@ public class EditActivity extends AppCompatActivity {
 
     private final String TAG = this.getClass().getSimpleName();
 
+    private final String WORK_STR = "WORK";
+
     private EditText title;
     private MaterialBetterSpinner spn;
-    private int position;
+    private int position = 0;
     private String priority = "";
     private RadioGroup group;
     private String category;
@@ -83,7 +85,6 @@ public class EditActivity extends AppCompatActivity {
         imgView = (ImageView) findViewById(R.id.photo_thumnail); /////
         Bitmap bMap = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + File.separator + activity.getId() +".jpg");
         imgView.setImageBitmap(bMap);
-        Log.e("OOO","AAA");
 
         button_pick = (Button) findViewById(R.id.button_pick); /////
 
@@ -94,9 +95,6 @@ public class EditActivity extends AppCompatActivity {
         final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.listPriority, android.R.layout.simple_spinner_item);
         spn.setAdapter(adapter);
-
-
-
 
         title.setText(activity.getTitle());
         description.setText(activity.getDescription());
@@ -115,6 +113,10 @@ public class EditActivity extends AppCompatActivity {
                 position = 2;
                 break;
         }
+
+       ((RadioButton) findViewById(activity.getCategory() == WORK_STR ?
+               R.id.radioButton_job : R.id.radioButton_recreation)).setChecked(true);
+
 
         group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -292,12 +294,6 @@ public class EditActivity extends AppCompatActivity {
         fo.write(bytes.toByteArray());
         fo.close();
         return f;
-    }
-
-    public static Bitmap getScaledBitmap(Bitmap b, int reqWidth, int reqHeight) {
-        Matrix m = new Matrix();
-        m.setRectToRect(new RectF(0, 0, b.getWidth(), b.getHeight()), new RectF(0, 0, reqWidth, reqHeight), Matrix.ScaleToFit.CENTER);
-        return Bitmap.createBitmap(b, 0, 0, b.getWidth(), b.getHeight(), m, true);
     }
 
     @Override
