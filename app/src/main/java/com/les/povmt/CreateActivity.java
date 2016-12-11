@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -29,6 +31,7 @@ import com.android.volley.Response;
 import com.les.povmt.models.User;
 import com.les.povmt.network.RestClient;
 import com.les.povmt.util.Constants;
+import com.les.povmt.util.ImageUtils;
 import com.les.povmt.util.Messages;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 import org.json.JSONException;
@@ -36,8 +39,10 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -66,20 +71,17 @@ public class CreateActivity extends AppCompatActivity {
     private Button button_create;
     private final Context mContext = this;
 
+    private final String INPUT_FILE_NAME = "tempCreatePicIn";
+    private final String OUTPUT_FILE_NAME = "tempCreatePicOu";
+    private final int IMAGE_HEIGHT = 500;
+    private final int IMAGE_WIDTH = IMAGE_HEIGHT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_edit);
 
-        File fdelete = new File(Environment.getExternalStorageDirectory() + File.separator + "tempCreatePic" +".jpg");
-        if (fdelete.exists()) {
-            if (fdelete.delete()) {
-                System.out.println("file Deleted");
-            } else {
-                System.out.println("file not Deleted :");
-            }
-        }
+        deleteFiles();
 
         imgView = (ImageView) findViewById(R.id.photo_thumnail);
         button_pick = (Button) findViewById(R.id.button_pick);
@@ -88,6 +90,7 @@ public class CreateActivity extends AppCompatActivity {
         description = (EditText) findViewById(R.id.description_activity);
         spn = (MaterialBetterSpinner) findViewById(R.id.priority_activity);
 
+        deleteFiles ();
 
         final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.listPriority, android.R.layout.simple_spinner_item);
@@ -212,7 +215,13 @@ public class CreateActivity extends AppCompatActivity {
                     String activity = "";
 
                     String id = json.getJSONObject("activity").getString("id");
-                    Bitmap bMap = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + File.separator + "tempCreatePic" + ".jpg");
+
+                    String input = Environment.getExternalStorageDirectory() + File.separator + INPUT_FILE_NAME + ".jpg";
+                    String output = Environment.getExternalStorageDirectory() + File.separator + OUTPUT_FILE_NAME + ".jpg";
+
+                    ImageUtils.getBitmap(input, output);
+
+                    Bitmap bMap = BitmapFactory.decodeFile(output);
                     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                     bMap.compress(Bitmap.CompressFormat.JPEG, 60, bytes);
                     File f = null;
@@ -241,6 +250,8 @@ public class CreateActivity extends AppCompatActivity {
                         AlertDialog.Builder builder = new AlertDialog.Builder(CreateActivity.this);
                         builder.setMessage(Messages.CREATE_ACTIVITY_ERROR_MSG).setNegativeButton("Retry", null).create().show();
                     }
+
+                    deleteFiles ();
                 } catch (Exception e) {
 
                     Log.e(TAG, e.getMessage());
@@ -268,13 +279,18 @@ public class CreateActivity extends AppCompatActivity {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss") ;
 
         File f = null;
-        f = new File(Environment.getExternalStorageDirectory() + File.separator + "tempCreatePic" +".jpg");
+        f = new File(Environment.getExternalStorageDirectory() + File.separator + INPUT_FILE_NAME +".jpg");
         ActivityCompat.requestPermissions(CreateActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
         f.createNewFile();
         FileOutputStream fo = new FileOutputStream(f);
         fo.write(bytes.toByteArray());
         fo.close();
         return f;
+    }
+
+    private void deleteFiles () {
+        ImageUtils.deleteFile(Environment.getExternalStorageDirectory() + File.separator + INPUT_FILE_NAME +".jpg");
+        ImageUtils.deleteFile(Environment.getExternalStorageDirectory() + File.separator + OUTPUT_FILE_NAME +".jpg");
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
@@ -288,7 +304,7 @@ public class CreateActivity extends AppCompatActivity {
                     Uri uri = imageReturnedIntent.getData();
                     try {
                         imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                        imgView.setImageBitmap(imageBitmap);
+                        imgView.setImageBitmap(Bitmap.createScaledBitmap(imageBitmap, IMAGE_WIDTH, IMAGE_HEIGHT, true));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
