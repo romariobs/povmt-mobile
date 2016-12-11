@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -23,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -37,11 +39,13 @@ import com.les.povmt.notification.NotificationEventReceiver;
 import com.les.povmt.notification.NotificationServiceStarterReceiver;
 import com.les.povmt.parser.ActivityParser;
 import com.les.povmt.util.Constants;
+import com.les.povmt.util.ImageUtils;
 import com.les.povmt.util.Messages;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -239,7 +243,7 @@ public class ListUserActivity extends AppCompatActivity {
         RestClient.get(context, url, successListner, errorListener);
     }
 
-    private void deleteActivity(String id) {
+    private void deleteActivity(final String id) {
 
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
@@ -250,22 +254,14 @@ public class ListUserActivity extends AppCompatActivity {
                     JSONObject json = new JSONObject(response);
 
                     int status = 0;
-                    String activity = "";
 
                     if (json.has(Constants.TAG_STATUS)) {
                         status = json.getInt(Constants.TAG_STATUS);
                     }
 
-                    if (json.has(Constants.TAG_ACTIVITY)) {
-                        activity = json.getString(Constants.TAG_ACTIVITY);
-                    }
+                    ImageUtils.deleteFile(Environment.getExternalStorageDirectory() + File.separator + id +".jpg");
 
-                    if (status == RestClient.HTTP_OK) {
-
-                        //finish();
-
-                    } else {
-
+                    if (status != RestClient.HTTP_OK) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(ListUserActivity.this);
                         builder.setMessage(Messages.DELETE_ACTIVITY_ERROR_MSG).setNegativeButton("Retry", null).create().show();
                     }
@@ -365,8 +361,6 @@ public class ListUserActivity extends AppCompatActivity {
 
                 alertDialog.setView(dialogView);
                 alertDialog.show();
-
-
 
                 return true;
         }
