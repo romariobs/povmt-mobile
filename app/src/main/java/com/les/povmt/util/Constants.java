@@ -37,6 +37,15 @@ public class Constants {
     public static final String TAG_ROOT = "activities";
     public static final String TAG_ACTIVITY = "activity";
 
+    // priority
+    public static final String LOW = "LOW";
+    public static final String MEDIUM = "MEDIUM";
+    public static final String HIGH = "HIGH";
+
+    // category
+    public static final String WORK = "WORK";
+    public static final String LEISURE = "LEISURE";
+
 
 }
 

@@ -2,7 +2,6 @@ package com.les.povmt.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -13,10 +12,8 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.les.povmt.util.Constants;
 import com.les.povmt.ActivityProfileActivity;
-import com.les.povmt.CreateActivity;
-import com.les.povmt.EditActivity;
 import com.les.povmt.R;
 import com.les.povmt.RegisterTiActivity;
 import com.les.povmt.models.Activity;
@@ -54,15 +51,12 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.vi
         holder.title.setText(activity.getTitle());
         holder.description.setText(activity.getDescription());
         switch (activity.getCategory()) {
-            case "WORK":
+            case Constants.WORK:
                 holder.view.setBackgroundColor(context.getResources().getColor(R.color.workColor));
-               // holder.view.setBackgroundColor(Color.GREEN);
-                //view.setBackgroundColor(Color.BLUE);
                 holder.category.setText("Trabalho");
                 break;
-            case "LEISURE":
+            case Constants.LEISURE:
                 holder.view.setBackgroundColor(context.getResources().getColor(R.color.leisureColor));
-               // holder.view.setBackgroundColor(Color.BLUE);
                 holder.category.setText("Lazer");
                 break;
         }

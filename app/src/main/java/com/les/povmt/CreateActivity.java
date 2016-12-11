@@ -65,13 +65,13 @@ public class CreateActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
-                        priority = "LOW";
+                        priority = Constants.LOW;
                         break;
                     case 1:
-                        priority = "MEDIUM";
+                        priority = Constants.MEDIUM;
                         break;
                     case 2:
-                        priority = "HIGH";
+                        priority = Constants.HIGH;
                         break;
                 }
 
@@ -87,10 +87,10 @@ public class CreateActivity extends AppCompatActivity {
                 //Handle the case where the user don't select any thing
                 //In this case no put the parameter to send in the request.
                 if (category.equals("Trabalho")){
-                    category = "WORK";
+                    category = Constants.WORK;
                 }
                 else {
-                    category = "LEISURE";
+                    category = Constants.LEISURE;
                 }
                 //Check this better!
             }
@@ -128,13 +128,6 @@ public class CreateActivity extends AppCompatActivity {
         createActivity();
         Intent intent = new Intent(this, ListUserActivity.class);
         startActivity(intent);
-
-
-
-//        Intent intent = new Intent(getApplication(), ActivityProfileActivity.class);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        intent.putExtra("activity", activity);
-//        getApplication().startActivity(intent);
     }
 
     private void createActivity(){
@@ -159,7 +152,6 @@ public class CreateActivity extends AppCompatActivity {
                     }
 
                     if (status == RestClient.HTTP_CREATED) {
-                        //onBackPressed();
                         finish();
 
                     } else {

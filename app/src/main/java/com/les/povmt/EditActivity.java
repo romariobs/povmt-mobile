@@ -28,9 +28,7 @@ import android.widget.RadioGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.android.volley.Response;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.les.povmt.models.Activity;
 import com.les.povmt.models.User;
 import com.les.povmt.network.RestClient;
@@ -50,7 +48,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static com.android.volley.Request.Method.HEAD;
 
 /**
  * Created by cesar on 26/11/16.
@@ -107,14 +104,14 @@ public class EditActivity extends AppCompatActivity {
         priority = activity.getPriority();
 
         switch (priority){
-            case "LOW":
+            case Constants.LOW:
                 position = 0;
                 break;
 
-            case "MEDIUM":
+            case Constants.MEDIUM:
                 position = 1;
                 break;
-            case "HIGH":
+            case Constants.HIGH:
                 position = 2;
                 break;
         }
@@ -128,10 +125,10 @@ public class EditActivity extends AppCompatActivity {
                 //Handle the case where the user don't select any thing
                 //In this case no put the parameter to send in the request.
                 if (category.equals("Trabalho")){
-                    category = "WORK";
+                    category = Constants.WORK;
                 }
                 else {
-                    category = "LEISURE";
+                    category = Constants.LEISURE;
                 }
                 //Check this better!
             }
@@ -174,20 +171,20 @@ public class EditActivity extends AppCompatActivity {
                 });
                 builder.show();
             }
-        }); /////
+        });
 
         spn.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
-                        priority = "LOW";
+                        priority = Constants.LOW;
                         break;
                     case 1:
-                        priority = "MEDIUM";
+                        priority = Constants.MEDIUM;
                         break;
                     case 2:
-                        priority = "HIGH";
+                        priority = Constants.HIGH;
                         break;
                 }
             }
@@ -217,14 +214,6 @@ public class EditActivity extends AppCompatActivity {
         editActivity();
         Intent intent = new Intent(this, ListUserActivity.class);
         startActivity(intent);
-
-
-
-//        editActivity();
-//        Intent intent = new Intent(getApplication(), ActivityProfileActivity.class);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        intent.putExtra("activity", activity);
-//        getApplication().startActivity(intent);
     }
 
     private boolean verifyConditions(){
@@ -258,7 +247,6 @@ public class EditActivity extends AppCompatActivity {
                     }
 
                     if (status == RestClient.HTTP_OK) {
-                        //onBackPressed();
                         finish();
                     } else {
 
