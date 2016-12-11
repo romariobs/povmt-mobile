@@ -156,13 +156,14 @@ public class LoginActivity extends AppCompatActivity{
                             }
 
                             loading.cancel();
-                            Intent accountIntent = new Intent(LoginActivity.this, ListUserActivity.class);
 
+                            Intent listUserIntent = new Intent(LoginActivity.this, ListUserActivity.class);
                             JSONObject user = json.getJSONObject(Constants.TAG_USER);
-                            accountIntent.putExtra(Constants.TAG_ID, user.getString(Constants.TAG_ID));
-                            LoginActivity.this.startActivity(accountIntent);
+                            listUserIntent.putExtra(Constants.TAG_ID, user.getString(Constants.TAG_ID));
+                            LoginActivity.this.startActivity(listUserIntent);
 
                             User.setCurrentUser(user.getString(Constants.TAG_ID), user.getString(Constants.TAG_NAME), user.getString(Constants.TAG_EMAIL));
+                            finish();
                         } else {
                             loading.cancel();
                             AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
