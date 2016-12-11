@@ -39,6 +39,11 @@ import com.les.povmt.network.VolleySingleton;
 import com.les.povmt.notification.ItService;
 import com.les.povmt.notification.ResultActivity;
 import com.les.povmt.parser.ActivityParser;
+import com.les.povmt.util.Constants;
+import com.les.povmt.util.Messages;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,6 +65,8 @@ public class ListUserActivity extends AppCompatActivity {
     private final Context context = this;
     private ProgressDialog loading;
     private CoordinatorLayout coordinatorLayout;
+
+    private final Context mContext = this;
 
     private Map<Integer, Activity> map;
 
@@ -214,18 +221,51 @@ public class ListUserActivity extends AppCompatActivity {
     }
 
     private void deleteActivity(String id) {
-        StringRequest activitiesRequest = new StringRequest(Request.Method.DELETE, RestClient.ACTIVITY_ENDPOINT_URL + "/" + id, new Response.Listener<String>(){
+
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, response);
-            }
-        }, new Response.ErrorListener() {
+
+                try {
+                    JSONObject json = new JSONObject(response);
+
+                    int status = 0;
+                    String activity = "";
+
+                    if (json.has(Constants.TAG_STATUS)) {
+                        status = json.getInt(Constants.TAG_STATUS);
+                    }
+
+                    if (json.has(Constants.TAG_ACTIVITY)) {
+                        activity = json.getString(Constants.TAG_ACTIVITY);
+                    }
+
+                    if (status == RestClient.HTTP_OK) {
+
+                        //finish();
+
+                    } else {
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(ListUserActivity.this);
+                        builder.setMessage(Messages.DELETE_ACTIVITY_ERROR_MSG).setNegativeButton("Retry", null).create().show();
+                    }
+                } catch (JSONException e) {
+
+                    Log.e(TAG, e.getMessage());
+                }
+            };
+
+        };
+
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-            }
-        });
 
-        VolleySingleton.getInstance(context).addToRequestQueue(activitiesRequest);
+            }
+        };
+
+        RestClient.delete(mContext, RestClient.ACTIVITY_ENDPOINT_URL+"/"+ id , responseListener, errorListener);
     }
 
     private void startEditActivity() {

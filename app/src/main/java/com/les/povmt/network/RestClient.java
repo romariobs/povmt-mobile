@@ -100,7 +100,9 @@ public class RestClient {
      * @param ctx - the current activity context.
      * @param url - the address to call in the server
      */
-    public static void delete(Context ctx, String url){
+    public static void delete(Context ctx, String url, Response.Listener<String> listener, Response.ErrorListener errorListener){
+        DeleteRequest request = new DeleteRequest(Request.Method.DELETE, url, listener, errorListener);
+        VolleySingleton.getInstance(ctx).addToRequestQueue(request);
 
     }
 
