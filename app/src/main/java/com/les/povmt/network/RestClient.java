@@ -31,6 +31,12 @@ public class RestClient {
     public static final String USER_ENDPOINT_URL = SERVER_URL + "/user";
 
     /**
+     * API endpoint to access history
+     */
+    public static final String HISTORY_ENDPOINT_URL = SERVER_URL + "/history";
+
+
+    /**
      * API endpoint for request the authentication token and authorize the next api calls.
      */
     public static final String AUTH_ENDPOINT_URL = USER_ENDPOINT_URL + "/auth";

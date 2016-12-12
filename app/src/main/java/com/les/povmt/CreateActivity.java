@@ -27,13 +27,19 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.les.povmt.models.User;
 import com.les.povmt.network.RestClient;
+import com.les.povmt.network.VolleySingleton;
 import com.les.povmt.util.Constants;
 import com.les.povmt.util.ImageUtils;
 import com.les.povmt.util.Messages;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -43,10 +49,14 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import static java.net.HttpURLConnection.HTTP_OK;
 
 
 /**
@@ -75,7 +85,6 @@ public class CreateActivity extends AppCompatActivity {
     private final String OUTPUT_FILE_NAME = "tempCreatePicOu";
     private final int IMAGE_HEIGHT = 500;
     private final int IMAGE_WIDTH = IMAGE_HEIGHT;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
