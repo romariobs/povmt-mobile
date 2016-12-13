@@ -36,6 +36,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class RegisterTiActivity extends AppCompatActivity {
 
@@ -112,7 +113,7 @@ public class RegisterTiActivity extends AppCompatActivity {
         mBtAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mDurationTi != null && !mDurationTi.getText().toString().equals("00:00")) {
+                if(mDurationTi != null && !mDurationTi.getText().toString().equals("Duração") && !mDurationTi.getText().toString().equals("00:00")) {
                     if (!editar)
                         addInvestedTime();
                     else
@@ -165,9 +166,33 @@ public class RegisterTiActivity extends AppCompatActivity {
 
         Map<String, String> parameters = new HashMap<>();
 
-        parameters.put(Constants.TAG_DURATION, mDurationTi.getText().toString());
+        parameters.put(Constants.TAG_DURATION, convertToMinutes()+"");
         parameters.put(Constants.TAG_INVESTEDTIMEAT, getIntent().getStringExtra("id"));
+        if (mCheckbox.isChecked()) {
+            parameters.put(Constants.TAG_CREATED_AT, getYesterday());
+        }
         RestClient.put(getApplicationContext(), RestClient.INVESTED_TIME_ENDPOINT_URL+"/" + getIntent().getStringExtra("idTI"), parameters, responseListener );
+    }
+
+    private long convertToMinutes() {
+        String[] time;
+        if (mDurationTi != null) {
+            Log.d("RegisterTiAc", "Olha o tempo "+mDurationTi.getText().toString());
+            time = mDurationTi.getText().toString().split(":");
+        } else {
+            time = "00:00".split(":");
+        }
+
+        String hour = time[0];
+        String minutes = time[1];
+
+        long tempoMili = TimeUnit.HOURS.toMinutes(Integer.parseInt(hour)) + TimeUnit.MINUTES.toMinutes(Integer.parseInt(minutes));
+        Log.d("RegisterTiAc", "minutes: "+tempoMili);
+
+        return tempoMili;
+
+
+
     }
 
     public void addInvestedTime() {
@@ -210,7 +235,7 @@ public class RegisterTiActivity extends AppCompatActivity {
 
         Map<String, String> parameters = new HashMap<>();
 
-        parameters.put(Constants.TAG_DURATION, mDurationTi.getText().toString());
+        parameters.put(Constants.TAG_DURATION, convertToMinutes()+"");
         parameters.put(Constants.TAG_INVESTEDTIMEAT, getIntent().getStringExtra("id"));
         if (mCheckbox.isChecked()) {
             parameters.put(Constants.TAG_CREATED_AT, getYesterday());

@@ -52,8 +52,11 @@ public class ActivityProfileFragment extends Fragment {
         });
         ImageView image = (ImageView) v.findViewById(R.id.imageActivity);
 
-        Bitmap bMap = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + File.separator + activity.getId() +".jpg");
-        image.setImageBitmap(bMap);
+        if(image != null) {
+            Bitmap bMap = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + File.separator + activity.getId() +".jpg");
+            image.setImageBitmap(bMap);
+        }
+
 
         TextView description = (TextView) v.findViewById(R.id.description);
         description.setText(activity.getDescription());

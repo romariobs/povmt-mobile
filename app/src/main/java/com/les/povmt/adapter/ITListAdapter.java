@@ -21,6 +21,7 @@ import com.les.povmt.models.InvestedTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Lucas on 24/11/2016.
@@ -56,22 +57,12 @@ public class ITListAdapter extends RecyclerView.Adapter<ITListAdapter.viewHolder
         InvestedTime itItem = investedTimes.get(position);
 
         String time = "";
-        int timeDuration = itItem.getDuration();
-        int hours = timeDuration / 60;
-        if (hours < 10) {
-            time += "0" + hours + ":";
-            timeDuration -= hours * 60;
-            if (timeDuration < 10)
-                time += "0" + timeDuration;
-            else
-                time += timeDuration;
-        } else {
-            time += hours + ":";
-            if (timeDuration < 10)
-                time += "0" + timeDuration;
-            else
-                time += timeDuration;
-        }
+        int timeDurationMinutes = itItem.getDuration(); //in minutes
+        long horas = TimeUnit.MINUTES.toHours(timeDurationMinutes);
+
+        timeDurationMinutes -= TimeUnit.HOURS.toMinutes(horas);
+
+        time = String.format("%02d:%02d", horas, timeDurationMinutes);
 
         holder.description.setText(itItem.getDate() + "  •  " + time);
     }
