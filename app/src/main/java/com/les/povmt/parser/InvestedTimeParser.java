@@ -95,6 +95,7 @@ public class InvestedTimeParser {
             }
             catch(JSONException e){
                 Log.e(TAG, e.getMessage());
+                return its;
             }
         }
         else {

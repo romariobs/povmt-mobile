@@ -30,8 +30,8 @@ public class BroadcastReceiverTI extends BroadcastReceiver {
         builder.setContentTitle("PovMT")
                 .setAutoCancel(true)
                 .setColor(context.getResources().getColor(R.color.colorAccent))
-                .setContentText("Quanto tempo você investiu ontem?")
-                .setSmallIcon(R.drawable.common_google_signin_btn_icon_light);
+                .setContentText("Você não investiu tempo ontem")
+                .setSmallIcon(R.mipmap.ic_launcher);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(context,
                 NOTIFICATION_ID,

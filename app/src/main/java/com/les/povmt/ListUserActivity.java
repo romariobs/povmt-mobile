@@ -1,12 +1,10 @@
 package com.les.povmt;
 
 import android.app.AlarmManager;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
@@ -34,8 +32,6 @@ import com.les.povmt.models.Activity;
 import com.les.povmt.models.InvestedTime;
 import com.les.povmt.models.User;
 import com.les.povmt.network.RestClient;
-import com.les.povmt.notification.NotificationEventReceiver;
-import com.les.povmt.notification.NotificationServiceStarterReceiver;
 import com.les.povmt.parser.ActivityParser;
 import com.les.povmt.parser.InvestedTimeParser;
 import com.les.povmt.util.Constants;
@@ -75,7 +71,7 @@ public class ListUserActivity extends AppCompatActivity {
     private final Context mContext = this;
 
     private Map<Integer, Activity> map;
-    private boolean hasTiYesterday;
+    private boolean notTiYesterday;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,10 +173,7 @@ public class ListUserActivity extends AppCompatActivity {
 
         if (canNotify() && !hasAlarm() && checkYesterday()) {
 
-            Intent intent = new Intent("BIRL");
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 669, intent, 0);
-            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, getTimeMilliNotification(), TWENTY_HOURS_IN_MILI, pendingIntent);
+            generateNotification();
         }
 
 
@@ -194,6 +187,13 @@ public class ListUserActivity extends AppCompatActivity {
                 startEditActivity();
             }
         });
+    }
+
+    private void generateNotification() {
+        Intent intent = new Intent("BIRL");
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 669, intent, 0);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, getTimeMilliNotification(), TWENTY_HOURS_IN_MILI, pendingIntent);
     }
 
     private boolean hasAlarm () {
@@ -254,7 +254,7 @@ public class ListUserActivity extends AppCompatActivity {
             public void onResponse(String response) {
                 InvestedTimeParser investedTimeParser = new InvestedTimeParser();
                 List<InvestedTime> lista = investedTimeParser.parse(response);
-                hasTiYesterday = lista.isEmpty();
+                notTiYesterday = lista.isEmpty();
 
             }
         };
@@ -262,14 +262,14 @@ public class ListUserActivity extends AppCompatActivity {
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                hasTiYesterday = true;
+                notTiYesterday = true;
             }
         };
 
 
         RestClient.get(this, sampleURL, successListener, errorListener);
 
-        return hasTiYesterday;
+        return notTiYesterday;
     }
 
     public void clear () {
@@ -423,6 +423,12 @@ public class ListUserActivity extends AppCompatActivity {
                         editor.putInt("TimeScheduleHour", timePicker.getCurrentHour());
                         editor.putInt("TimeScheduleMin", timePicker.getCurrentMinute());
                         editor.commit();
+
+                        if (canNotify() && checkYesterday()) {
+                            cancelAlarm();
+
+                            generateNotification();
+                        }
                         alertDialog.dismiss();
                     }
                 });
@@ -440,10 +446,7 @@ public class ListUserActivity extends AppCompatActivity {
                     public void onClick(View view) {
                         SharedPreferences.Editor editor = getSharedPreferences(POVMT_PREFS, MODE_PRIVATE).edit();
                         editor.putBoolean("habilitaNoti", false);
-                        Intent intent = new Intent("BIRL");
-                        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 669, intent, 0);
-                        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                        alarmManager.cancel(pendingIntent);
+                        cancelAlarm();
                         alertDialog.dismiss();
                     }
                 });
@@ -453,6 +456,11 @@ public class ListUserActivity extends AppCompatActivity {
                     public void onClick(View view) {
                         SharedPreferences.Editor editor = getSharedPreferences(POVMT_PREFS, MODE_PRIVATE).edit();
                         editor.putBoolean("habilitaNoti", true);
+                        if (checkYesterday()) {
+                            cancelAlarm();
+
+                            generateNotification();
+                        }
                         alertDialog.dismiss();
                     }
                 });
@@ -463,6 +471,13 @@ public class ListUserActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void cancelAlarm() {
+        Intent intent = new Intent("BIRL");
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 669, intent, 0);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.cancel(pendingIntent);
     }
 
     private void startReportFragment() {
