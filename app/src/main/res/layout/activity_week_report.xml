@@ -35,7 +35,7 @@
         android:background="@color/cardsBackground"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="520dp">
+        android:layout_marginTop="615dp">
 
         <TextView
             android:text="@string/txtRanking"
@@ -64,8 +64,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="480dp"
-        android:layout_marginTop="28dp"
+        android:layout_height="600dp"
         android:background="@color/cardsBackground"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true">
@@ -88,35 +87,59 @@
             android:layout_height="380dp" />
 
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="510dp"
+                    android:textSize="15dp"
+                    android:id="@+id/txtSpendMedium"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textAlignment="center"
+                    android:textStyle="normal|bold"
+                    android:text="Prioridade Média:    50%"/>
+
+                <View
+                android:layout_width="250dp"
+                android:layout_height="1dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="510dp"
+                android:background="@color/textColorPrimaryDark" />
+
+                <View
+                    android:layout_width="250dp"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="532dp"
+                    android:background="@color/textColorPrimaryDark" />
+
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:layout_marginTop="410dp"
-            android:textSize="15dp"
-            android:id="@+id/txtSpendMedium"
-            android:textColor="@color/colorPrimaryDark"
-            android:textAlignment="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="532dp"
+                    android:textSize="15dp"
+                    android:id="@+id/txtSpendLown"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textAlignment="center"
+                    android:textStyle="normal|bold"
+                    android:text="Prioridade Baixa:    50%"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:textSize="20dp"
+            android:layout_marginTop="415dp"
+            android:layout_marginLeft="65dp"
             android:textStyle="normal|bold"
-            android:text="Prioridade Média:    50%"/>
-
-        <View
-        android:layout_width="250dp"
-        android:layout_height="1dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="410dp"
-        android:background="@color/textColorPrimaryDark" />
-
-        <View
-            android:layout_width="250dp"
-            android:layout_height="1dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginTop="432dp"
-            android:background="@color/textColorPrimaryDark" />
+            android:textAlignment="center"
+            android:textColor="@color/leisureColor"
+            android:id="@+id/leisureTxt"
+            android:text="300min"/>
 
         <TextView
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:layout_marginTop="390dp"
+        android:layout_marginTop="490dp"
         android:textSize="15dp"
         android:textColor="@color/colorPrimaryDark"
         android:textAlignment="center"
@@ -125,15 +148,38 @@
             android:id="@+id/txtSpendHigh" />
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="20dp"
-            android:layout_marginTop="432dp"
             android:textSize="15dp"
-            android:id="@+id/txtSpendLown"
-            android:textColor="@color/colorPrimaryDark"
-            android:textAlignment="center"
+            android:layout_marginTop="390dp"
+            android:layout_marginLeft="197dp"
             android:textStyle="normal|bold"
-            android:text="Prioridade Baixa:    50%"/>
+            android:textColor="@color/workColor"
+            android:text="Trabalho"
+            android:id="@+id/textView4" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:textSize="20dp"
+            android:layout_marginTop="415dp"
+            android:textAlignment="center"
+            android:layout_marginLeft="195dp"
+            android:textStyle="normal|bold"
+            android:textColor="@color/workColor"
+            android:text="300min"
+            android:id="@+id/workTxt" />
+
+        <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:textSize="15dp"
+        android:layout_marginTop="390dp"
+        android:layout_marginLeft="80dp"
+        android:textStyle="normal|bold"
+        android:textColor="@color/leisureColor"
+        android:text="Lazer"
+            android:id="@+id/textView5" />
     </FrameLayout>
 </RelativeLayout>
 </ScrollView>

@@ -21,6 +21,7 @@ import com.les.povmt.R;
 import com.les.povmt.models.Activity;
 import com.les.povmt.models.InvestedTime;
 import com.les.povmt.models.User;
+import com.les.povmt.network.RestClient;
 import com.les.povmt.network.VolleySingleton;
 import com.les.povmt.parser.ActivityParser;
 import com.les.povmt.parser.InvestedTimeParser;
@@ -45,7 +46,7 @@ import static java.net.HttpURLConnection.HTTP_OK;
 public class SecondTabFragment extends Fragment {
     private Date startDay, endDay;
     private DateFormat dfServer = new SimpleDateFormat("yyyy-MM-dd");
-    private String hostURL = "http://povmt.herokuapp.com/history?startDate=";
+    private String hostURL = "http://povmt.herokuapp.com/history";
     private StringRequest stringRequest;
     private List<String> dataSource;
     private boolean isWorkCategory = false;
@@ -68,7 +69,7 @@ public class SecondTabFragment extends Fragment {
         cal.add(Calendar.WEEK_OF_YEAR, -1);
         startDay = cal.getTime();
 
-        hostURL += dfServer.format(startDay) + "&endDate=";
+        hostURL += "?startDate=" + dfServer.format(startDay) + "&endDate=";
         hostURL += dfServer.format(endDay) + "&creator=";
         hostURL += User.getCurrentUser().getId();
     }
@@ -87,16 +88,20 @@ public class SecondTabFragment extends Fragment {
         dataSource = new ArrayList<>();
         final ListView lView = (ListView) view.findViewById(R.id.list2);
 
-        stringRequest = new StringRequest(Request.Method.GET, hostURL, new Response.Listener<String>() {
+        String finalRequest = hostURL;
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+
+                Log.d("ON RESP", response);
+
                 JSONObject json;
 
                 try {
                     json = new JSONObject(response);
                     int status = 0;
 
-                    if (json.has("status")) {
+                    if (json.has("status")){
                         status = json.getInt("status");
                     }
                     loading.cancel();
@@ -113,14 +118,14 @@ public class SecondTabFragment extends Fragment {
 
                     System.out.println(response);
 
-                    if (group != null) {
+                    if (group!= null) {
                         JSONArray arrayIts = group.getJSONArray("its");
 
                         //PARSING ITs FROM HISTORY
                         List<Activity> activities = (new ActivityParser()).parseFromHistory(json.getJSONObject("history").toString());
                         List<InvestedTime> itsList = (new InvestedTimeParser()).parse(group.toString());
 
-                        for (int j = 1; j < json.getJSONObject("history").getJSONArray("groupedHistory").length(); j++) {
+                        for(int j = 1; j < json.getJSONObject("history").getJSONArray("groupedHistory").length();j++){
                             group = json.getJSONObject("history").getJSONArray("groupedHistory").optJSONObject(j);
                             List<InvestedTime> varList = (new InvestedTimeParser()).parse(group.toString());
                             itsList.addAll(varList);
@@ -131,7 +136,7 @@ public class SecondTabFragment extends Fragment {
                             String actName = "";
 
                             for (Activity act : activities) {
-                                if (act.getId().equals(invTime.getActivityId()))
+                                if(act.getId().equals(invTime.getActivityId()))
                                     actName = act.getTitle();
                             }
 
@@ -141,13 +146,16 @@ public class SecondTabFragment extends Fragment {
                             dataSource.add(text);
                         }
                     }
-                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.rowlayout, R.id.txtitem, dataSource);
+                    ArrayAdapter<String> adapter=new ArrayAdapter<String>(getActivity(),R.layout.rowlayout,R.id.txtitem, dataSource);
                     lView.setAdapter(adapter);
-                } catch (JSONException e) {
-                    Log.e("JSON", "FAILED");
+                } catch (JSONException e){
+                    Log.e("JSON","FAILED");
                 }
-            }
-        }, new Response.ErrorListener() {
+            };
+
+        };
+
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 loading.cancel();
@@ -156,8 +164,10 @@ public class SecondTabFragment extends Fragment {
                 builder.setMessage(error.toString()).setNegativeButton("OK", null)
                         .create().show();
             }
-        });
-        VolleySingleton.getInstance(getContext()).addToRequestQueue(stringRequest);
+        };
+
+        RestClient.get(getContext(), finalRequest, responseListener, errorListener);
+
         return view;
     }
 

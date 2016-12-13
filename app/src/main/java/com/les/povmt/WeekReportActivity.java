@@ -1,7 +1,6 @@
 package com.les.povmt;
 
 import android.app.AlertDialog;
-import android.app.IntentService;
 import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,10 +14,8 @@ import android.view.MenuItem;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
@@ -33,18 +30,15 @@ import com.les.povmt.models.InvestedTime;
 import com.les.povmt.models.RankingItem;
 import com.les.povmt.models.User;
 import com.les.povmt.network.RestClient;
-import com.les.povmt.network.VolleySingleton;
 import com.les.povmt.parser.ActivityParser;
 import com.les.povmt.parser.InvestedTimeParser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -65,6 +59,8 @@ public class WeekReportActivity extends AppCompatActivity {
     private TextView spendTimeHigh;
     private TextView spendTimeMedium;
     private TextView spendTimeLown;
+    private TextView leisureTxt;
+    private TextView workTxt;
 
     private Date startDay;
     private Date endDay;
@@ -92,6 +88,8 @@ public class WeekReportActivity extends AppCompatActivity {
         spendTimeHigh = (TextView) findViewById(R.id.txtSpendHigh);
         spendTimeLown = (TextView) findViewById(R.id.txtSpendLown);
         spendTimeMedium = (TextView) findViewById(R.id.txtSpendMedium);
+        leisureTxt = (TextView) findViewById(R.id.leisureTxt);
+        workTxt = (TextView) findViewById(R.id.workTxt);
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setTitle(getString(R.string.title_activity_week_report));
@@ -133,8 +131,6 @@ public class WeekReportActivity extends AppCompatActivity {
         sampleURL += dfServer.format(endDay) + "&creator=";
         sampleURL += User.getCurrentUser().getId() + "&token=";
         sampleURL += RestClient.getToken();
-
-        Log.d("url", sampleURL);
         generatePieData();
 
         TextView weekDays = (TextView) findViewById(R.id.weekDays);
@@ -171,9 +167,10 @@ public class WeekReportActivity extends AppCompatActivity {
 
         loading.setMessage("Carregando...");
         loading.show();
-        // Request a string response from the provided hostURL.
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, sampleURL, new Response.Listener<String>() {
+
+
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 JSONObject json;
@@ -197,10 +194,6 @@ public class WeekReportActivity extends AppCompatActivity {
                     if (group!= null) {
                         JSONArray arrayIts = group.getJSONArray("its");
 
-                        int arraySize = arrayIts != null ? arrayIts.length() : 0;
-
-
-                        //PARSING ITs FROM HISTORY
                         List<Activity> activitiesList = (new ActivityParser()).parseFromHistory(json.getJSONObject("history").toString());
                         List<InvestedTime> itsList = (new InvestedTimeParser()).parse(group.toString());
                         for(int j = 1; j < json.getJSONObject("history").getJSONArray("groupedHistory").length();j++){
@@ -215,6 +208,8 @@ public class WeekReportActivity extends AppCompatActivity {
                         int spendMedium = 0;
                         int spendLow = 0;
 
+                        int timeLeisure = 0;
+                        int timeJob = 0;
                         for (Activity ac : activitiesList){
                             RankingItem rk = new RankingItem(ac, 0, 0);
                             for(InvestedTime it : itsList){
@@ -229,6 +224,12 @@ public class WeekReportActivity extends AppCompatActivity {
                                     }  else {
                                         spendHigh += it.getDuration();
                                     }
+
+                                    if(ac.getCategory().equals("LEISURE")){
+                                        timeLeisure += it.getDuration();
+                                    } else {
+                                        timeJob += it.getDuration();
+                                    }
                                 }
                             }
 
@@ -240,6 +241,9 @@ public class WeekReportActivity extends AppCompatActivity {
 
                         mChart.setCenterText(((int)totalTimeInvested + " min"));
                         DecimalFormat df = new DecimalFormat("0.00");
+
+                        leisureTxt.setText(timeLeisure + " min\n %" + df.format(100 * (timeLeisure/ totalTimeInvested)));
+                        workTxt.setText(timeJob + " min\n %" + df.format(100 * (timeJob/ totalTimeInvested)));
 
                         spendTimeHigh.setText("Prioridade Alta:     " +  spendHigh + " min (% " + df.format(100 * (spendHigh/ totalTimeInvested)) + ")");
                         spendTimeMedium.setText("Prioridade Média:      " + spendMedium + " min (% " + df.format(100 * (spendMedium/ totalTimeInvested)) + ")");
@@ -289,24 +293,26 @@ public class WeekReportActivity extends AppCompatActivity {
                     Log.e("JSON","FAILED");
                 }
             }
-        }, new Response.ErrorListener() {
+        };
+
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 loading.cancel();
                 AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
                 builder.setTitle("Volley Error");
                 builder.setMessage(error.toString()).setNegativeButton("OK", null)
-                       .create().show();
+                        .create().show();
             }
-        });
+        };
 
-        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+        RestClient.get(this, sampleURL, responseListener, errorListener);
+
 
     }
 
     private void setList() {
         this.rankingAdapter = new RankingAdapter(getApplicationContext(), activities, totalTimeInvested);
-
         this.recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         registerForContextMenu(recyclerView);
         this.recyclerView.setAdapter(rankingAdapter);
@@ -314,7 +320,6 @@ public class WeekReportActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager =  new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         this.recyclerView.setLayoutManager(linearLayoutManager);
-
         rankingAdapter.update(activities);
     }
 }

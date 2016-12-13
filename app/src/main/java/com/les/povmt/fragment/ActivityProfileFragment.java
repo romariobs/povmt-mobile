@@ -1,7 +1,10 @@
 package com.les.povmt.fragment;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.TextViewCompat;
@@ -9,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.les.povmt.EditActivity;
@@ -16,6 +20,8 @@ import com.les.povmt.R;
 import com.les.povmt.models.Activity;
 
 import org.w3c.dom.Text;
+
+import java.io.File;
 
 public class ActivityProfileFragment extends Fragment {
     private Activity activity;
@@ -44,9 +50,27 @@ public class ActivityProfileFragment extends Fragment {
                 startEditActivity();
             }
         });
+        ImageView image = (ImageView) v.findViewById(R.id.imageActivity);
+
+        Bitmap bMap = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + File.separator + activity.getId() +".jpg");
+        image.setImageBitmap(bMap);
 
         TextView description = (TextView) v.findViewById(R.id.description);
         description.setText(activity.getDescription());
+        TextView category = (TextView) v.findViewById(R.id.category);
+        if(activity.getCategory().equals("LEISURE"))
+            category.setText("Lazer");
+        else
+            category.setText("Trabalho");
+
+        TextView priority = (TextView) v.findViewById(R.id.priority);
+        if(activity.getPriority().equals("HIGH"))
+            priority.setText("Alta");
+        else if (activity.getPriority().equals("MEDIUM"))
+            priority.setText("Média");
+        else
+            priority.setText("Baixa");
+
         return v;
     }
 
