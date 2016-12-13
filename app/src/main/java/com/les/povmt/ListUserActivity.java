@@ -440,6 +440,10 @@ public class ListUserActivity extends AppCompatActivity {
                     public void onClick(View view) {
                         SharedPreferences.Editor editor = getSharedPreferences(POVMT_PREFS, MODE_PRIVATE).edit();
                         editor.putBoolean("habilitaNoti", false);
+                        Intent intent = new Intent("BIRL");
+                        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 669, intent, 0);
+                        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                        alarmManager.cancel(pendingIntent);
                         alertDialog.dismiss();
                     }
                 });

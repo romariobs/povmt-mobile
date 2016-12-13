@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
@@ -29,6 +30,8 @@ import com.les.povmt.models.Activity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -49,6 +52,7 @@ public class RegisterTiActivity extends AppCompatActivity {
     private boolean editar;
 
     private InvestedTime InvestedTime;
+    private CheckBox mCheckbox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +61,7 @@ public class RegisterTiActivity extends AppCompatActivity {
         mDurationTi = (EditText) findViewById(R.id.editx_duration);
         mCalendar = Calendar.getInstance();
         mBtAdd = (Button) findViewById(R.id.bt_add_ti);
+        mCheckbox = (CheckBox) findViewById(R.id.checkBox_yesterday);
 
         InvestedTime = getIntent().getExtras().getParcelable("activity");
 
@@ -178,6 +183,8 @@ public class RegisterTiActivity extends AppCompatActivity {
                     int status = 0;
                     String activity = "";
 
+
+
                     if (json.has(Constants.TAG_STATUS)) {
                         status = json.getInt(Constants.TAG_STATUS);
                     }
@@ -205,9 +212,26 @@ public class RegisterTiActivity extends AppCompatActivity {
 
         parameters.put(Constants.TAG_DURATION, mDurationTi.getText().toString());
         parameters.put(Constants.TAG_INVESTEDTIMEAT, getIntent().getStringExtra("id"));
+        if (mCheckbox.isChecked()) {
+            parameters.put(Constants.TAG_CREATED_AT, getYesterday());
+        }
 
         RestClient.post(mContext, RestClient.INVESTED_TIME_ENDPOINT_URL, parameters, responseListener);
 
+    }
+
+    private String getYesterday() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.clear(Calendar.MINUTE);
+        cal.clear(Calendar.SECOND);
+        cal.clear(Calendar.MILLISECOND);
+        DateFormat dfServer = new SimpleDateFormat("yyyy-MM-dd");
+        cal.add(Calendar.DATE, -1);
+        String yesterday = dfServer.format(cal.getTime());
+
+        Log.d("REGISTER TI", "ontem " +yesterday);
+        return yesterday;
     }
 
     private void closeThis() {

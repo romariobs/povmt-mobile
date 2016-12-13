@@ -30,6 +30,13 @@
             android:hint="Duração" />
     </android.support.design.widget.TextInputLayout>
 
+
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/checkBox_yesterday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ontem"/>
+
     <Button
         android:id="@+id/bt_add_ti"
         android:layout_width="wrap_content"
