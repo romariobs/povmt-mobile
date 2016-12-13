@@ -80,7 +80,16 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.TIMEZONE_CHANGED" />
                 <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="NOTIFY_TI"/>
             </intent-filter>
         </receiver>
+
+        <receiver android:name=".notification.BroadcastReceiverTI">
+            <intent-filter>
+                <action android:name="BIRL"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 </manifest>

@@ -28,6 +28,9 @@ import static java.net.HttpURLConnection.HTTP_OK;
  * Created by felipe on 12/11/16.
  */
 
+/*
+ * UNNUSED
+ */
 public final class NotificationServiceStarterReceiver extends BroadcastReceiver {
     private static Context context;
 
@@ -40,14 +43,13 @@ public final class NotificationServiceStarterReceiver extends BroadcastReceiver 
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
     }
 
     private static void showNotification(boolean addYesterday) {
         if(addYesterday){
             Intent intent = new Intent();
-            intent.putExtra("time", getTimeMilliNotification());
-            NotificationEventReceiver.setupAlarm(context, intent);
+//            intent.putExtra("time", getTimeMilliNotification());
+
         }
     }
 

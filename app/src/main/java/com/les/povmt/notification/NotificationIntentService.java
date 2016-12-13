@@ -15,6 +15,9 @@ import com.les.povmt.R;
  * Created by felipe on 12/11/16.
  */
 
+/*
+ * UNNUSED
+ */
 public class NotificationIntentService extends IntentService {
 
     private static final int NOTIFICATION_ID = 1;
@@ -40,15 +43,15 @@ public class NotificationIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         try {
-            String action = intent.getAction();
+            /*String action = intent.getAction();
             if (ACTION_START.equals(action)) {
                 processStartNotification();
             }
             if (ACTION_DELETE.equals(action)) {
                 processDeleteNotification(intent);
-            }
+            }*/
         } finally {
-            WakefulBroadcastReceiver.completeWakefulIntent(intent);
+            /*WakefulBroadcastReceiver.completeWakefulIntent(intent);*/
         }
     }
 
