@@ -175,9 +175,13 @@ public class WeekReportActivity extends AppCompatActivity {
 
         loading.setMessage("Carregando...");
         loading.show();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, sampleURL, new Response.Listener<String>() {
+
+
+
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                Log.d("ON RESP", response);
                 JSONObject json;
                 try {
                     json = new JSONObject(response);
@@ -251,10 +255,7 @@ public class WeekReportActivity extends AppCompatActivity {
                         mChart.setCenterText(((int)totalTimeInvested + " min"));
                         DecimalFormat df = new DecimalFormat("0.00");
 
-                        // TODO textos categorias
-                        // TextView1
                         leisureTxt.setText(timeLeisure + " min\n %" + df.format(100 * (timeLeisure/ totalTimeInvested)));
-                        // TextView2
                         workTxt.setText(timeJob + " min\n %" + df.format(100 * (timeJob/ totalTimeInvested)));
 
                         spendTimeHigh.setText("Prioridade Alta:     " +  spendHigh + " min (% " + df.format(100 * (spendHigh/ totalTimeInvested)) + ")");
@@ -305,18 +306,21 @@ public class WeekReportActivity extends AppCompatActivity {
                     Log.e("JSON","FAILED");
                 }
             }
-        }, new Response.ErrorListener() {
+        };
+
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 loading.cancel();
                 AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
                 builder.setTitle("Volley Error");
                 builder.setMessage(error.toString()).setNegativeButton("OK", null)
-                       .create().show();
+                        .create().show();
             }
-        });
+        };
 
-        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+        RestClient.get(this, sampleURL, responseListener, errorListener);
+
 
     }
 

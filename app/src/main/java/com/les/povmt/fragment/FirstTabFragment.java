@@ -134,6 +134,7 @@ public class FirstTabFragment extends Fragment{
                         .create().show();
             }
         };
+
         RestClient.get(getContext(), finalRequest, responseListener, errorListener);
         return view;
     }
