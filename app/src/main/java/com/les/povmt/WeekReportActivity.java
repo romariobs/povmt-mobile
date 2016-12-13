@@ -1,7 +1,6 @@
 package com.les.povmt;
 
 import android.app.AlertDialog;
-import android.app.IntentService;
 import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,10 +14,8 @@ import android.view.MenuItem;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
@@ -33,18 +30,15 @@ import com.les.povmt.models.InvestedTime;
 import com.les.povmt.models.RankingItem;
 import com.les.povmt.models.User;
 import com.les.povmt.network.RestClient;
-import com.les.povmt.network.VolleySingleton;
 import com.les.povmt.parser.ActivityParser;
 import com.les.povmt.parser.InvestedTimeParser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -137,8 +131,6 @@ public class WeekReportActivity extends AppCompatActivity {
         sampleURL += dfServer.format(endDay) + "&creator=";
         sampleURL += User.getCurrentUser().getId() + "&token=";
         sampleURL += RestClient.getToken();
-
-        Log.d("url", sampleURL);
         generatePieData();
 
         TextView weekDays = (TextView) findViewById(R.id.weekDays);
@@ -181,7 +173,6 @@ public class WeekReportActivity extends AppCompatActivity {
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d("ON RESP", response);
                 JSONObject json;
                 try {
                     json = new JSONObject(response);
@@ -203,10 +194,6 @@ public class WeekReportActivity extends AppCompatActivity {
                     if (group!= null) {
                         JSONArray arrayIts = group.getJSONArray("its");
 
-                        int arraySize = arrayIts != null ? arrayIts.length() : 0;
-
-
-                        //PARSING ITs FROM HISTORY
                         List<Activity> activitiesList = (new ActivityParser()).parseFromHistory(json.getJSONObject("history").toString());
                         List<InvestedTime> itsList = (new InvestedTimeParser()).parse(group.toString());
                         for(int j = 1; j < json.getJSONObject("history").getJSONArray("groupedHistory").length();j++){
@@ -326,7 +313,6 @@ public class WeekReportActivity extends AppCompatActivity {
 
     private void setList() {
         this.rankingAdapter = new RankingAdapter(getApplicationContext(), activities, totalTimeInvested);
-
         this.recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         registerForContextMenu(recyclerView);
         this.recyclerView.setAdapter(rankingAdapter);
@@ -334,7 +320,6 @@ public class WeekReportActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager =  new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         this.recyclerView.setLayoutManager(linearLayoutManager);
-
         rankingAdapter.update(activities);
     }
 }

@@ -54,6 +54,7 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.vi
         holder.description.setText(activity.getDescription());
         Bitmap bMap = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + File.separator + activity.getId() +".jpg");
         holder.imageViewMenuOverflow.setImageBitmap(bMap);
+
         switch (activity.getCategory()) {
             case Constants.WORK:
                 holder.view.setBackgroundColor(context.getResources().getColor(R.color.workColor));

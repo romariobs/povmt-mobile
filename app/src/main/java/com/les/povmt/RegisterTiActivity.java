@@ -212,8 +212,6 @@ public class RegisterTiActivity extends AppCompatActivity {
 
     private void closeThis() {
         this.finish();
-
     }
-
 
 }
