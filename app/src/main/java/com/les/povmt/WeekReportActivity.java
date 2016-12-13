@@ -65,6 +65,8 @@ public class WeekReportActivity extends AppCompatActivity {
     private TextView spendTimeHigh;
     private TextView spendTimeMedium;
     private TextView spendTimeLown;
+    private TextView leisureTxt;
+    private TextView workTxt;
 
     private Date startDay;
     private Date endDay;
@@ -92,6 +94,8 @@ public class WeekReportActivity extends AppCompatActivity {
         spendTimeHigh = (TextView) findViewById(R.id.txtSpendHigh);
         spendTimeLown = (TextView) findViewById(R.id.txtSpendLown);
         spendTimeMedium = (TextView) findViewById(R.id.txtSpendMedium);
+        leisureTxt = (TextView) findViewById(R.id.leisureTxt);
+        workTxt = (TextView) findViewById(R.id.workTxt);
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setTitle(getString(R.string.title_activity_week_report));
@@ -171,8 +175,6 @@ public class WeekReportActivity extends AppCompatActivity {
 
         loading.setMessage("Carregando...");
         loading.show();
-        // Request a string response from the provided hostURL.
-
         StringRequest stringRequest = new StringRequest(Request.Method.GET, sampleURL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -215,6 +217,8 @@ public class WeekReportActivity extends AppCompatActivity {
                         int spendMedium = 0;
                         int spendLow = 0;
 
+                        int timeLeisure = 0;
+                        int timeJob = 0;
                         for (Activity ac : activitiesList){
                             RankingItem rk = new RankingItem(ac, 0, 0);
                             for(InvestedTime it : itsList){
@@ -229,6 +233,12 @@ public class WeekReportActivity extends AppCompatActivity {
                                     }  else {
                                         spendHigh += it.getDuration();
                                     }
+
+                                    if(ac.getCategory().equals("LEISURE")){
+                                        timeLeisure += it.getDuration();
+                                    } else {
+                                        timeJob += it.getDuration();
+                                    }
                                 }
                             }
 
@@ -240,6 +250,12 @@ public class WeekReportActivity extends AppCompatActivity {
 
                         mChart.setCenterText(((int)totalTimeInvested + " min"));
                         DecimalFormat df = new DecimalFormat("0.00");
+
+                        // TODO textos categorias
+                        // TextView1
+                        leisureTxt.setText(timeLeisure + " min\n %" + df.format(100 * (timeLeisure/ totalTimeInvested)));
+                        // TextView2
+                        workTxt.setText(timeJob + " min\n %" + df.format(100 * (timeJob/ totalTimeInvested)));
 
                         spendTimeHigh.setText("Prioridade Alta:     " +  spendHigh + " min (% " + df.format(100 * (spendHigh/ totalTimeInvested)) + ")");
                         spendTimeMedium.setText("Prioridade Média:      " + spendMedium + " min (% " + df.format(100 * (spendMedium/ totalTimeInvested)) + ")");
