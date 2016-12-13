@@ -1,8 +1,12 @@
 package com.les.povmt;
 
+import android.app.AlarmManager;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
@@ -27,10 +31,13 @@ import com.android.volley.VolleyError;
 import com.les.povmt.adapter.ActivitiesAdapter;
 import com.les.povmt.fragment.ReportFragment;
 import com.les.povmt.models.Activity;
+import com.les.povmt.models.InvestedTime;
+import com.les.povmt.models.User;
 import com.les.povmt.network.RestClient;
 import com.les.povmt.notification.NotificationEventReceiver;
 import com.les.povmt.notification.NotificationServiceStarterReceiver;
 import com.les.povmt.parser.ActivityParser;
+import com.les.povmt.parser.InvestedTimeParser;
 import com.les.povmt.util.Constants;
 import com.les.povmt.util.ImageUtils;
 import com.les.povmt.util.Messages;
@@ -39,6 +46,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -49,6 +58,8 @@ import java.util.Map;
 public class ListUserActivity extends AppCompatActivity {
 
     private static final String POVMT_PREFS = "POVMT_PREFS";
+    public static final String NOTIFY_TI = "NOTIFY_TI";
+    private static final int TWENTY_HOURS_IN_MILI = 86400000;
     private final int CREATE_ATIVITY = 1;
 
     private static String userId;
@@ -64,6 +75,7 @@ public class ListUserActivity extends AppCompatActivity {
     private final Context mContext = this;
 
     private Map<Integer, Activity> map;
+    private boolean hasTiYesterday;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,11 +175,14 @@ public class ListUserActivity extends AppCompatActivity {
                             }
                         });
 
+        if (canNotify() && !hasAlarm() && checkYesterday()) {
 
-        Intent intent = new Intent();
-        intent.putExtra("time", getTimeMilliNotification());
+            Intent intent = new Intent("BIRL");
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 669, intent, 0);
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, getTimeMilliNotification(), TWENTY_HOURS_IN_MILI, pendingIntent);
+        }
 
-        NotificationServiceStarterReceiver.setupAlarm(getApplicationContext());
 
         recyclerView.addOnItemTouchListener(swipeTouchListener);
 
@@ -179,6 +194,21 @@ public class ListUserActivity extends AppCompatActivity {
                 startEditActivity();
             }
         });
+    }
+
+    private boolean hasAlarm () {
+        return PendingIntent.getBroadcast(this, 669, new Intent("BIRL"), PendingIntent.FLAG_NO_CREATE) != null; //Se for null é por que não existe alarme ativo.
+    }
+
+    public void ouvindo() {
+        Intent intent = new Intent(NOTIFY_TI);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        sendBroadcast(intent);
+    }
+
+    private boolean canNotify() {
+        SharedPreferences prefs = getSharedPreferences(POVMT_PREFS, MODE_PRIVATE);
+        return prefs.getBoolean("habilitaNoti", true);
     }
 
     public void refresh () {
@@ -195,9 +225,51 @@ public class ListUserActivity extends AppCompatActivity {
         calendar.set(Calendar.MINUTE, timeset_min);
         calendar.set(Calendar.SECOND, 00);
 
+        calendar.add(Calendar.SECOND, 3);
+
         return calendar.getTimeInMillis();
+    }
+
+    private boolean checkYesterday() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.clear(Calendar.MINUTE);
+        cal.clear(Calendar.SECOND);
+        cal.clear(Calendar.MILLISECOND);
+        DateFormat dfServer = new SimpleDateFormat("yyyy-MM-dd");
+        String today = dfServer.format(cal.getTime());
+        cal.add(Calendar.DATE, -1);
+        String yesterday = dfServer.format(cal.getTime());
+
+        String sampleURL = RestClient.HISTORY_ENDPOINT_URL+"?startDate=";
+
+        sampleURL += yesterday + "&endDate=";
+        sampleURL += today + "&creator=";
+        sampleURL += User.getCurrentUser().getId() + "&token=";
+        sampleURL += RestClient.getToken();
 
 
+        Response.Listener<String> successListener = new Response.Listener<String>(){
+            @Override
+            public void onResponse(String response) {
+                InvestedTimeParser investedTimeParser = new InvestedTimeParser();
+                List<InvestedTime> lista = investedTimeParser.parse(response);
+                hasTiYesterday = lista.isEmpty();
+
+            }
+        };
+
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                hasTiYesterday = true;
+            }
+        };
+
+
+        RestClient.get(this, sampleURL, successListener, errorListener);
+
+        return hasTiYesterday;
     }
 
     public void clear () {
@@ -304,6 +376,7 @@ public class ListUserActivity extends AppCompatActivity {
         super.onDestroy();
         clear();
         closeDialog();
+
     }
 
     @Override
@@ -315,6 +388,8 @@ public class ListUserActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
+        final View dialogView;
+        final AlertDialog alertDialog;
         switch (itemId) {
             case 16908332:
                 onBackPressed();
@@ -326,8 +401,8 @@ public class ListUserActivity extends AppCompatActivity {
             case R.id.action_options:
                 return true;
             case R.id.action_set_schedule:
-                final View dialogView = View.inflate(this, R.layout.dialog_notification_schedule, null);
-                final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+                dialogView = View.inflate(this, R.layout.dialog_notification_schedule, null);
+                alertDialog = new AlertDialog.Builder(this).create();
 
                 final TimePicker timePicker = (TimePicker) dialogView.findViewById(R.id.tp_new_time);
                 timePicker.setIs24HourView(true);
@@ -348,6 +423,32 @@ public class ListUserActivity extends AppCompatActivity {
                         editor.putInt("TimeScheduleHour", timePicker.getCurrentHour());
                         editor.putInt("TimeScheduleMin", timePicker.getCurrentMinute());
                         editor.commit();
+                        alertDialog.dismiss();
+                    }
+                });
+
+                alertDialog.setView(dialogView);
+                alertDialog.show();
+
+                return true;
+            case R.id.action_disable_noti:
+                dialogView = View.inflate(this, R.layout.dialog_notification_disable, null);
+                alertDialog = new AlertDialog.Builder(this).create();
+
+                dialogView.findViewById(R.id.bt_notification_disable).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        SharedPreferences.Editor editor = getSharedPreferences(POVMT_PREFS, MODE_PRIVATE).edit();
+                        editor.putBoolean("habilitaNoti", false);
+                        alertDialog.dismiss();
+                    }
+                });
+
+                dialogView.findViewById(R.id.bt_notification_enable).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        SharedPreferences.Editor editor = getSharedPreferences(POVMT_PREFS, MODE_PRIVATE).edit();
+                        editor.putBoolean("habilitaNoti", true);
                         alertDialog.dismiss();
                     }
                 });

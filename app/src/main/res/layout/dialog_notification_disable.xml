@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_centerHorizontal="true"
+    android:layout_width="match_parent"
+    android:layout_gravity="center_horizontal|center_vertical"
+    android:padding="8dp"
+    android:layout_height="match_parent">
+
+
+    <Button
+        android:id="@+id/bt_notification_enable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Desativar"
+        android:layout_margin="5dp"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/colorWhite"/>
+
+
+    <Button
+        android:id="@+id/bt_notification_disable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:text="Ativar"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/colorWhite"/>
+
+</LinearLayout>
