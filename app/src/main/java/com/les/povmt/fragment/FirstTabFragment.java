@@ -51,6 +51,8 @@ public class FirstTabFragment extends Fragment{
     @Bind(R.id.tv_recreation)
     TextView mBtRecreation;
 
+    ListView lView;
+
     public FirstTabFragment() {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.HOUR_OF_DAY, 0); // ! clear would not reset the hour of day !
@@ -75,14 +77,20 @@ public class FirstTabFragment extends Fragment{
 
         selectTypeWork();
 
+        dataSource = new ArrayList<>();
+        lView = (ListView)view.findViewById(R.id.list1);
+
+        return view;
+    }
+
+    private void callService() {
+        dataSource = new ArrayList<>();
         final ProgressDialog loading = new ProgressDialog(getContext(), R.style.AppThemeDarkDialog);
         loading.setMessage("Carregando...");
         loading.show();
 
-        dataSource = new ArrayList<>();
-        final ListView lView = (ListView)view.findViewById(R.id.list1);
-
         String finalRequest = hostURL;
+
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -116,11 +124,7 @@ public class FirstTabFragment extends Fragment{
                         for(int j = 1; j < json.getJSONObject("history").getJSONArray("groupedHistory").length();j++){
                             group = json.getJSONObject("history").getJSONArray("groupedHistory").optJSONObject(j);
                             List<InvestedTime> varList = (new InvestedTimeParser()).parse(group.toString());
-                            if(isWorkCategory) {
-                                itsList.addAll(varList);
-                            } else {
-                                itsList.addAll(varList);
-                            }
+                            itsList.addAll(varList);
                         }
 
                         for (int it = 0; it < itsList.size(); it++) {
@@ -128,12 +132,17 @@ public class FirstTabFragment extends Fragment{
                             String actName = "";
 
                             for (Activity act : activities) {
-                                if(act.getId().equals(invTime.getActivityId()))
-                                    actName = act.getTitle();
+                                if((isWorkCategory && act.getCategory().equals("WORK")) || (!isWorkCategory && !act.getCategory().equals("WORK"))) {
+                                    if(act.getId().equals(invTime.getActivityId()))
+                                        actName = act.getTitle();
+                                }
                             }
-                            text = "Atividade: " + actName + "\nTempo Investido: " + invTime.getDuration() + " minutos"
-                                    + "\nEm " + invTime.getDate();
-                            dataSource.add(text);
+
+                            if (!actName.equals("")) {
+                                text = "Atividade: " + actName + "\nTempo Investido: " + invTime.getDuration() + " minutos"
+                                        + "\nEm " + invTime.getDate();
+                                dataSource.add(text);
+                            }
                         }
                     }
                     ArrayAdapter<String> adapter=new ArrayAdapter<>(getActivity(),R.layout.rowlayout,R.id.txtitem, dataSource);
@@ -156,9 +165,7 @@ public class FirstTabFragment extends Fragment{
         };
 
         RestClient.get(getContext(), finalRequest, responseListener, errorListener);
-        return view;
     }
-
 
     @OnClick(R.id.tv_work)
     void selectTypeWork() {
@@ -169,7 +176,7 @@ public class FirstTabFragment extends Fragment{
         mBtRecreation.setTextColor(Color.BLACK);
 
         isWorkCategory = true;
-//        callService();
+        callService();
     }
 
     @OnClick(R.id.tv_recreation)
@@ -181,6 +188,6 @@ public class FirstTabFragment extends Fragment{
         mBtWork.setTextColor(Color.BLACK);
 
         isWorkCategory = false;
-//        callService();
+        callService();
     }
 }
