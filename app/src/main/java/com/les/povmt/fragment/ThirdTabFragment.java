@@ -54,6 +54,7 @@ public class ThirdTabFragment extends Fragment {
     @Bind(R.id.tv_recreation)
     TextView mBtRecreation;
 
+    @Bind(R.id.list3)
     ListView lView;
 
     public ThirdTabFragment() {
@@ -79,7 +80,6 @@ public class ThirdTabFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_three, container, false);
         ButterKnife.bind(this, view);
         dataSource = new ArrayList<>();
-        lView = (ListView) view.findViewById(R.id.list3);
 
         selectTypeWork();
 
