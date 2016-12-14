@@ -74,11 +74,9 @@ public class FirstTabFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_one, container, false);
         ButterKnife.bind(this, view);
+        lView = (ListView)view.findViewById(R.id.list1);
 
         selectTypeWork();
-
-        dataSource = new ArrayList<>();
-        lView = (ListView)view.findViewById(R.id.list1);
 
         return view;
     }
