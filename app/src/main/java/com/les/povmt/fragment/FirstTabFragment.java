@@ -51,6 +51,7 @@ public class FirstTabFragment extends Fragment {
     @Bind(R.id.tv_recreation)
     TextView mBtRecreation;
 
+    @Bind(R.id.list1)
     ListView lView;
 
     public FirstTabFragment() {
@@ -74,10 +75,7 @@ public class FirstTabFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_one, container, false);
         ButterKnife.bind(this, view);
-        lView = (ListView) view.findViewById(R.id.list1);
-
         selectTypeWork();
-
         return view;
     }
 
@@ -109,7 +107,6 @@ public class FirstTabFragment extends Fragment {
                         builder.setMessage(status).setNegativeButton("ok", null)
                                 .create().show();
                     }
-                    String text = "";
 
                     JSONObject group = json.getJSONObject("history").getJSONArray("groupedHistory")
                             .optJSONObject(0);
@@ -137,7 +134,7 @@ public class FirstTabFragment extends Fragment {
                             }
 
                             if (!actName.equals("")) {
-                                text = "Atividade: " + actName + "\nTempo Investido: " + invTime.getDuration() + " minutos"
+                                String text = "Atividade: " + actName + "\nTempo Investido: " + invTime.getDuration() + " minutos"
                                         + "\nEm " + invTime.getDate();
                                 dataSource.add(text);
                             }
