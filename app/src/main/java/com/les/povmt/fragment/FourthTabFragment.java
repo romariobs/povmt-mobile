@@ -161,9 +161,6 @@ public class FourthTabFragment extends Fragment implements OnChartValueSelectedL
         loadingBeforeWeek.show();
         loadingLastWeek.show();
 
-//        VolleySingleton.getInstance(getActivity()).addToRequestQueue(getActualWeekRequest(loadingActualWeek));
-//        VolleySingleton.getInstance(getActivity()).addToRequestQueue(getBeforeWeekRequest(loadingBeforeWeek));
-//        VolleySingleton.getInstance(getActivity()).addToRequestQueue(getLastWeekRequest(loadingLastWeek));
         getActualWeekRequest(loadingActualWeek);
         getBeforeWeekRequest(loadingBeforeWeek);
         getLastWeekRequest(loadingLastWeek);
@@ -244,65 +241,6 @@ public class FourthTabFragment extends Fragment implements OnChartValueSelectedL
         RestClient.get(getContext(), mUrlActualWeek, responseListener, errorListener);
 
         return null;
-
-        /*return new StringRequest(Request.Method.GET, mUrlActualWeek, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                JSONObject json;
-
-                try {
-                    json = new JSONObject(response);
-                    int status = 0;
-
-                    if (json.has("status")) {
-                        status = json.getInt("status");
-                    }
-
-                    if (status != HTTP_OK) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        builder.setMessage(status).setNegativeButton("ok", null)
-                                .create().show();
-                    }
-
-                    JSONObject group = json.getJSONObject("history").getJSONArray("groupedHistory")
-                            .optJSONObject(0);
-
-                    if (group != null) {
-                        List<InvestedTime> itsList = (new InvestedTimeParser()).parse(group.toString());
-                        for (int j = 1; j < json.getJSONObject("history").getJSONArray("groupedHistory").length(); j++) {
-                            group = json.getJSONObject("history").getJSONArray("groupedHistory").optJSONObject(j);
-                            List<InvestedTime> varList = (new InvestedTimeParser()).parse(group.toString());
-                            itsList.addAll(varList);
-                        }
-
-                        for (InvestedTime item :
-                                itsList) {
-                            //TODO Separar por categoria
-                            if (isWorkCategory) {
-                                mActualWeekTime += item.getDuration();
-                            } else {
-                                mActualWeekTime += item.getDuration();
-                            }
-                        }
-                        mActualWeekTime = mActualWeekTime / 7 > 24 ? 24 : mActualWeekTime / 7;
-                    }
-                    setGraphic();
-                    loading.cancel();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                loading.cancel();
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Volley Error");
-                builder.setMessage(error.toString()).setNegativeButton("OK", null)
-                        .create().show();
-            }
-        });*/
     }
 
     /**
@@ -380,65 +318,6 @@ public class FourthTabFragment extends Fragment implements OnChartValueSelectedL
         RestClient.get(getContext(), mUrlBeforeWeek, responseListener, errorListener);
 
         return null;
-
-        /*return new StringRequest(Request.Method.GET, mUrlBeforeWeek, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                JSONObject json;
-
-                try {
-                    json = new JSONObject(response);
-                    int status = 0;
-
-                    if (json.has("status")) {
-                        status = json.getInt("status");
-                    }
-
-                    if (status != HTTP_OK) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        builder.setMessage(status).setNegativeButton("ok", null)
-                                .create().show();
-                    }
-
-                    JSONObject group = json.getJSONObject("history").getJSONArray("groupedHistory")
-                            .optJSONObject(0);
-
-                    if (group != null) {
-                        List<InvestedTime> itsList = (new InvestedTimeParser()).parse(group.toString());
-                        for (int j = 1; j < json.getJSONObject("history").getJSONArray("groupedHistory").length(); j++) {
-                            group = json.getJSONObject("history").getJSONArray("groupedHistory").optJSONObject(j);
-                            List<InvestedTime> varList = (new InvestedTimeParser()).parse(group.toString());
-                            itsList.addAll(varList);
-                        }
-
-                        for (InvestedTime item :
-                                itsList) {
-                            //TODO Separar por categoria
-                            if (isWorkCategory) {
-                                mBeforeWeekTime += item.getDuration();
-                            } else {
-                                mBeforeWeekTime += item.getDuration();
-                            }
-                        }
-                        mBeforeWeekTime = mBeforeWeekTime / 7 > 24 ? 24 : mBeforeWeekTime / 7;
-                    }
-                    setGraphic();
-                    loading.cancel();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                loading.cancel();
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Volley Error");
-                builder.setMessage(error.toString()).setNegativeButton("OK", null)
-                        .create().show();
-            }
-        });*/
     }
 
     /**
@@ -516,83 +395,23 @@ public class FourthTabFragment extends Fragment implements OnChartValueSelectedL
         RestClient.get(getContext(), mUrlLastWeek, responseListener, errorListener);
 
         return null;
-//        return new StringRequest(Request.Method.GET, mUrlLastWeek, new Response.Listener<String>() {
-//            @Override
-//            public void onResponse(String response) {
-//                JSONObject json;
-//
-//                try {
-//                    json = new JSONObject(response);
-//                    int status = 0;
-//
-//                    if (json.has("status")) {
-//                        status = json.getInt("status");
-//                    }
-//
-//                    if (status != HTTP_OK) {
-//                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//                        builder.setMessage(status).setNegativeButton("ok", null)
-//                                .create().show();
-//                    }
-//
-//                    JSONObject group = json.getJSONObject("history").getJSONArray("groupedHistory")
-//                            .optJSONObject(0);
-//
-//                    if (group != null) {
-//                        List<InvestedTime> itsList = (new InvestedTimeParser()).parse(group.toString());
-//                        for (int j = 1; j < json.getJSONObject("history").getJSONArray("groupedHistory").length(); j++) {
-//                            group = json.getJSONObject("history").getJSONArray("groupedHistory").optJSONObject(j);
-//                            List<InvestedTime> varList = (new InvestedTimeParser()).parse(group.toString());
-//                            itsList.addAll(varList);
-//                        }
-//
-//                        for (InvestedTime item :
-//                                itsList) {
-//                            //TODO Separar por categoria
-//                            if (isWorkCategory) {
-//                                mLastWeekTime += item.getDuration();
-//                            } else {
-//                                mLastWeekTime += item.getDuration();
-//                            }
-//                        }
-//                        mLastWeekTime = mLastWeekTime / 7 > 24 ? 24 : mLastWeekTime / 7;
-//                    }
-//                    setGraphic();
-//                    loading.cancel();
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                loading.cancel();
-//                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//                builder.setTitle("Volley Error");
-//                builder.setMessage(error.toString()).setNegativeButton("OK", null)
-//                        .create().show();
-//            }
-//        });
     }
 
     /**
      * Prepare url to service
      */
     private void prepateUrl() {
+        this.mUrlActualWeek += mDateFormat.format(mActualWeekStartDay) + "&endDate=";
+        this.mUrlActualWeek += mDateFormat.format(mActualWeekEndDay) + "&creator=";
+        this.mUrlActualWeek += User.getCurrentUser().getId();
 
-        mUrlActualWeek += mDateFormat.format(mActualWeekStartDay) + "&endDate=";
-        mUrlActualWeek += mDateFormat.format(mActualWeekEndDay) + "&creator=";
-        mUrlActualWeek += User.getCurrentUser().getId();
+        this.mUrlBeforeWeek += mDateFormat.format(mBeforeWeekStartDay) + "&endDate=";
+        this.mUrlBeforeWeek += mDateFormat.format(mBeforeWeekEndDay) + "&creator=";
+        this.mUrlBeforeWeek += User.getCurrentUser().getId();
 
-        mUrlBeforeWeek += mDateFormat.format(mBeforeWeekStartDay) + "&endDate=";
-        mUrlBeforeWeek += mDateFormat.format(mBeforeWeekEndDay) + "&creator=";
-        mUrlBeforeWeek += User.getCurrentUser().getId();
-
-        mUrlLastWeek += mDateFormat.format(mLastWeekStartDay) + "&endDate=";
-        mUrlLastWeek += mDateFormat.format(mLastWeekEndDay) + "&creator=";
-        mUrlLastWeek += User.getCurrentUser().getId();
-
+        this.mUrlLastWeek += mDateFormat.format(mLastWeekStartDay) + "&endDate=";
+        this.mUrlLastWeek += mDateFormat.format(mLastWeekEndDay) + "&creator=";
+        this.mUrlLastWeek += User.getCurrentUser().getId();
     }
 
     /**
