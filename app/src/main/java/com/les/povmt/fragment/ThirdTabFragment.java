@@ -21,6 +21,7 @@ import com.les.povmt.R;
 import com.les.povmt.models.Activity;
 import com.les.povmt.models.InvestedTime;
 import com.les.povmt.models.User;
+import com.les.povmt.network.RestClient;
 import com.les.povmt.network.VolleySingleton;
 import com.les.povmt.parser.ActivityParser;
 import com.les.povmt.parser.InvestedTimeParser;
@@ -45,7 +46,7 @@ import static java.net.HttpURLConnection.HTTP_OK;
 public class ThirdTabFragment extends Fragment {
     private Date startDay, endDay;
     private DateFormat dfServer = new SimpleDateFormat("yyyy-MM-dd");
-    private String hostURL = "http://povmt.herokuapp.com/history?startDate=";
+    private String hostURL = "http://povmt.herokuapp.com/history";
     private StringRequest stringRequest;
     private List<String> dataSource;
     private boolean isWorkCategory = false;
@@ -71,7 +72,7 @@ public class ThirdTabFragment extends Fragment {
         cal.add(Calendar.WEEK_OF_YEAR, -2);
         startDay =  cal.getTime();
 
-        hostURL += dfServer.format(startDay) + "&endDate=";
+        hostURL += "?startDate=" + dfServer.format(startDay) + "&endDate=";
         hostURL += dfServer.format(endDay) + "&creator=";
         hostURL += User.getCurrentUser().getId();
     }
@@ -80,24 +81,27 @@ public class ThirdTabFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_three, container, false);
         ButterKnife.bind(this, view);
+        dataSource = new ArrayList<>();
+        lView = (ListView)view.findViewById(R.id.list3);
 
         selectTypeWork();
 
-
-        dataSource = new ArrayList<>();
-        lView = (ListView)view.findViewById(R.id.list3);
-        callService();
         return view;
     }
 
     private void callService() {
+        dataSource = new ArrayList<>();
         final ProgressDialog loading = new ProgressDialog(getContext(), R.style.AppThemeDarkDialog);
         loading.setMessage("Carregando...");
         loading.show();
 
-        stringRequest = new StringRequest(Request.Method.GET, hostURL, new Response.Listener<String>() {
+        String finalRequest = hostURL;
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+
+                Log.d("ON RESP", response);
+
                 JSONObject json;
 
                 try {
@@ -119,11 +123,7 @@ public class ThirdTabFragment extends Fragment {
                     JSONObject group = json.getJSONObject("history").getJSONArray("groupedHistory")
                             .optJSONObject(0);
 
-                    System.out.println(response);
-
                     if (group!= null) {
-                        JSONArray arrayIts = group.getJSONArray("its");
-
                         //PARSING ITs FROM HISTORY
                         List<Activity> activities = (new ActivityParser()).parseFromHistory(json.getJSONObject("history").toString());
                         List<InvestedTime> itsList = (new InvestedTimeParser()).parse(group.toString());
@@ -131,12 +131,7 @@ public class ThirdTabFragment extends Fragment {
                         for(int j = 1; j < json.getJSONObject("history").getJSONArray("groupedHistory").length();j++){
                             group = json.getJSONObject("history").getJSONArray("groupedHistory").optJSONObject(j);
                             List<InvestedTime> varList = (new InvestedTimeParser()).parse(group.toString());
-                            //TODO Separar por categoria
-                            if (isWorkCategory) {
-                                itsList.addAll(varList);
-                            } else {
-                                itsList.addAll(varList);
-                            }
+                            itsList.addAll(varList);
                         }
 
                         for (int it = 0; it < itsList.size(); it++) {
@@ -144,23 +139,28 @@ public class ThirdTabFragment extends Fragment {
                             String actName = "";
 
                             for (Activity act : activities) {
-                                if(act.getId().equals(invTime.getActivityId()))
-                                    actName = act.getTitle();
+                                if((isWorkCategory && act.getCategory().equals("WORK")) || (!isWorkCategory && !act.getCategory().equals("WORK"))) {
+                                    if(act.getId().equals(invTime.getActivityId()))
+                                        actName = act.getTitle();
+                                }
                             }
 
-                            Calendar cal = invTime.getOriginalDate();
-                            text = "Atividade: " + actName + "\nTempo Investido: " + invTime.getDuration() + " minutos"
-                                    + "\nEm " + invTime.getDate();
-                            dataSource.add(text);
+                            if (!actName.equals("")) {
+                                text = "Atividade: " + actName + "\nTempo Investido: " + invTime.getDuration() + " minutos"
+                                        + "\nEm " + invTime.getDate();
+                                dataSource.add(text);
+                            }
                         }
                     }
-                    ArrayAdapter<String> adapter=new ArrayAdapter<String>(getActivity(),R.layout.rowlayout,R.id.txtitem, dataSource);
+                    ArrayAdapter<String> adapter=new ArrayAdapter<>(getActivity(),R.layout.rowlayout,R.id.txtitem, dataSource);
                     lView.setAdapter(adapter);
                 } catch (JSONException e){
                     Log.e("JSON","FAILED");
                 }
             }
-        }, new Response.ErrorListener() {
+        };
+
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 loading.cancel();
@@ -169,8 +169,9 @@ public class ThirdTabFragment extends Fragment {
                 builder.setMessage(error.toString()).setNegativeButton("OK", null)
                         .create().show();
             }
-        });
-        VolleySingleton.getInstance(getContext()).addToRequestQueue(stringRequest);
+        };
+
+        RestClient.get(getContext(), finalRequest, responseListener, errorListener);
     }
 
     @OnClick(R.id.tv_work)
