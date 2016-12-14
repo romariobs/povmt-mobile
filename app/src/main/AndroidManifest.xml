@@ -23,7 +23,7 @@
             android:theme="@style/AppTheme.NoBar" />
         <activity
             android:name=".LoginActivity"
-            android:label="Pra onde vai meu Tempo?"
+            android:label="Para onde vai meu Tempo?"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoBar">
             <intent-filter>

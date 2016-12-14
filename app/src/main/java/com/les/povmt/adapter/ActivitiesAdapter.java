@@ -52,7 +52,12 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.vi
 
         holder.title.setText(activity.getTitle());
         holder.description.setText(activity.getDescription());
-        Bitmap bMap = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + File.separator + activity.getId() +".jpg");
+        Bitmap bMap = null;
+        File f = new File(Environment.getExternalStorageDirectory() + File.separator + activity.getId() +".jpg");
+        if(f.exists() && !f.isDirectory()) {
+            bMap = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + File.separator + activity.getId() +".jpg");
+        }
+
         holder.imageViewMenuOverflow.setImageBitmap(bMap);
 
         switch (activity.getCategory()) {

@@ -90,7 +90,7 @@ public class FirstTabFragment extends Fragment {
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d("ON RESP", response);
+                Log.d("TAB1", response);
                 JSONObject json;
 
                 try {

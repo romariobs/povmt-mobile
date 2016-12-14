@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.les.povmt.R;
 import com.les.povmt.models.Activity;
 import com.les.povmt.models.InvestedTime;
@@ -41,10 +40,8 @@ import butterknife.OnClick;
 import static java.net.HttpURLConnection.HTTP_OK;
 
 public class ThirdTabFragment extends Fragment {
-    private Date startDay, endDay;
     private DateFormat dfServer = new SimpleDateFormat("yyyy-MM-dd");
     private String hostURL = "http://povmt.herokuapp.com/history";
-    private StringRequest stringRequest;
     private List<String> dataSource;
     private boolean isWorkCategory = false;
 
@@ -63,26 +60,23 @@ public class ThirdTabFragment extends Fragment {
         cal.clear(Calendar.MINUTE);
         cal.clear(Calendar.SECOND);
         cal.clear(Calendar.MILLISECOND);
-
         cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
         cal.add(Calendar.WEEK_OF_YEAR, -1);
+
+        Date startDay, endDay;
         endDay = cal.getTime();
         cal.add(Calendar.WEEK_OF_YEAR, -2);
         startDay = cal.getTime();
 
-        hostURL += "?startDate=" + dfServer.format(startDay) + "&endDate=";
-        hostURL += dfServer.format(endDay) + "&creator=";
-        hostURL += User.getCurrentUser().getId();
+        hostURL += "?startDate=" + dfServer.format(startDay) + "&endDate=" + dfServer.format(endDay)
+                + "&creator=" + User.getCurrentUser().getId();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_three, container, false);
         ButterKnife.bind(this, view);
-        dataSource = new ArrayList<>();
-
         selectTypeWork();
-
         return view;
     }
 
@@ -93,14 +87,13 @@ public class ThirdTabFragment extends Fragment {
         loading.show();
 
         String finalRequest = hostURL;
+
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-
-                Log.d("ON RESP", response);
+                Log.d("TAB3", response);
 
                 JSONObject json;
-
                 try {
                     json = new JSONObject(response);
                     int status = 0;

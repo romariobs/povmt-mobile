@@ -211,8 +211,7 @@ public class CreateActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         createActivity();
-        Intent intent = new Intent(this, ListUserActivity.class);
-        startActivity(intent);
+        finish();
     }
 
     private void createActivity(){

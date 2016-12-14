@@ -214,10 +214,8 @@ public class EditActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-
         editActivity();
-        Intent intent = new Intent(this, ListUserActivity.class);
-        startActivity(intent);
+        finish();
     }
 
     private void validate () throws Exception {
