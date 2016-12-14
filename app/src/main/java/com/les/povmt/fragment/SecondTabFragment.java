@@ -54,6 +54,7 @@ public class SecondTabFragment extends Fragment {
     @Bind(R.id.tv_recreation)
     TextView mBtRecreation;
 
+    @Bind(R.id.list2)
     ListView lView;
 
     public SecondTabFragment() {
@@ -77,7 +78,6 @@ public class SecondTabFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_two, container, false);
         ButterKnife.bind(this, view);
-        lView = (ListView) view.findViewById(R.id.list2);
 
         selectTypeWork();
 
@@ -94,11 +94,9 @@ public class SecondTabFragment extends Fragment {
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-
                 Log.d("ON RESP", response);
 
                 JSONObject json;
-
                 try {
                     json = new JSONObject(response);
                     int status = 0;
