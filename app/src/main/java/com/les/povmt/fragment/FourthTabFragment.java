@@ -195,7 +195,6 @@ public class FourthTabFragment extends Fragment implements OnChartValueSelectedL
                         builder.setMessage(status).setNegativeButton("ok", null)
                                 .create().show();
                     }
-                    String text = "";
 
                     JSONObject group = json.getJSONObject("history").getJSONArray("groupedHistory")
                             .optJSONObject(0);
@@ -272,7 +271,6 @@ public class FourthTabFragment extends Fragment implements OnChartValueSelectedL
                         builder.setMessage(status).setNegativeButton("ok", null)
                                 .create().show();
                     }
-                    String text = "";
 
                     JSONObject group = json.getJSONObject("history").getJSONArray("groupedHistory")
                             .optJSONObject(0);
@@ -349,7 +347,6 @@ public class FourthTabFragment extends Fragment implements OnChartValueSelectedL
                         builder.setMessage(status).setNegativeButton("ok", null)
                                 .create().show();
                     }
-                    String text = "";
 
                     JSONObject group = json.getJSONObject("history").getJSONArray("groupedHistory")
                             .optJSONObject(0);
