@@ -115,7 +115,6 @@ public class ThirdTabFragment extends Fragment {
                         builder.setMessage(status).setNegativeButton("ok", null)
                                 .create().show();
                     }
-                    String text = "";
 
                     JSONObject group = json.getJSONObject("history").getJSONArray("groupedHistory")
                             .optJSONObject(0);
@@ -143,7 +142,7 @@ public class ThirdTabFragment extends Fragment {
                             }
 
                             if (!actName.equals("")) {
-                                text = "Atividade: " + actName + "\nTempo Investido: " + invTime.getDuration() + " minutos"
+                                String text = "Atividade: " + actName + "\nTempo Investido: " + invTime.getDuration() + " minutos"
                                         + "\nEm " + invTime.getDate();
                                 dataSource.add(text);
                             }
