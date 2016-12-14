@@ -5,12 +5,12 @@ import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -29,7 +29,7 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.les.povmt.R;
 import com.les.povmt.models.InvestedTime;
 import com.les.povmt.models.User;
-import com.les.povmt.network.VolleySingleton;
+import com.les.povmt.network.RestClient;
 import com.les.povmt.parser.InvestedTimeParser;
 
 import org.json.JSONException;
@@ -161,9 +161,12 @@ public class FourthTabFragment extends Fragment implements OnChartValueSelectedL
         loadingBeforeWeek.show();
         loadingLastWeek.show();
 
-        VolleySingleton.getInstance(getActivity()).addToRequestQueue(getActualWeekRequest(loadingActualWeek));
-        VolleySingleton.getInstance(getActivity()).addToRequestQueue(getBeforeWeekRequest(loadingBeforeWeek));
-        VolleySingleton.getInstance(getActivity()).addToRequestQueue(getLastWeekRequest(loadingLastWeek));
+//        VolleySingleton.getInstance(getActivity()).addToRequestQueue(getActualWeekRequest(loadingActualWeek));
+//        VolleySingleton.getInstance(getActivity()).addToRequestQueue(getBeforeWeekRequest(loadingBeforeWeek));
+//        VolleySingleton.getInstance(getActivity()).addToRequestQueue(getLastWeekRequest(loadingLastWeek));
+        getActualWeekRequest(loadingActualWeek);
+        getBeforeWeekRequest(loadingBeforeWeek);
+        getLastWeekRequest(loadingLastWeek);
     }
 
     /**
@@ -173,7 +176,76 @@ public class FourthTabFragment extends Fragment implements OnChartValueSelectedL
      * @return StringRequest
      */
     private StringRequest getActualWeekRequest(final ProgressDialog loading) {
-        return new StringRequest(Request.Method.GET, mUrlActualWeek, new Response.Listener<String>() {
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                Log.d("ON RESP", response);
+
+                JSONObject json;
+
+                try {
+                    json = new JSONObject(response);
+                    int status = 0;
+
+                    if (json.has("status")) {
+                        status = json.getInt("status");
+                    }
+                    loading.cancel();
+
+                    if (status != HTTP_OK) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        builder.setMessage(status).setNegativeButton("ok", null)
+                                .create().show();
+                    }
+                    String text = "";
+
+                    JSONObject group = json.getJSONObject("history").getJSONArray("groupedHistory")
+                            .optJSONObject(0);
+
+                    if (group != null) {
+                        List<InvestedTime> itsList = (new InvestedTimeParser()).parse(group.toString());
+                        for (int j = 1; j < json.getJSONObject("history").getJSONArray("groupedHistory").length(); j++) {
+                            group = json.getJSONObject("history").getJSONArray("groupedHistory").optJSONObject(j);
+                            List<InvestedTime> varList = (new InvestedTimeParser()).parse(group.toString());
+                            itsList.addAll(varList);
+                        }
+
+                        for (InvestedTime item :
+                                itsList) {
+                            //TODO Separar por categoria
+                            if (isWorkCategory) {
+                                mActualWeekTime += item.getDuration();
+                            } else {
+                                mActualWeekTime += item.getDuration();
+                            }
+                        }
+                        mActualWeekTime = mActualWeekTime / 7 > 24 ? 24 : mActualWeekTime / 7;
+                    }
+                    setGraphic();
+                    loading.cancel();
+                } catch (JSONException e) {
+                    Log.e("JSON", "FAILED");
+                }
+            }
+        };
+
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                loading.cancel();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Volley Error");
+                builder.setMessage(error.toString()).setNegativeButton("OK", null)
+                        .create().show();
+            }
+        };
+
+        RestClient.get(getContext(), mUrlActualWeek, responseListener, errorListener);
+
+        return null;
+
+        /*return new StringRequest(Request.Method.GET, mUrlActualWeek, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 JSONObject json;
@@ -230,7 +302,7 @@ public class FourthTabFragment extends Fragment implements OnChartValueSelectedL
                 builder.setMessage(error.toString()).setNegativeButton("OK", null)
                         .create().show();
             }
-        });
+        });*/
     }
 
     /**
@@ -240,7 +312,76 @@ public class FourthTabFragment extends Fragment implements OnChartValueSelectedL
      * @return StringRequest
      */
     private StringRequest getBeforeWeekRequest(final ProgressDialog loading) {
-        return new StringRequest(Request.Method.GET, mUrlBeforeWeek, new Response.Listener<String>() {
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                Log.d("ON RESP", response);
+
+                JSONObject json;
+
+                try {
+                    json = new JSONObject(response);
+                    int status = 0;
+
+                    if (json.has("status")) {
+                        status = json.getInt("status");
+                    }
+                    loading.cancel();
+
+                    if (status != HTTP_OK) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        builder.setMessage(status).setNegativeButton("ok", null)
+                                .create().show();
+                    }
+                    String text = "";
+
+                    JSONObject group = json.getJSONObject("history").getJSONArray("groupedHistory")
+                            .optJSONObject(0);
+
+                    if (group != null) {
+                        List<InvestedTime> itsList = (new InvestedTimeParser()).parse(group.toString());
+                        for (int j = 1; j < json.getJSONObject("history").getJSONArray("groupedHistory").length(); j++) {
+                            group = json.getJSONObject("history").getJSONArray("groupedHistory").optJSONObject(j);
+                            List<InvestedTime> varList = (new InvestedTimeParser()).parse(group.toString());
+                            itsList.addAll(varList);
+                        }
+
+                        for (InvestedTime item :
+                                itsList) {
+                            //TODO Separar por categoria
+                            if (isWorkCategory) {
+                                mBeforeWeekTime += item.getDuration();
+                            } else {
+                                mBeforeWeekTime += item.getDuration();
+                            }
+                        }
+                        mBeforeWeekTime = mBeforeWeekTime / 7 > 24 ? 24 : mBeforeWeekTime / 7;
+                    }
+                    setGraphic();
+                    loading.cancel();
+                } catch (JSONException e) {
+                    Log.e("JSON", "FAILED");
+                }
+            }
+        };
+
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                loading.cancel();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Volley Error");
+                builder.setMessage(error.toString()).setNegativeButton("OK", null)
+                        .create().show();
+            }
+        };
+
+        RestClient.get(getContext(), mUrlBeforeWeek, responseListener, errorListener);
+
+        return null;
+
+        /*return new StringRequest(Request.Method.GET, mUrlBeforeWeek, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 JSONObject json;
@@ -297,7 +438,7 @@ public class FourthTabFragment extends Fragment implements OnChartValueSelectedL
                 builder.setMessage(error.toString()).setNegativeButton("OK", null)
                         .create().show();
             }
-        });
+        });*/
     }
 
     /**
@@ -307,9 +448,12 @@ public class FourthTabFragment extends Fragment implements OnChartValueSelectedL
      * @return StringRequest
      */
     private StringRequest getLastWeekRequest(final ProgressDialog loading) {
-        return new StringRequest(Request.Method.GET, mUrlLastWeek, new Response.Listener<String>() {
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+
+                Log.d("ON RESP", response);
+
                 JSONObject json;
 
                 try {
@@ -319,12 +463,14 @@ public class FourthTabFragment extends Fragment implements OnChartValueSelectedL
                     if (json.has("status")) {
                         status = json.getInt("status");
                     }
+                    loading.cancel();
 
                     if (status != HTTP_OK) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                         builder.setMessage(status).setNegativeButton("ok", null)
                                 .create().show();
                     }
+                    String text = "";
 
                     JSONObject group = json.getJSONObject("history").getJSONArray("groupedHistory")
                             .optJSONObject(0);
@@ -351,20 +497,83 @@ public class FourthTabFragment extends Fragment implements OnChartValueSelectedL
                     setGraphic();
                     loading.cancel();
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Log.e("JSON", "FAILED");
                 }
-
             }
-        }, new Response.ErrorListener() {
+        };
+
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 loading.cancel();
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("Volley Error");
                 builder.setMessage(error.toString()).setNegativeButton("OK", null)
                         .create().show();
             }
-        });
+        };
+
+        RestClient.get(getContext(), mUrlLastWeek, responseListener, errorListener);
+
+        return null;
+//        return new StringRequest(Request.Method.GET, mUrlLastWeek, new Response.Listener<String>() {
+//            @Override
+//            public void onResponse(String response) {
+//                JSONObject json;
+//
+//                try {
+//                    json = new JSONObject(response);
+//                    int status = 0;
+//
+//                    if (json.has("status")) {
+//                        status = json.getInt("status");
+//                    }
+//
+//                    if (status != HTTP_OK) {
+//                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//                        builder.setMessage(status).setNegativeButton("ok", null)
+//                                .create().show();
+//                    }
+//
+//                    JSONObject group = json.getJSONObject("history").getJSONArray("groupedHistory")
+//                            .optJSONObject(0);
+//
+//                    if (group != null) {
+//                        List<InvestedTime> itsList = (new InvestedTimeParser()).parse(group.toString());
+//                        for (int j = 1; j < json.getJSONObject("history").getJSONArray("groupedHistory").length(); j++) {
+//                            group = json.getJSONObject("history").getJSONArray("groupedHistory").optJSONObject(j);
+//                            List<InvestedTime> varList = (new InvestedTimeParser()).parse(group.toString());
+//                            itsList.addAll(varList);
+//                        }
+//
+//                        for (InvestedTime item :
+//                                itsList) {
+//                            //TODO Separar por categoria
+//                            if (isWorkCategory) {
+//                                mLastWeekTime += item.getDuration();
+//                            } else {
+//                                mLastWeekTime += item.getDuration();
+//                            }
+//                        }
+//                        mLastWeekTime = mLastWeekTime / 7 > 24 ? 24 : mLastWeekTime / 7;
+//                    }
+//                    setGraphic();
+//                    loading.cancel();
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                loading.cancel();
+//                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//                builder.setTitle("Volley Error");
+//                builder.setMessage(error.toString()).setNegativeButton("OK", null)
+//                        .create().show();
+//            }
+//        });
     }
 
     /**

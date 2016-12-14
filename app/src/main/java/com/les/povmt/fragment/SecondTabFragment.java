@@ -13,7 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -22,11 +21,9 @@ import com.les.povmt.models.Activity;
 import com.les.povmt.models.InvestedTime;
 import com.les.povmt.models.User;
 import com.les.povmt.network.RestClient;
-import com.les.povmt.network.VolleySingleton;
 import com.les.povmt.parser.ActivityParser;
 import com.les.povmt.parser.InvestedTimeParser;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -106,7 +103,7 @@ public class SecondTabFragment extends Fragment {
                     json = new JSONObject(response);
                     int status = 0;
 
-                    if (json.has("status")){
+                    if (json.has("status")) {
                         status = json.getInt("status");
                     }
                     loading.cancel();
@@ -121,12 +118,12 @@ public class SecondTabFragment extends Fragment {
                     JSONObject group = json.getJSONObject("history").getJSONArray("groupedHistory")
                             .optJSONObject(0);
 
-                    if (group!= null) {
+                    if (group != null) {
                         //PARSING ITs FROM HISTORY
                         List<Activity> activities = (new ActivityParser()).parseFromHistory(json.getJSONObject("history").toString());
                         List<InvestedTime> itsList = (new InvestedTimeParser()).parse(group.toString());
 
-                        for(int j = 1; j < json.getJSONObject("history").getJSONArray("groupedHistory").length();j++){
+                        for (int j = 1; j < json.getJSONObject("history").getJSONArray("groupedHistory").length(); j++) {
                             group = json.getJSONObject("history").getJSONArray("groupedHistory").optJSONObject(j);
                             List<InvestedTime> varList = (new InvestedTimeParser()).parse(group.toString());
                             itsList.addAll(varList);
@@ -137,8 +134,8 @@ public class SecondTabFragment extends Fragment {
                             String actName = "";
 
                             for (Activity act : activities) {
-                                if((isWorkCategory && act.getCategory().equals("WORK")) || (!isWorkCategory && !act.getCategory().equals("WORK"))) {
-                                    if(act.getId().equals(invTime.getActivityId()))
+                                if ((isWorkCategory && act.getCategory().equals("WORK")) || (!isWorkCategory && !act.getCategory().equals("WORK"))) {
+                                    if (act.getId().equals(invTime.getActivityId()))
                                         actName = act.getTitle();
                                 }
                             }
@@ -150,10 +147,10 @@ public class SecondTabFragment extends Fragment {
                             }
                         }
                     }
-                    ArrayAdapter<String> adapter=new ArrayAdapter<>(getActivity(),R.layout.rowlayout,R.id.txtitem, dataSource);
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.rowlayout, R.id.txtitem, dataSource);
                     lView.setAdapter(adapter);
-                } catch (JSONException e){
-                    Log.e("JSON","FAILED");
+                } catch (JSONException e) {
+                    Log.e("JSON", "FAILED");
                 }
             }
         };

@@ -39,7 +39,7 @@ import butterknife.OnClick;
 
 import static java.net.HttpURLConnection.HTTP_OK;
 
-public class FirstTabFragment extends Fragment{
+public class FirstTabFragment extends Fragment {
     private DateFormat dfServer = new SimpleDateFormat("yyyy-MM-dd");
     private String hostURL = "http://povmt.herokuapp.com/history";
     private List<String> dataSource;
@@ -61,8 +61,8 @@ public class FirstTabFragment extends Fragment{
         cal.clear(Calendar.MILLISECOND);
         cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek()); // get start of this week
 
-        Date startDay,endDay;
-        startDay =  cal.getTime();
+        Date startDay, endDay;
+        startDay = cal.getTime();
         cal.add(Calendar.WEEK_OF_YEAR, 1);
         endDay = cal.getTime();
 
@@ -74,7 +74,7 @@ public class FirstTabFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_one, container, false);
         ButterKnife.bind(this, view);
-        lView = (ListView)view.findViewById(R.id.list1);
+        lView = (ListView) view.findViewById(R.id.list1);
 
         selectTypeWork();
 
@@ -99,7 +99,7 @@ public class FirstTabFragment extends Fragment{
                     json = new JSONObject(response);
                     int status = 0;
 
-                    if (json.has("status")){
+                    if (json.has("status")) {
                         status = json.getInt("status");
                     }
                     loading.cancel();
@@ -114,12 +114,12 @@ public class FirstTabFragment extends Fragment{
                     JSONObject group = json.getJSONObject("history").getJSONArray("groupedHistory")
                             .optJSONObject(0);
 
-                    if (group!= null) {
+                    if (group != null) {
                         //PARSING ITs FROM HISTORY
                         List<Activity> activities = (new ActivityParser()).parseFromHistory(json.getJSONObject("history").toString());
                         List<InvestedTime> itsList = (new InvestedTimeParser()).parse(group.toString());
 
-                        for(int j = 1; j < json.getJSONObject("history").getJSONArray("groupedHistory").length();j++){
+                        for (int j = 1; j < json.getJSONObject("history").getJSONArray("groupedHistory").length(); j++) {
                             group = json.getJSONObject("history").getJSONArray("groupedHistory").optJSONObject(j);
                             List<InvestedTime> varList = (new InvestedTimeParser()).parse(group.toString());
                             itsList.addAll(varList);
@@ -130,8 +130,8 @@ public class FirstTabFragment extends Fragment{
                             String actName = "";
 
                             for (Activity act : activities) {
-                                if((isWorkCategory && act.getCategory().equals("WORK")) || (!isWorkCategory && !act.getCategory().equals("WORK"))) {
-                                    if(act.getId().equals(invTime.getActivityId()))
+                                if ((isWorkCategory && act.getCategory().equals("WORK")) || (!isWorkCategory && !act.getCategory().equals("WORK"))) {
+                                    if (act.getId().equals(invTime.getActivityId()))
                                         actName = act.getTitle();
                                 }
                             }
@@ -143,10 +143,10 @@ public class FirstTabFragment extends Fragment{
                             }
                         }
                     }
-                    ArrayAdapter<String> adapter=new ArrayAdapter<>(getActivity(),R.layout.rowlayout,R.id.txtitem, dataSource);
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.rowlayout, R.id.txtitem, dataSource);
                     lView.setAdapter(adapter);
-                } catch (JSONException e){
-                    Log.e("JSON","FAILED");
+                } catch (JSONException e) {
+                    Log.e("JSON", "FAILED");
                 }
             }
         };
