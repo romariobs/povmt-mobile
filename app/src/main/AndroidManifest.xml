@@ -67,10 +67,6 @@
             android:name=".ActivityProfileActivity"
             android:parentActivityName=".ListUserActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".HistoricActivity"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".ListUserActivity" />
 
         <service
             android:name=".notification.NotificationIntentService"
