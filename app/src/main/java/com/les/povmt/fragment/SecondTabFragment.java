@@ -116,11 +116,7 @@ public class SecondTabFragment extends Fragment {
                     JSONObject group = json.getJSONObject("history").getJSONArray("groupedHistory")
                             .optJSONObject(0);
 
-                    System.out.println(response);
-
                     if (group!= null) {
-                        JSONArray arrayIts = group.getJSONArray("its");
-
                         //PARSING ITs FROM HISTORY
                         List<Activity> activities = (new ActivityParser()).parseFromHistory(json.getJSONObject("history").toString());
                         List<InvestedTime> itsList = (new InvestedTimeParser()).parse(group.toString());
@@ -128,7 +124,11 @@ public class SecondTabFragment extends Fragment {
                         for(int j = 1; j < json.getJSONObject("history").getJSONArray("groupedHistory").length();j++){
                             group = json.getJSONObject("history").getJSONArray("groupedHistory").optJSONObject(j);
                             List<InvestedTime> varList = (new InvestedTimeParser()).parse(group.toString());
-                            itsList.addAll(varList);
+                            if(isWorkCategory) {
+                                itsList.addAll(varList);
+                            } else {
+                                itsList.addAll(varList);
+                            }
                         }
 
                         for (int it = 0; it < itsList.size(); it++) {
@@ -139,20 +139,17 @@ public class SecondTabFragment extends Fragment {
                                 if(act.getId().equals(invTime.getActivityId()))
                                     actName = act.getTitle();
                             }
-
-                            Calendar cal = invTime.getOriginalDate();
                             text = "Atividade: " + actName + "\nTempo Investido: " + invTime.getDuration() + " minutos"
                                     + "\nEm " + invTime.getDate();
                             dataSource.add(text);
                         }
                     }
-                    ArrayAdapter<String> adapter=new ArrayAdapter<String>(getActivity(),R.layout.rowlayout,R.id.txtitem, dataSource);
+                    ArrayAdapter<String> adapter=new ArrayAdapter<>(getActivity(),R.layout.rowlayout,R.id.txtitem, dataSource);
                     lView.setAdapter(adapter);
                 } catch (JSONException e){
                     Log.e("JSON","FAILED");
                 }
-            };
-
+            }
         };
 
         Response.ErrorListener errorListener = new Response.ErrorListener() {

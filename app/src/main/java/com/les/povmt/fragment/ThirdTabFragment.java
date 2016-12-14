@@ -56,6 +56,8 @@ public class ThirdTabFragment extends Fragment {
     @Bind(R.id.tv_recreation)
     TextView mBtRecreation;
 
+    ListView lView;
+
     public ThirdTabFragment() {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.HOUR_OF_DAY, 0); // ! clear would not reset the hour of day !
@@ -81,12 +83,17 @@ public class ThirdTabFragment extends Fragment {
 
         selectTypeWork();
 
+
+        dataSource = new ArrayList<>();
+        lView = (ListView)view.findViewById(R.id.list3);
+        callService();
+        return view;
+    }
+
+    private void callService() {
         final ProgressDialog loading = new ProgressDialog(getContext(), R.style.AppThemeDarkDialog);
         loading.setMessage("Carregando...");
         loading.show();
-
-        dataSource = new ArrayList<>();
-        final ListView lView = (ListView)view.findViewById(R.id.list3);
 
         stringRequest = new StringRequest(Request.Method.GET, hostURL, new Response.Listener<String>() {
             @Override
@@ -164,7 +171,6 @@ public class ThirdTabFragment extends Fragment {
             }
         });
         VolleySingleton.getInstance(getContext()).addToRequestQueue(stringRequest);
-        return view;
     }
 
     @OnClick(R.id.tv_work)
@@ -176,7 +182,7 @@ public class ThirdTabFragment extends Fragment {
         mBtRecreation.setTextColor(Color.BLACK);
 
         isWorkCategory = true;
-//        callService();
+        callService();
     }
 
     @OnClick(R.id.tv_recreation)
@@ -188,6 +194,6 @@ public class ThirdTabFragment extends Fragment {
         mBtWork.setTextColor(Color.BLACK);
 
         isWorkCategory = false;
-//        callService();
+        callService();
     }
 }
