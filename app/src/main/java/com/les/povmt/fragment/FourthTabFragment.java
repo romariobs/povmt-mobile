@@ -188,7 +188,6 @@ public class FourthTabFragment extends Fragment implements OnChartValueSelectedL
                     if (json.has("status")) {
                         status = json.getInt("status");
                     }
-                    loading.cancel();
 
                     if (status != HTTP_OK) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -222,6 +221,8 @@ public class FourthTabFragment extends Fragment implements OnChartValueSelectedL
                     loading.cancel();
                 } catch (JSONException e) {
                     Log.e("JSON", "FAILED");
+                } finally {
+                    loading.cancel();
                 }
             }
         };
@@ -264,7 +265,6 @@ public class FourthTabFragment extends Fragment implements OnChartValueSelectedL
                     if (json.has("status")) {
                         status = json.getInt("status");
                     }
-                    loading.cancel();
 
                     if (status != HTTP_OK) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -295,9 +295,10 @@ public class FourthTabFragment extends Fragment implements OnChartValueSelectedL
                         mBeforeWeekTime = mBeforeWeekTime / 7 > 24 ? 24 : mBeforeWeekTime / 7;
                     }
                     setGraphic();
-                    loading.cancel();
                 } catch (JSONException e) {
                     Log.e("JSON", "FAILED");
+                } finally {
+                    loading.cancel();
                 }
             }
         };
@@ -340,7 +341,6 @@ public class FourthTabFragment extends Fragment implements OnChartValueSelectedL
                     if (json.has("status")) {
                         status = json.getInt("status");
                     }
-                    loading.cancel();
 
                     if (status != HTTP_OK) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -374,6 +374,8 @@ public class FourthTabFragment extends Fragment implements OnChartValueSelectedL
                     loading.cancel();
                 } catch (JSONException e) {
                     Log.e("JSON", "FAILED");
+                } finally {
+                    loading.cancel();
                 }
             }
         };

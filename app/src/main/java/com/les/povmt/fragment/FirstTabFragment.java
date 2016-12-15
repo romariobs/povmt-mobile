@@ -100,7 +100,6 @@ public class FirstTabFragment extends Fragment {
                     if (json.has("status")) {
                         status = json.getInt("status");
                     }
-                    loading.cancel();
 
                     if (status != HTTP_OK) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -144,6 +143,8 @@ public class FirstTabFragment extends Fragment {
                     lView.setAdapter(adapter);
                 } catch (JSONException e) {
                     Log.e("JSON", "FAILED");
+                } finally {
+                    loading.cancel();
                 }
             }
         };
